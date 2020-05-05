@@ -8,10 +8,12 @@ library(sf)
 library(leaflet)
 library(geojsonio)
 library(sp)
+library(viridis)
+library(htmltools)
 
 rm(list = ls())
 getwd()
-setwd('C:/Users/Bruno/Documents/Bruno/Emprender/Formaci?n/EANT - Data Analytics/Proyecto Final')
+
 dir()
 
 df= read.csv('Covid19arData - Prov_CABA.csv',encoding = 'UTF-8')
@@ -20,7 +22,6 @@ df <- df %>% rename(
   'Barrio' = localidad
 )
 df$Barrio <- df$Barrio %>% toupper()
-
 df$Barrio[df$Barrio=='VILLA PUYERREDON'] <- 'VILLA PUEYRREDON'
 df$Barrio[df$Barrio=='VILLA GRAL MITE'] <- 'VILLA GRAL MITRE'
 
@@ -44,10 +45,9 @@ barrios_xy <- as.data.frame(sf::st_coordinates(barrios_centroides))
 barrios_xy = barrios_xy %>% mutate(nombre = barrios$Barrio)
 
 
-
 pal <- colorBin("OrRd", domain = dfnew$casos)
 
-dfnew %>%
+
   leaflet(data = dfnew) %>%
   addTiles() %>%
   addPolygons(label = ~casos,
@@ -60,5 +60,4 @@ dfnew %>%
               highlightOptions = highlightOptions(color = "white",
                                                   weight = 2,
                                                   bringToFront = TRUE)
-  )
-
+              )
