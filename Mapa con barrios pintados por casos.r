@@ -80,7 +80,18 @@ leaflet(data = dfnew) %>%
 #             lat = Hospitales$lat,
 #             popup = htmlEscape(Hospitales$nom_map),
 #             clusterOptions = markerClusterOptions()) %>% 
-
+#  addAwesomeMarkers(lng = Privados$long,
+#                  lat = Privados$lat,
+#                  popup = htmlEscape(Privados$nombre),
+#                  icon = icon.fa,
+#                  clusterOptions = markerClusterOptions()) %>% 
+#  addCircles(lng = Hospitales$long,
+#             lat = Hospitales$lat,
+#             radius = 1400) %>% 
+#  addCircles(lng = Privados$long,
+#             lat = Privados$lat,
+#             radius = 700,
+#             color = 'red')
   #En caso de utilizar ggplot para armar los barrios:
   #esta funcion guarda el mapa como jpg,  quizas nos sea util tenerla a mano
   #ggsave("mapa_barrios_poligonos.jpg", width = 50, height = 20, units = "cm", dpi = 200, limitsize = TRUE) #guardar mapa en jpg#
