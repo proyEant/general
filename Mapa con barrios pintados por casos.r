@@ -43,11 +43,14 @@ view(barrios)
 Hospitales<- read.csv('hospitales.csv')
 Privados<- read.csv('centros-de-salud-privados.csv')
 
+head(Hospitales)
 unique(Hospitales$tipo_espec)
 
 #Mezcla barrios con casos
 dfnew <- merge(barrios,df)
 view(dfnew)
+
+rm(df,barrios)
 
 #Centroides
 barrios_centroides <- sf::st_centroid(barrios)
@@ -75,6 +78,7 @@ leaflet(data = dfnew) %>%
                                                   weight = 2,
                                                   bringToFront = TRUE)
               ) 
+#Comentario
 #%>% 
 #  addMarkers(lng = ,
 #             lat = Hospitales$lat,
