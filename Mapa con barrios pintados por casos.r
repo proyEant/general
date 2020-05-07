@@ -31,7 +31,7 @@ View(df)
 unique(df$Barrio) #48 barrios
 
 #DF Barrios
-barrios<- st_read("http://cdn.buenosaires.gob.ar/datosabiertos/datasets/barrios/barrios.geojson")
+barrios <- st_read("http://cdn.buenosaires.gob.ar/datosabiertos/datasets/barrios/barrios.geojson")
 barrios <- barrios %>% rename(
   'Barrio' = barrio)
 barrios$Barrio <- as.character(barrios$Barrio)
@@ -39,34 +39,51 @@ barrios$Barrio[barrios$Barrio=='VILLA GRAL. MITRE'] <- 'VILLA GRAL MITRE'
 
 view(barrios)
 
-#DF Hospitales y clínicas privadas
-Hospitales<- read.csv('hospitales.csv')
-Privados<- read.csv('centros-de-salud-privados.csv')
+#DF Estaciones Subte
 
-head(Hospitales)
-unique(Hospitales$tipo_espec)
+subte <- st_read('http://cdn.buenosaires.gob.ar/datosabiertos/datasets/subte-estaciones/subte_estaciones.geojson')
+view(subte)
+
+#DF Hospitales y clínicas privadas
+Hospitales<- read.csv('hospitales.csv',encoding = 'UTF-8')
+Privados<- read.csv('centros-de-salud-privados.csv',encoding = 'UTF-8')
 
 #Mezcla barrios con casos
 dfnew <- merge(barrios,df)
 view(dfnew)
 
-rm(df,barrios)
 
-#Centroides
-barrios_centroides <- sf::st_centroid(barrios)
-barrios_xy <- as.data.frame(sf::st_coordinates(barrios_centroides))
-barrios_xy = barrios_xy %>% mutate(nombre = barrios$Barrio)
+#   Limpieza DF y Environment
+Hospitales <- Hospitales %>% select(lat,long,nombre,tipo,telefono,barrio)
+view(head(Hospitales))
+Privados <- Privados %>% select(lat,long,nombre,telefonos,barrio)
+view(head(Privados))
+
+rm(df,barrios)
+view(subte1)
+
+#Centroids (en caso de aplicar los casos de los infectados como heatmap en el centro de cada barrio)
+#barrios_centroides <- sf::st_centroid(barrios)
+#barrios_xy <- as.data.frame(sf::st_coordinates(barrios_centroides))
+#barrios_xy = barrios_xy %>% mutate(nombre = barrios$Barrio)
+
+subte_xy <- sf::st_coordinates(subte)
+subte_xy <- as.data.frame(subte_xy)
+subte <- mutate(subte,'lat'=subte_xy$Y,'lng'=subte_xy$X)
+
+rm(subte_xy)
+view(subte)
 
 #Addons para visualización
 icon.fa <- makeAwesomeIcon(icon = 'flag', markerColor = 'red', library='fa', iconColor = 'black')
 pal <- colorBin("OrRd", domain = dfnew$casos)
 
-
 #Visualización
 
 leaflet(data = dfnew) %>%
   addTiles() %>%
-  #addProviderTiles(provider = 'CartoDB.Positron') %>% 
+  #addProviderTiles(provider = 'CartoDB.Positron') %>%
+  
   addPolygons(label = ~casos,
               fillColor = ~pal(casos),
               color = "#444444",
@@ -76,26 +93,30 @@ leaflet(data = dfnew) %>%
               fillOpacity = 0.5,
               highlightOptions = highlightOptions(color = "white",
                                                   weight = 2,
-                                                  bringToFront = TRUE)
-              ) 
-#Comentario
-#%>% 
-#  addMarkers(lng = ,
-#             lat = Hospitales$lat,
-#             popup = htmlEscape(Hospitales$nom_map),
-#             clusterOptions = markerClusterOptions()) %>% 
-#  addAwesomeMarkers(lng = Privados$long,
-#                  lat = Privados$lat,
-#                  popup = htmlEscape(Privados$nombre),
-#                  icon = icon.fa,
-#                  clusterOptions = markerClusterOptions()) %>% 
-#  addCircles(lng = Hospitales$long,
-#             lat = Hospitales$lat,
-#             radius = 1400) %>% 
-#  addCircles(lng = Privados$long,
-#             lat = Privados$lat,
-#             radius = 700,
-#             color = 'red')
+                                                  bringToFront = F)
+  ) %>% 
+  addCircleMarkers(lng = Hospitales$long,
+                   lat = Hospitales$lat,
+                   clusterOptions = markerClusterOptions(),
+                   radius = 18,
+                   color = 'blue',
+                   label = Hospitales$nombre
+  ) %>%
+  addCircleMarkers(lng = Privados$long,
+                   lat = Privados$lat,
+                   clusterOptions = markerClusterOptions(),
+                   radius = 12,
+                   color = 'red',
+                   label = Privados$nombre) %>% 
+  addMarkers(lng = subte$lng,
+             lat = subte$lat,
+             icon = icon.fa,
+             label = subte$ESTACION
+  )
+  
+
+?addMarkers
+
   #En caso de utilizar ggplot para armar los barrios:
   #esta funcion guarda el mapa como jpg,  quizas nos sea util tenerla a mano
   #ggsave("mapa_barrios_poligonos.jpg", width = 50, height = 20, units = "cm", dpi = 200, limitsize = TRUE) #guardar mapa en jpg#
