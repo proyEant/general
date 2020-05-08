@@ -39,6 +39,24 @@ barrios$Barrio[barrios$Barrio=='VILLA GRAL. MITRE'] <- 'VILLA GRAL MITRE'
 
 view(barrios)
 
+
+#DF Molinetes y limpieza
+
+molinetes <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general/molinetes.csv',stringsAsFactors = F, encoding = 'UTF-8')
+molinetes$fecha = as.Date(molinetes$fecha,'%Y-%m-%d')
+molinetes$estacion <- toupper(molinetes$estacion)
+#molinetes$desde <- substring(molinetes$desde,1,5)
+molinetes$desde <- substring(molinetes$desde,1,2)
+molinetes$hasta <- substring(molinetes$hasta,1,5)
+molinetes <- molinetes %>% select(desde,estacion,fecha,total)
+molinetes <- molinetes %>% group_by(estacion,desde,fecha) %>% 
+  summarise(total = sum(total))
+#molinetes <- molinetes %>% group_by(estacion,desde,fecha) 
+molinetes <- molinetes %>% filter(fecha > '2020-02-01' & fecha < '2020-06-01' & total>quantile(molinetes$total,0.75))
+?summarise
+view(molinetes)
+
+
 #DF Estaciones Subte
 
 subte <- st_read('http://cdn.buenosaires.gob.ar/datosabiertos/datasets/subte-estaciones/subte_estaciones.geojson')
@@ -80,6 +98,14 @@ pal <- colorBin("OrRd", domain = dfnew$casos)
 
 #Visualización
 
+  #Concurrencia subte
+ggplot(data = molinetes, aes(x=desde,y=total,color=estacion))+
+   geom_point()
+
+ggplot(data = molinetes, aes(x=desde,y=estacion,size=total,color=estacion))+
+   geom_jitter()
+
+  #Mapa
 leaflet(data = dfnew) %>%
   addTiles() %>%
   #addProviderTiles(provider = 'CartoDB.Positron') %>%
