@@ -70,6 +70,22 @@ Privados<- read.csv('centros-de-salud-privados.csv',encoding = 'UTF-8')
 dfnew <- merge(barrios,df)
 view(dfnew)
 
+#DF con barrios, estaciones de subte y tren, y cantidades en horario matutino y vespertino
+view(dfmapa)
+dfmapa <- molinetes
+dfmapa <- dfmapa %>% 
+  mutate('horario'=
+           case_when(desde >= 6 & desde <= 10 ~ 'matutino',
+                     desde >= 16 & desde <= 20 ~ 'vespertino',
+                     TRUE ~ 'borrar')
+  )
+names(dfmapa) = c('ESTACION','desde','fecha','total','horario')
+dfmapa <- dfmapa %>% select(ESTACION,fecha,total,horario) %>% 
+  filter(!horario=='borrar') 
+
+unique(dfmapa$ESTACION)
+dfmapa <- dfmapa %>% group_by(ESTACION,fecha,horario)
+
 
 #   Limpieza DF y Environment
 Hospitales <- Hospitales %>% select(lat,long,nombre,tipo,telefono,barrio)
