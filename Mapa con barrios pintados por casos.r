@@ -53,6 +53,7 @@ molinetes <- molinetes %>% group_by(estacion,desde,fecha) %>%
   summarise(total = sum(total))
 #molinetes <- molinetes %>% group_by(estacion,desde,fecha) 
 molinetes <- molinetes %>% filter(fecha > '2020-02-01' & fecha < '2020-06-01' & total>quantile(molinetes$total,0.75))
+molinetes$desde <- as.numeric(molinetes$desde)
 ?summarise
 view(molinetes)
 
@@ -75,17 +76,17 @@ view(dfmapa)
 dfmapa <- molinetes
 dfmapa <- dfmapa %>% 
   mutate('horario'=
-           case_when(desde >= 6 & desde <= 10 ~ 'matutino',
-                     desde >= 16 & desde <= 20 ~ 'vespertino',
+           case_when(desde >= 16 & desde <= 20 ~ 'vespertino',
+                     desde >= 06 & desde <= 10 ~ 'matutino',
                      TRUE ~ 'borrar')
-  )
-names(dfmapa) = c('ESTACION','desde','fecha','total','horario')
-dfmapa <- dfmapa %>% select(ESTACION,fecha,total,horario) %>% 
-  filter(!horario=='borrar') 
+         )
 
-unique(dfmapa$ESTACION)
-dfmapa <- dfmapa %>% group_by(ESTACION,fecha,horario)
-
+dfmapa <- dfmapa %>% group_by(estacion,fecha,horario) %>% 
+  select(-desde) %>%
+  filter(!horario=='borrar') %>%
+  summarise(sum(total))
+names(dfmapa) = c('ESTACION','fecha','horario','total')
+view(dfmapa)
 
 #   Limpieza DF y Environment
 Hospitales <- Hospitales %>% select(lat,long,nombre,tipo,telefono,barrio)
