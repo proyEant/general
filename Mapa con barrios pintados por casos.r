@@ -57,6 +57,25 @@ molinetes$desde <- as.numeric(molinetes$desde)
 ?summarise
 view(molinetes)
 
+
+#DF Molinetes 2019 y limpieza
+molinetes2019 <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general/molinetes122019.csv',stringsAsFactors = F, encoding = 'UTF-8')
+molinetes2019$fecha = as.Date(molinetes2019$fecha,'%Y-%m-%d')
+molinetes2019$estacion <- toupper(molinetes2019$estacion)
+#molinetes$desde <- substring(molinetes$desde,1,5)
+molinetes2019$desde <- substring(molinetes2019$desde,1,2)
+#molinetes$hasta <- substring(molinetes$hasta,1,5)
+molinetes2019 <- molinetes2019 %>% select(desde,estacion,fecha,total)
+molinetes2019 <- molinetes2019 %>% group_by(estacion,desde,fecha) %>% 
+  summarise(total = sum(total))
+#molinetes <- molinetes %>% group_by(estacion,desde,fecha) 
+#molinetes2019feb <- molinetes2019 %>% filter(fecha > '2019-02-01' & fecha < '2019-02-29' & total>quantile(molinetes2019$total,0.75))
+molinetes2019 <- molinetes2019 %>% filter(fecha > '2019-06-01' & fecha < '2019-06-30' & total>quantile(molinetes2019$total,0.75))
+molinetes2019$desde <- as.numeric(molinetes2019$desde)
+#molinetes2019feb$desde <- as.numeric(molinetes2019feb$desde)
+
+view(molinetes)
+
 #DF Estaciones Subte
 
 subte <- st_read('http://cdn.buenosaires.gob.ar/datosabiertos/datasets/subte-estaciones/subte_estaciones.geojson')
@@ -71,6 +90,7 @@ dfnew <- merge(barrios,df)
 view(dfnew)
 
 #DF con barrios, estaciones de subte y tren, y cantidades en horario matutino y vespertino
+  # 2020
 view(dfmapa)
 dfmapa <- molinetes
 dfmapa <- dfmapa %>% 
@@ -87,6 +107,22 @@ dfmapa <- dfmapa %>% group_by(estacion,fecha,horario) %>%
 names(dfmapa) = c('ESTACION','fecha','horario','total')
 view(dfmapa)
 
+  #2019
+view(dfmapa)
+dfmapa2019 <- molinetes2019
+dfmapa2019 <- dfmapa2019 %>% 
+  mutate('horario'=
+           case_when(desde >= 16 & desde <= 20 ~ 'vespertino',
+                     desde >= 06 & desde <= 10 ~ 'matutino',
+                     TRUE ~ 'borrar')
+  )
+
+dfmapa2019 <- dfmapa2019 %>% group_by(estacion,fecha,horario) %>% 
+  select(-desde) %>%
+  filter(!horario=='borrar') %>%
+  summarise(sum(total))
+names(dfmapa2019) = c('ESTACION','fecha','horario','total')
+view(dfmapa2019)
 
 # Mezcla barrios con estaciones
 
@@ -134,6 +170,18 @@ ggplot(data = molinetes, aes(x=desde,y=estacion,size=total/29,color=total/29))+
   labs(title = 'Focos de concentración en estaciones',
        x = 'Horarios de ingreso al molinete',
        y = 'Total de personas')
+
+
+ggplot(data = molinetes2019, aes(x=desde,y=estacion,size=total/30,color=total/30))+
+  geom_jitter()+
+  scale_size_continuous(limits=c(50, 700), breaks=seq(50, 600, by=50))+
+  scale_color_continuous(limits=c(50, 700), breaks=seq(50, 600, by=50))+
+  guides(color= guide_legend(), size=guide_legend())+
+  scale_x_continuous(breaks = seq(5,22,by = 1))+
+  labs(title = 'Focos de concentración en estaciones',
+       x = 'Horarios de ingreso al molinete',
+       y = 'Total de personas')
+
 
   #Mapa
 leaflet(data = dfnew) %>%
