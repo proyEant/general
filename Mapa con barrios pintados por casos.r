@@ -47,15 +47,23 @@ molinetes$fecha = as.Date(molinetes$fecha,'%Y-%m-%d')
 molinetes$estacion <- toupper(molinetes$estacion)
 #molinetes$desde <- substring(molinetes$desde,1,5)
 molinetes$desde <- substring(molinetes$desde,1,2)
-molinetes$hasta <- substring(molinetes$hasta,1,5)
 molinetes <- molinetes %>% select(desde,estacion,fecha,total)
+molinetes$desde <- as.numeric(molinetes$desde)
+view(head(molinetes))
 molinetes <- molinetes %>% group_by(estacion,desde,fecha) %>% 
   summarise(total = sum(total))
 #molinetes <- molinetes %>% group_by(estacion,desde,fecha) 
 molinetes <- molinetes %>% filter(fecha > '2020-02-01' & fecha < '2020-02-29' & total>quantile(molinetes$total,0.75))
-molinetes$desde <- as.numeric(molinetes$desde)
-?summarise
+
 view(molinetes)
+
+# Promedio diario de tránsito de personas en febrero 2020
+molinetesmapa <- molinetes %>% group_by(estacion) %>% 
+  summarise(total = round(sum(total)/29)) %>% 
+  top_n(15,total) %>% 
+  arrange(desc(total))
+
+view(molinetesmapa)
 
 
 #DF Molinetes 2019 y limpieza
@@ -64,7 +72,6 @@ molinetes2019$fecha = as.Date(molinetes2019$fecha,'%Y-%m-%d')
 molinetes2019$estacion <- toupper(molinetes2019$estacion)
 #molinetes$desde <- substring(molinetes$desde,1,5)
 molinetes2019$desde <- substring(molinetes2019$desde,1,2)
-#molinetes$hasta <- substring(molinetes$hasta,1,5)
 molinetes2019 <- molinetes2019 %>% select(desde,estacion,fecha,total)
 molinetes2019 <- molinetes2019 %>% group_by(estacion,desde,fecha) %>% 
   summarise(total = sum(total))
@@ -130,6 +137,7 @@ view(dfmapa)
 view(dfnew)
 view(subte)
 dfgeneral <- merge(dfmapa,subte,by = 'ESTACION')
+dfgeneral <- dfgeneral %>% select(c(-ID,-geometry))
 view(dfgeneral)
 dfgeneral <- 
 #   Limpieza DF y Environment
@@ -168,8 +176,9 @@ ggplot(data = molinetes, aes(x=desde,y=estacion,size=total/29,color=total/29))+
   guides(color= guide_legend(), size=guide_legend())+
   scale_x_continuous(breaks = seq(5,22,by = 1))+
   labs(title = 'Focos de concentración en estaciones',
-       x = 'Horarios de ingreso al molinete',
-       y = 'Total de personas')
+       x = 'Horarios de ingreso al molinete por día',
+       y = 'Estaciones'
+  )
 
 
 ggplot(data = molinetes2019, aes(x=desde,y=estacion,size=total/30,color=total/30))+
