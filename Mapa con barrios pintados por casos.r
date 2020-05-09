@@ -52,7 +52,7 @@ molinetes <- molinetes %>% select(desde,estacion,fecha,total)
 molinetes <- molinetes %>% group_by(estacion,desde,fecha) %>% 
   summarise(total = sum(total))
 #molinetes <- molinetes %>% group_by(estacion,desde,fecha) 
-molinetes <- molinetes %>% filter(fecha > '2020-02-01' & fecha < '2020-06-01' & total>quantile(molinetes$total,0.75))
+molinetes <- molinetes %>% filter(fecha > '2020-02-01' & fecha < '2020-02-29' & total>quantile(molinetes$total,0.75))
 molinetes$desde <- as.numeric(molinetes$desde)
 ?summarise
 view(molinetes)
@@ -89,8 +89,13 @@ view(dfmapa)
 
 
 # Mezcla barrios con estaciones
-gf
 
+view(dfmapa)
+view(dfnew)
+view(subte)
+dfgeneral <- merge(dfmapa,subte,by = 'ESTACION')
+view(dfgeneral)
+dfgeneral <- 
 #   Limpieza DF y Environment
 Hospitales <- Hospitales %>% select(lat,long,nombre,tipo,telefono,barrio)
 view(head(Hospitales))
@@ -120,12 +125,15 @@ pal <- colorBin("OrRd", domain = dfnew$casos)
 
   #Concurrencia subte
 
-ggplot(data = molinetes, aes(x=desde,y=estacion,size=total,color=total))+
+ggplot(data = molinetes, aes(x=desde,y=estacion,size=total/29,color=total/29))+
   geom_jitter()+
-  scale_size_continuous(limits=c(2000, 10000), breaks=seq(2000, 10000, by=3000))+
-  scale_color_continuous(limits=c(2000, 10000), breaks=seq(2000, 10000, by=3000))+
+  scale_size_continuous(limits=c(50, 700), breaks=seq(50, 600, by=50))+
+  scale_color_continuous(limits=c(50, 700), breaks=seq(50, 600, by=50))+
   guides(color= guide_legend(), size=guide_legend())+
-  scale_x_continuous(breaks = seq(5,22,by = 1))
+  scale_x_continuous(breaks = seq(5,22,by = 1))+
+  labs(title = 'Focos de concentración en estaciones',
+       x = 'Horarios de ingreso al molinete',
+       y = 'Total de personas')
 
   #Mapa
 leaflet(data = dfnew) %>%
@@ -161,7 +169,7 @@ leaflet(data = dfnew) %>%
              icon = icon.fa,
              label = subte$ESTACION
   )
-  
+# Las estaciones de subte y tren deben estar por día, considerando el total de pases por 1 día.
 
 ?addMarkers
 
