@@ -57,7 +57,6 @@ molinetes$desde <- as.numeric(molinetes$desde)
 ?summarise
 view(molinetes)
 
-
 #DF Estaciones Subte
 
 subte <- st_read('http://cdn.buenosaires.gob.ar/datosabiertos/datasets/subte-estaciones/subte_estaciones.geojson')
@@ -88,6 +87,10 @@ dfmapa <- dfmapa %>% group_by(estacion,fecha,horario) %>%
 names(dfmapa) = c('ESTACION','fecha','horario','total')
 view(dfmapa)
 
+
+# Mezcla barrios con estaciones
+gf
+
 #   Limpieza DF y Environment
 Hospitales <- Hospitales %>% select(lat,long,nombre,tipo,telefono,barrio)
 view(head(Hospitales))
@@ -116,11 +119,13 @@ pal <- colorBin("OrRd", domain = dfnew$casos)
 #Visualización
 
   #Concurrencia subte
-ggplot(data = molinetes, aes(x=desde,y=total,color=estacion))+
-   geom_point()
 
-ggplot(data = molinetes, aes(x=desde,y=estacion,size=total,color=estacion))+
-   geom_jitter()
+ggplot(data = molinetes, aes(x=desde,y=estacion,size=total,color=total))+
+  geom_jitter()+
+  scale_size_continuous(limits=c(2000, 10000), breaks=seq(2000, 10000, by=3000))+
+  scale_color_continuous(limits=c(2000, 10000), breaks=seq(2000, 10000, by=3000))+
+  guides(color= guide_legend(), size=guide_legend())+
+  scale_x_continuous(breaks = seq(5,22,by = 1))
 
   #Mapa
 leaflet(data = dfnew) %>%
