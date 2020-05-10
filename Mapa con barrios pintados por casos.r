@@ -72,9 +72,11 @@ molinetesmapa <- molinetesmapa %>%
                      TRUE ~ 'borrar')
   )
 
-molinetesmapa<- molinetesmapa %>% group_by(estacion,horario) %>% top_n(2,total) %>% arrange(desc(total))
+molinetesmapa<- molinetesmapa %>% group_by(estacion,horario) %>% top_n(1,total) %>% arrange(desc(total))
+names(molinetesmapa) = c('ESTACION','desde','total','horario')
 
 view(molinetesmapa)
+
 
 
 #DF Molinetes 2019 y limpieza
@@ -102,11 +104,34 @@ view(subte)
 Hospitales<- read.csv('hospitales.csv',encoding = 'UTF-8')
 Privados<- read.csv('centros-de-salud-privados.csv',encoding = 'UTF-8')
 
-#Mezcla barrios con casos
+
+#DF Tráfico Vehicular
+getwd()
+"C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general"
+
+df_flujoVehic = read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/flujo-vehicular-por-radares-2020.csv', header = T, encoding = 'UTF-8', stringsAsFactors = F)
+
+#suma la cantidad por dispo_nombre por dia
+df_mapAccesos= df_flujoVehic %>% 
+  group_by(fecha, autopista_nombre, disp_nombre, lat, long) %>% 
+  summarise(totalDia= sum(cantidad))
+
+#nrow(df_mapAccesos)
+
+#ahora quiero analizar los 40 dias para atras
+
+today= Sys.Date()
+df_accesos_40=data.frame()
+df_accesos_40 = df_mapAccesos[ (as.Date(today) - as.Date(df_mapAccesos$fecha))<=40,] #solo me quedo con las filas que cumplen la condicion.
+
+
+
+#Mezclas de DF
+  #Barrios con casos
 dfnew <- merge(barrios,df)
 view(dfnew)
 
-#DF con barrios, estaciones de subte y tren, y cantidades en horario matutino y vespertino
+  #DF con barrios, estaciones de subte y tren, y cantidades en horario matutino y vespertino
   # 2020
 view(dfmapa)
 dfmapa <- molinetes
@@ -146,10 +171,11 @@ view(dfmapa2019)
 view(dfmapa)
 view(dfnew)
 view(subte)
-dfgeneral <- merge(dfmapa,subte,by = 'ESTACION')
-dfgeneral <- dfgeneral %>% select(c(-ID,-geometry))
+dfgeneral <- merge(molinetesmapa,subte,by = 'ESTACION')
+dfgeneral <- dfgeneral %>% select(c(-ID,-geometry)) %>% 
+  arrange(desc(total))
 view(dfgeneral)
-dfgeneral <- 
+# dfgeneral <- 
 #   Limpieza DF y Environment
 Hospitales <- Hospitales %>% select(lat,long,nombre,tipo,telefono,barrio)
 view(head(Hospitales))
@@ -215,6 +241,7 @@ ggplot(data = molinetes2019, aes(x=desde,y=estacion,size=total/30,color=total/30
 
 
   #Mapa
+    # Salud
 leaflet(data = dfnew) %>%
   addTiles() %>%
   #addProviderTiles(provider = 'CartoDB.Positron') %>%
@@ -248,6 +275,62 @@ leaflet(data = dfnew) %>%
              icon = icon.fa,
              label = subte$ESTACION
   )
+
+    # Tránsito
+
+barrioslabels <- sprintf(
+  "<strong>%s</strong><br/>%g casos",
+  dfnew$Barrio, dfnew$casos
+) %>% lapply(htmltools::HTML)
+
+estacioneslabels <- sprintf(
+  "<strong>Estación: %s</strong><br/>%g casos",
+  dfgeneral$ESTACION, dfgeneral$total
+) %>% lapply(htmltools::HTML)
+
+leaflet(data = dfnew) %>%
+  addTiles() %>%
+  #addProviderTiles(provider = 'CartoDB.Positron') %>%
+  
+  addPolygons(label = barrioslabels,
+              fillColor = ~pal(casos),
+              color = "#444444",
+              weight = 1,
+              smoothFactor = 0.5,
+              opacity = 1.0,
+              fillOpacity = 0.5,
+              highlightOptions = highlightOptions(color = "white",
+                                                  weight = 2,
+                                                  bringToFront = F)
+              #popup = paste0('Barrio: ',dfnew$Barrio)
+  ) %>% 
+  addCircleMarkers(lng = dfgeneral$lng,
+             lat = dfgeneral$lat,
+             radius = dfgeneral$total/500,
+             color = 'red',
+             label = estacioneslabels
+             #popup = paste0('Estación: ', dfgeneral$ESTACION)
+  ) %>% 
+  addLegend(pal = pal, values = ~dfnew$casos,opacity = 0.7,position = 'bottomright')
+            
+
+
+#grafica con puntos INTERACTIVO CON PLOTLY.
+#muestra por dia los accesos a una autopiesta. los puntos del mismo color son los diferentes accesos
+#podemos observar que hay mas cantidad de autos en Dellepiane
+#se apagan capas
+p=ggplot(df_accesos_40,aes(x = fecha, y = totalDia, color=autopista_nombre, text = paste("Acceso:",disp_nombre)))+
+  geom_point()+
+  geom_point()+
+  scale_color_viridis(discrete = T, option = 'D',
+                      direction = 1)+
+  theme(axis.text.x = element_text(angle = 90))+
+  geom_hline(yintercept = 20000, colour="orange")+
+  geom_hline(yintercept = 40000, colour="red")
+ggplotly(p)
+
+
+
 # Las estaciones de subte y tren deben estar por día, considerando el total de pases por 1 día.
 
 ?addMarkers
