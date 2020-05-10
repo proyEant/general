@@ -10,14 +10,17 @@ library(geojsonio)
 library(sp)
 library(viridis)
 library(htmltools)
+library(stringi)
 
 #Iniciación
 rm(list = ls())
 getwd()
 dir()
 
-#DF Casos CABA
+#DF Casos CABA y nueva fuente con datos 7 de Mayo 2020
 df= read.csv('Covid19arData - Prov_CABA.csv',encoding = 'UTF-8')
+dfcabanew <- read_xlsx('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/casos_caba_7mayo.xlsx')
+
 df<- select(df,-c(prov,depto,altas,fuente,fechaact))
 df <- df %>% rename(
   'Barrio' = localidad
@@ -26,11 +29,24 @@ df$Barrio <- df$Barrio %>% toupper()
 df$Barrio[df$Barrio=='VILLA PUYERREDON'] <- 'VILLA PUEYRREDON'
 df$Barrio[df$Barrio=='VILLA GRAL MITE'] <- 'VILLA GRAL MITRE'
 
-View(df)
+dfcabanew$Barrio <- toupper(dfcabanew$Barrio)
+names(dfcabanew) = c('Comunas','Barrio','Casos7_5')
+dfcabanew <- dfcabanew %>% drop_na() %>% select(-Comunas)
+dfcabanew$Barrio <- stri_trans_general(dfcabanew$Barrio,"Latin-ASCII")
+dfcabanew$Barrio[dfcabanew$Barrio=='NUNEZ'] <- 'NUÑEZ'
+dfcabanew$Barrio[dfcabanew$Barrio=='VILLA GENERAL MITRE'] <- 'VILLA GRAL MITRE'
+dfcabanew$Barrio[dfcabanew$Barrio=='MONTSERRAT'] <- 'MONSERRAT'
+dfcabanew$Barrio[dfcabanew$Barrio=='LA PATERNAL'] <- 'PATERNAL'
+dfcabanew$Barrio[dfcabanew$Barrio=='LA BOCA'] <- 'BOCA'
 
+df$casos7_5 <- merge(df,dfcabanew)
+View(df)
+view(dfcabanew)
+view(dfnew)
 unique(df$Barrio) #48 barrios
 
-#DF Barrios
+
+#DF Barrios (mapeo geográfico)
 barrios <- st_read("http://cdn.buenosaires.gob.ar/datosabiertos/datasets/barrios/barrios.geojson")
 barrios <- barrios %>% rename(
   'Barrio' = barrio)
@@ -140,6 +156,10 @@ view(df_trenescaba)
 dfnew <- merge(barrios,df)
 view(dfnew)
 
+  #DF Casos nuevos con DF casos anterior
+dfnew<- merge(dfnew,dfcabanew)
+view(dfnew)
+
   #DF con barrios, estaciones de subte y tren, y cantidades en horario matutino y vespertino
   # 2020
 view(dfmapa)
@@ -157,6 +177,8 @@ dfmapa <- dfmapa %>% group_by(estacion,fecha,horario) %>%
   summarise(sum(total))
 names(dfmapa) = c('ESTACION','fecha','horario','total')
 view(dfmapa)
+
+
 
   #2019
 view(dfmapa)
@@ -232,7 +254,7 @@ df_sentidoB_junio19 = na.omit(df_accesos2019) %>%
 #Addons para visualización
 icon.fa <- makeAwesomeIcon(icon = 'flag', markerColor = 'red', library='fa', iconColor = 'black')
 pal <- colorBin("OrRd", domain = dfnew$casos)
-
+pal2 <- colorBin("OrRd", domain = dfnew$Casos7_5)
 #Visualización
 
 #Iconos
@@ -319,7 +341,7 @@ leaflet(data = dfnew) %>%
 
 barrioslabels <- sprintf(
   "<strong>%s</strong><br/>%g casos",
-  dfnew$Barrio, dfnew$casos
+  dfnew$Barrio, dfnew$Casos7_5
 ) %>% lapply(htmltools::HTML)
 
 estacioneslabels <- sprintf(
@@ -329,8 +351,9 @@ estacioneslabels <- sprintf(
 
 leaflet(data = dfnew) %>%
   addTiles() %>%
+  addProviderTiles('CartoDB.Positron') %>% 
   addPolygons(label = barrioslabels,
-              fillColor = ~pal(casos),
+              fillColor = ~pal2(Casos7_5),
               color = "#444444",
               weight = 1,
               smoothFactor = 0.5,
@@ -380,8 +403,8 @@ leaflet(data = dfnew) %>%
     options = layersControlOptions(collapsed = FALSE)
     ) %>% 
 
-  addLegend(pal = pal,
-            values = ~dfnew$casos,
+  addLegend(pal = pal2,
+            values = ~dfnew$Casos7_5,
             opacity = 0.7,
             position = 'bottomright',
             title = 'Cantidad de casos:'
