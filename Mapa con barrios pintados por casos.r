@@ -47,21 +47,32 @@ molinetes$fecha = as.Date(molinetes$fecha,'%Y-%m-%d')
 molinetes$estacion <- toupper(molinetes$estacion)
 #molinetes$desde <- substring(molinetes$desde,1,5)
 molinetes$desde <- substring(molinetes$desde,1,2)
-molinetes <- molinetes %>% select(desde,estacion,fecha,total)
 molinetes$desde <- as.numeric(molinetes$desde)
-view(head(molinetes))
-molinetes <- molinetes %>% group_by(estacion,desde,fecha) %>% 
+molinetes <- molinetes %>% filter(fecha > '2020-02-01' & fecha < '2020-02-29')
+molinetes <- molinetes %>% select(desde,estacion,total)
+molinetes <- molinetes %>% group_by(estacion,desde) %>% 
   summarise(total = sum(total))
 #molinetes <- molinetes %>% group_by(estacion,desde,fecha) 
-molinetes <- molinetes %>% filter(fecha > '2020-02-01' & fecha < '2020-02-29' & total>quantile(molinetes$total,0.75))
+#molinetes <- molinetes %>% filter(fecha > '2020-02-01' & fecha < '2020-02-29' & desde >= 5 & desde <= 21 & total>quantile(molinetes$total,0.95))
+molinetes <- molinetes %>% filter(desde >= 5 & desde <= 21 & total>quantile(molinetes$total,0.85))
+molinetes$total <- round(molinetes$total/29)
 
+unique(molinetes$estacion) #66
 view(molinetes)
+#quantile(molinetes$total,0.83)
 
-# Promedio diario de tránsito de personas en febrero 2020
-molinetesmapa <- molinetes %>% group_by(estacion) %>% 
-  summarise(total = round(sum(total)/29)) %>% 
-  top_n(15,total) %>% 
-  arrange(desc(total))
+
+# Máximos diarios (promedio mensual) de tránsito de personas en febrero 2020  ## VER SI SIRVE PROMEDIO##
+molinetesmapa<- molinetes %>% group_by(estacion) %>% top_n(1,total) %>% arrange(desc(total))
+
+molinetesmapa <- molinetesmapa %>% 
+  mutate('horario'=
+           case_when(desde >= 16 & desde <= 21 ~ 'vespertino',
+                     desde >= 05 & desde <= 12 ~ 'matutino',
+                     TRUE ~ 'borrar')
+  )
+
+molinetesmapa<- molinetesmapa %>% group_by(estacion,horario) %>% top_n(2,total) %>% arrange(desc(total))
 
 view(molinetesmapa)
 
@@ -81,7 +92,6 @@ molinetes2019 <- molinetes2019 %>% filter(fecha > '2019-06-01' & fecha < '2019-0
 molinetes2019$desde <- as.numeric(molinetes2019$desde)
 #molinetes2019feb$desde <- as.numeric(molinetes2019feb$desde)
 
-view(molinetes)
 
 #DF Estaciones Subte
 
@@ -169,17 +179,29 @@ pal <- colorBin("OrRd", domain = dfnew$casos)
 
   #Concurrencia subte
 
-ggplot(data = molinetes, aes(x=desde,y=estacion,size=total/29,color=total/29))+
+ggplot(data = molinetes, aes(x=desde,y=estacion,size=total,color=total))+
   geom_jitter()+
-  scale_size_continuous(limits=c(50, 700), breaks=seq(50, 600, by=50))+
-  scale_color_continuous(limits=c(50, 700), breaks=seq(50, 600, by=50))+
+  scale_size_continuous(limits=c(750, 7000), breaks=seq(1000, 10000, by=500))+
+  scale_color_continuous(limits=c(750, 7000), breaks=seq(1000, 10000, by=500))+
   guides(color= guide_legend(), size=guide_legend())+
-  scale_x_continuous(breaks = seq(5,22,by = 1))+
+  scale_x_continuous(breaks = seq(5,21,by = 1))+
   labs(title = 'Focos de concentración en estaciones',
        x = 'Horarios de ingreso al molinete por día',
        y = 'Estaciones'
-  )
+  )+
+  theme_bw()
 
+ggplot(data = molinetesmapa, aes(x=desde,y=estacion,size=total,color=total))+
+  geom_jitter()+
+  scale_size_continuous(limits=c(250, 7000), breaks=seq(500, 10000, by=500))+
+  scale_color_continuous(limits=c(250, 7000), breaks=seq(500, 10000, by=500))+
+  guides(color= guide_legend(), size=guide_legend())+
+  scale_x_continuous(breaks = seq(5,21,by = 1))+
+  labs(title = 'Focos de concentración en estaciones',
+       x = 'Horarios de ingreso al molinete por día',
+       y = 'Estaciones'
+  )+
+  theme_bw()
 
 ggplot(data = molinetes2019, aes(x=desde,y=estacion,size=total/30,color=total/30))+
   geom_jitter()+
