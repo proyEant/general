@@ -109,10 +109,12 @@ Privados<- read.csv('centros-de-salud-privados.csv',encoding = 'UTF-8')
 getwd()
 "C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general"
 
-df_flujoVehic = read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/flujo-vehicular-por-radares-2020.csv', header = T, encoding = 'UTF-8', stringsAsFactors = F)
+
+df_flujoVehic2020 = read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/flujo-vehicular-por-radares-2020.csv', header = T, encoding = 'UTF-8', stringsAsFactors = F)
+df_flujoVehic2019 = read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/flujo-vehicular-por-radares-2019.csv', header = T, encoding = 'UTF-8', stringsAsFactors = F)
 
 #suma la cantidad por dispo_nombre por dia
-df_mapAccesos= df_flujoVehic %>% 
+df_mapAccesos= df_flujoVehic2020 %>% 
   group_by(fecha, autopista_nombre, disp_nombre, lat, long) %>% 
   summarise(totalDia= sum(cantidad))
 
@@ -196,6 +198,29 @@ subte <- mutate(subte,'lat'=subte_xy$Y,'lng'=subte_xy$X)
 
 rm(subte_xy)
 view(subte)
+
+
+######## CODIGO MAPA PROMEDIO ACCESO PARA JUNIO 2019 SENTIDO A Y B################
+
+##Armo el data frame por dia. obtengo valor por acceso por dia.
+
+
+df_accesos2019 = na.omit(df_flujoVehic2019) %>%
+  group_by(fecha, autopista_nombre, disp_nombre, seccion_sentido, lat, long) %>% 
+  summarise(totalDia= sum(cantidad))
+
+##armo loa data Frame de junio por acceso y promedio por mes
+
+df_sentidoA_junio19 = na.omit(df_accesos2019) %>%
+  filter(fecha>='2019-06-01' && fecha<='2019-06-30', seccion_sentido == 'A' ) %>% 
+  group_by(autopista_nombre, disp_nombre, seccion_sentido, lat, long) %>% 
+  summarise(promedioMes = round(sum(totalDia)/30))
+
+df_sentidoB_junio19 = na.omit(df_accesos2019) %>%
+  filter(fecha>='2019-06-01' && fecha<='2019-06-30', seccion_sentido == 'B' ) %>% 
+  group_by(autopista_nombre, disp_nombre, seccion_sentido, lat, long) %>% 
+  summarise(promedioMes = round(sum(totalDia)/30))
+
 
 #Addons para visualización
 icon.fa <- makeAwesomeIcon(icon = 'flag', markerColor = 'red', library='fa', iconColor = 'black')
@@ -284,14 +309,12 @@ barrioslabels <- sprintf(
 ) %>% lapply(htmltools::HTML)
 
 estacioneslabels <- sprintf(
-  "<strong>Estación: %s</strong><br/>%g casos",
+  "<strong>Estación: %s</strong><br/>%g pasajeros",
   dfgeneral$ESTACION, dfgeneral$total
 ) %>% lapply(htmltools::HTML)
 
 leaflet(data = dfnew) %>%
   addTiles() %>%
-  #addProviderTiles(provider = 'CartoDB.Positron') %>%
-  
   addPolygons(label = barrioslabels,
               fillColor = ~pal(casos),
               color = "#444444",
@@ -302,32 +325,47 @@ leaflet(data = dfnew) %>%
               highlightOptions = highlightOptions(color = "white",
                                                   weight = 2,
                                                   bringToFront = F)
-              #popup = paste0('Barrio: ',dfnew$Barrio)
-  ) %>% 
+              ) %>% 
   addCircleMarkers(lng = dfgeneral$lng,
              lat = dfgeneral$lat,
              radius = dfgeneral$total/500,
              color = 'red',
              label = estacioneslabels
-             #popup = paste0('Estación: ', dfgeneral$ESTACION)
-  ) %>% 
-  addLegend(pal = pal, values = ~dfnew$casos,opacity = 0.7,position = 'bottomright')
+             ) %>% 
+  addCircleMarkers(lng = df_sentidoA_junio19$long,
+                   lat = df_sentidoA_junio19$lat,
+                   clusterOptions = markerClusterOptions(), 
+                   popup = paste0("<b>Acceso: </b>",df_sentidoA_junio19$disp_nombre, "<br>",
+                                  "<b>Sentido: </b>",df_sentidoA_junio19$seccion_sentido, "<br>",
+                                  "<b>Cant: </b>",df_sentidoA_junio19$promedioMes),
+                   radius= df_sentidoA_junio19$promedioMes/1000,
+                   color = "red",
+                   group = "SentidoA") %>%
+  
+  addCircleMarkers(lng = df_sentidoB_junio19$long,
+                   lat = df_sentidoB_junio19$lat,
+                   clusterOptions = markerClusterOptions(), 
+                   popup = paste0("<b>Acceso: </b>",df_sentidoB_junio19$disp_nombre, "<br>",
+                                  "<b>Sentido: </b>",df_sentidoB_junio19$seccion_sentido, "<br>",
+                                  "<b>Cant: </b>",df_sentidoB_junio19$promedioMes),
+                   radius= df_sentidoB_junio19$promedioMes[1]/1000,
+                   color = "blue",
+                   group = "SentidoB") %>%
+  
+  addLayersControl(
+    overlayGroups = c("SentidoA", "SentidoB"),
+    options = layersControlOptions(collapsed = FALSE)
+    ) %>% 
+
+  addLegend(pal = pal,
+            values = ~dfnew$casos,
+            opacity = 0.7,
+            position = 'bottomright',
+            title = 'Cantidad de casos:'
+            )
+  
             
 
-
-#grafica con puntos INTERACTIVO CON PLOTLY.
-#muestra por dia los accesos a una autopiesta. los puntos del mismo color son los diferentes accesos
-#podemos observar que hay mas cantidad de autos en Dellepiane
-#se apagan capas
-p=ggplot(df_accesos_40,aes(x = fecha, y = totalDia, color=autopista_nombre, text = paste("Acceso:",disp_nombre)))+
-  geom_point()+
-  geom_point()+
-  scale_color_viridis(discrete = T, option = 'D',
-                      direction = 1)+
-  theme(axis.text.x = element_text(angle = 90))+
-  geom_hline(yintercept = 20000, colour="orange")+
-  geom_hline(yintercept = 40000, colour="red")
-ggplotly(p)
 
 
 
