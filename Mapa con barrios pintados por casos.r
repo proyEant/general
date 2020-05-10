@@ -107,8 +107,6 @@ Privados<- read.csv('centros-de-salud-privados.csv',encoding = 'UTF-8')
 
 #DF Tráfico Vehicular
 getwd()
-"C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general"
-
 
 df_flujoVehic2020 = read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/flujo-vehicular-por-radares-2020.csv', header = T, encoding = 'UTF-8', stringsAsFactors = F)
 df_flujoVehic2019 = read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/flujo-vehicular-por-radares-2019.csv', header = T, encoding = 'UTF-8', stringsAsFactors = F)
@@ -126,6 +124,15 @@ today= Sys.Date()
 df_accesos_40=data.frame()
 df_accesos_40 = df_mapAccesos[ (as.Date(today) - as.Date(df_mapAccesos$fecha))<=40,] #solo me quedo con las filas que cumplen la condicion.
 
+#DF Estaciones de Tren
+df_trenes= read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/estaciones-de-ferrocarril.csv',encoding = 'UTF-8', stringsAsFactors = F)
+
+view(df_trenes)
+df_trenescaba= df_trenes%>%
+  select(long,lat,nombre,linea,ramal,barrio,comuna) %>% 
+  filter(comuna %in% c('Comuna 14','Comuna 13','Comuna 12', 'Comuna 11', 'Comuna 10', 'Comuna 9','Comuna 8', 'Comuna 7','Comuna 6', 'Comuna 5','Comuna 4', 'Comuna 3','Comuna 2', 'Comuna 1','Comuna 15'))
+
+view(df_trenescaba)
 
 
 #Mezclas de DF
@@ -228,6 +235,13 @@ pal <- colorBin("OrRd", domain = dfnew$casos)
 
 #Visualización
 
+#Iconos
+transitoiconos <- iconList(
+  tren = makeIcon("trenes.png", 18, 18)
+  #subte = makeIcon("danger-24.png", "danger-24@2x.png", 24, 24)
+)
+
+
   #Concurrencia subte
 
 ggplot(data = molinetes, aes(x=desde,y=estacion,size=total,color=total))+
@@ -309,8 +323,8 @@ barrioslabels <- sprintf(
 ) %>% lapply(htmltools::HTML)
 
 estacioneslabels <- sprintf(
-  "<strong>Estación: %s</strong><br/>%g pasajeros",
-  dfgeneral$ESTACION, dfgeneral$total
+  "<strong>Estación: %s</strong><br/><strong>Horario:</strong> %s<br/><strong>Pasajeros:</strong> %g",
+  dfgeneral$ESTACION, dfgeneral$horario, dfgeneral$total
 ) %>% lapply(htmltools::HTML)
 
 leaflet(data = dfnew) %>%
@@ -351,9 +365,18 @@ leaflet(data = dfnew) %>%
                    radius= df_sentidoB_junio19$promedioMes[1]/1000,
                    color = "blue",
                    group = "SentidoB") %>%
+  addMarkers(lng = ~ df_trenescaba$long,
+             lat = ~ df_trenescaba$lat,
+             icon = ~transitoiconos,
+             popup = ~ htmlEscape(paste('Línea:',df_trenescaba$linea,' Estación:',df_trenescaba$nombre))) %>% 
+#  addCircles(lng =  ~ df_trenescaba$long,
+#             lat = ~ df_trenescaba$lat,
+#             color ="purple",
+#             radius = 110,
+#             weight = 10) %>% 
   
   addLayersControl(
-    overlayGroups = c("SentidoA", "SentidoB"),
+    overlayGroups = c("Autopistas: Acceso a CABA", "Autopistas: Salida de CABA"),
     options = layersControlOptions(collapsed = FALSE)
     ) %>% 
 
@@ -365,8 +388,6 @@ leaflet(data = dfnew) %>%
             )
   
             
-
-
 
 
 # Las estaciones de subte y tren deben estar por día, considerando el total de pases por 1 día.
