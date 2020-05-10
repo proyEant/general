@@ -251,13 +251,15 @@ df_sentidoB_junio19 = na.omit(df_accesos2019) %>%
   summarise(promedioMes = round(sum(totalDia)/30))
 
 
-#Addons para visualización
-icon.fa <- makeAwesomeIcon(icon = 'flag', markerColor = 'red', library='fa', iconColor = 'black')
-pal <- colorBin("OrRd", domain = dfnew$casos)
-pal2 <- colorBin("OrRd", domain = dfnew$Casos7_5)
+
 #Visualización
 
-#Iconos
+  #Addons para visualización
+icon.fa <- makeAwesomeIcon(icon = 'flag', markerColor = 'red', library='fa', iconColor = 'black')
+pal <- colorBin("OrRd", domain = dfnew$casos)
+pal2 <- colorBin("YlOrRd", domain = dfnew$Casos7_5)
+
+  #Iconos
 transitoiconos <- iconList(
   tren = makeIcon("trenes.png", 18, 18)
   #subte = makeIcon("danger-24.png", "danger-24@2x.png", 24, 24)
@@ -358,14 +360,14 @@ leaflet(data = dfnew) %>%
               weight = 1,
               smoothFactor = 0.5,
               opacity = 1.0,
-              fillOpacity = 0.5,
+              fillOpacity = 0.25,
               highlightOptions = highlightOptions(color = "white",
                                                   weight = 2,
                                                   bringToFront = F)
               ) %>% 
   addCircleMarkers(lng = dfgeneral$lng,
              lat = dfgeneral$lat,
-             radius = dfgeneral$total/500,
+             radius = dfgeneral$total/400,
              color = 'red',
              label = estacioneslabels
              ) %>% 
@@ -377,7 +379,7 @@ leaflet(data = dfnew) %>%
                                   "<b>Cant: </b>",df_sentidoA_junio19$promedioMes),
                    radius= df_sentidoA_junio19$promedioMes/1000,
                    color = "red",
-                   group = "SentidoA") %>%
+                   group = "Autopistas: Acceso a CABA") %>%
   
   addCircleMarkers(lng = df_sentidoB_junio19$long,
                    lat = df_sentidoB_junio19$lat,
@@ -387,7 +389,7 @@ leaflet(data = dfnew) %>%
                                   "<b>Cant: </b>",df_sentidoB_junio19$promedioMes),
                    radius= df_sentidoB_junio19$promedioMes[1]/1000,
                    color = "blue",
-                   group = "SentidoB") %>%
+                   group = "Autopistas: Salida de CABA") %>%
   addMarkers(lng = ~ df_trenescaba$long,
              lat = ~ df_trenescaba$lat,
              icon = ~transitoiconos,
