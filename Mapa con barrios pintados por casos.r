@@ -67,6 +67,18 @@ view(df)
 
 unique(df$Barrio) #48 barrios
 
+# DF Fallecidos CABA (Falta)
+
+#df_fallecidos <- read_xlsx('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/Fallecidos.xlsx')
+
+# DF Farmacias
+
+df_far <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/farmacias.csv',stringsAsFactors = F, encoding = 'UTF-8')
+
+df_far <- df_far %>% select(calle_nombre,calle_altura,lat,long,barrio,comuna,codigo_postal_argentino)
+df_far$barrio <- toupper(df_far$barrio)
+names(df_far) = c('calle','altura','lat','long','Barrio','comuna','CP')
+view(df_far)
 
 #DF Molinetes y limpieza
 
@@ -125,11 +137,13 @@ view(subte)
 
 #DF Hospitales y clínicas privadas
 Hospitales<- read.csv('hospitales.csv',encoding = 'UTF-8')
-Hospitales <- Hospitales %>% select(lat,long,nombre,tipo,telefono,barrio)
+Hospitales <- Hospitales %>% select(barrio, lat, long, nombre, comuna, calle_nombre, telefono,calle_altura, tipo_espec) %>% 
+  filter(!tipo_espec %in% c('SALUD MENTAL','MED. FISICA/REHABILITACION'))
 view(head(Hospitales))
 Privados<- read.csv('centros-de-salud-privados.csv',encoding = 'UTF-8')
 Privados <- Privados %>% select(lat,long,nombre,telefonos,barrio)
 view(head(Privados))
+
 
 #DF Estaciones de Tren
 df_trenes= read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/estaciones-de-ferrocarril.csv',encoding = 'UTF-8', stringsAsFactors = F)
@@ -252,18 +266,6 @@ df_sentidoB_junio19 = na.omit(df_accesos2019) %>%
 
 #Visualización
 
-  #Addons para visualización
-icon.fa <- makeAwesomeIcon(icon = 'flag', markerColor = 'red', library='fa', iconColor = 'black')
-pal <- colorBin("OrRd", domain = df$casos)
-pal2 <- colorBin("YlOrRd", domain = df$Casos7_5)
-
-  #Iconos
-transitoiconos <- iconList(
-  tren = makeIcon("trenes.png", 18, 18)
-  #subte = makeIcon("danger-24.png", "danger-24@2x.png", 24, 24)
-)
-
-
   #Concurrencia subte
 
 ggplot(data = molinetes, aes(x=desde,y=estacion,size=total,color=total))+
@@ -300,20 +302,42 @@ ggplot(data = molinetes2019, aes(x=desde,y=estacion,size=total/30,color=total/30
        x = 'Horarios de ingreso al molinete',
        y = 'Total de personas')
 
+view(df_sentidoB_junio19$promedioMes[1]/1000)
+view(df_sentidoA_junio19$promedioMes/1000)
 
-  #Mapa
+  #Mapas
+
+#Addons para visualización
+icon.fa <- makeAwesomeIcon(icon = 'flag', markerColor = 'red', library='fa', iconColor = 'black')
+pal <- colorBin("OrRd", domain = df$casos)
+pal2 <- colorBin("YlOrRd", domain = df$Casos7_5)
+
+#Iconos
+iconos <- iconList(
+  tren = makeIcon("trenes.png", 18, 18),
+  subte = makeIcon("metro.png", 18, 18),
+  farmacias = makeIcon('farmacia.png',16, 16),
+  cajeros = makeIcon('atm.png', 16, 16)
+)
+
     # Salud
+farmaciaslabels <- sprintf(
+  "<strong>Farmacia</strong><br>%s %g<br/>%s",
+  df_far$calle, df_far$altura, df_far$CP
+) %>% lapply(htmltools::HTML)
+
 leaflet(data = df) %>%
   addTiles() %>%
-  #addProviderTiles(provider = 'CartoDB.Positron') %>%
-  
-  addPolygons(label = ~casos,
-              fillColor = ~pal(casos),
+  addProviderTiles('CartoDB.Positron',
+                   group = 'Cartografía Limpia') %>% 
+  addPolygons(label = barrioslabels,
+              fillColor = ~pal2(Casos7_5),
               color = "#444444",
               weight = 1,
               smoothFactor = 0.5,
               opacity = 1.0,
               fillOpacity = 0.5,
+              group = 'Casos por Barrio',
               highlightOptions = highlightOptions(color = "white",
                                                   weight = 2,
                                                   bringToFront = F)
@@ -323,19 +347,40 @@ leaflet(data = df) %>%
                    clusterOptions = markerClusterOptions(),
                    radius = 18,
                    color = 'blue',
-                   label = Hospitales$nombre
-  ) %>%
+                   label = Hospitales$nombre,
+                   group = 'Hospitales'
+                   ) %>%
   addCircleMarkers(lng = Privados$long,
                    lat = Privados$lat,
                    clusterOptions = markerClusterOptions(),
                    radius = 12,
                    color = 'red',
-                   label = Privados$nombre) %>% 
-  addMarkers(lng = subte$lng,
-             lat = subte$lat,
-             icon = icon.fa,
-             label = subte$ESTACION
+                   label = Privados$nombre,
+                   group = 'Clínicas Privadas'
+                   ) %>% 
+# A las farmacias habría que filtrarlas porque son muchas, y cargan el mapa (y no se ven)
+  
+  addMarkers(lng = ~df_far$long,
+             lat = ~df_far$lat,
+             label = farmaciaslabels,
+             icon = iconos$farmacias,
+             group = 'Farmacias'
+             ) %>% 
+#  addMarkers(lng = df_far$long,
+#             lat = df_far$lat,
+#             icon = iconos$farmacias) %>% 
+  addLayersControl(
+    overlayGroups = c('Hospitales','Clínicas Privadas','Farmacias','Casos por Barrio','Cartografía Limpia'),
+    options = layersControlOptions(collapsed = FALSE)
+  ) %>% 
+  
+  addLegend(pal = pal2,
+            values = ~df$Casos7_5,
+            opacity = 0.7,
+            position = 'bottomright',
+            title = 'Cantidad de casos:'
   )
+
 
     # Tránsito
 
@@ -349,16 +394,23 @@ estacioneslabels <- sprintf(
   dfgeneral$ESTACION, dfgeneral$horario, dfgeneral$total
 ) %>% lapply(htmltools::HTML)
 
+estacionestrenlabels <- sprintf(
+  "<strong>Estación: %s</strong><br/><strong>Línea: </strong>%s<br/><strong>Ramal: </strong>%s",
+  df_trenescaba$nombre, df_trenescaba$linea, df_trenescaba$ramal
+) %>% lapply(htmltools::HTML)
+
 leaflet(data = df) %>%
   addTiles() %>%
-  addProviderTiles('CartoDB.Positron') %>% 
+  addProviderTiles('CartoDB.Positron',
+                   group = 'Cartografía Limpia') %>% 
   addPolygons(label = barrioslabels,
               fillColor = ~pal2(Casos7_5),
               color = "#444444",
               weight = 1,
               smoothFactor = 0.5,
               opacity = 1.0,
-              fillOpacity = 0.25,
+              fillOpacity = 0.38,
+              group = 'Casos por Barrio',
               highlightOptions = highlightOptions(color = "white",
                                                   weight = 2,
                                                   bringToFront = F)
@@ -367,6 +419,8 @@ leaflet(data = df) %>%
              lat = dfgeneral$lat,
              radius = dfgeneral$total/400,
              color = 'red',
+             icons(iconos$subte),
+             group = 'Estaciones de subte',
              label = estacioneslabels
              ) %>% 
   addCircleMarkers(lng = df_sentidoA_junio19$long,
@@ -385,21 +439,23 @@ leaflet(data = df) %>%
                    popup = paste0("<b>Acceso: </b>",df_sentidoB_junio19$disp_nombre, "<br>",
                                   "<b>Sentido: </b>",df_sentidoB_junio19$seccion_sentido, "<br>",
                                   "<b>Cant: </b>",df_sentidoB_junio19$promedioMes),
-                   radius= df_sentidoB_junio19$promedioMes[1]/1000,
+                   radius= df_sentidoB_junio19$promedioMes/1000, #Tenía el [1]
                    color = "blue",
                    group = "Autopistas: Salida de CABA") %>%
   addMarkers(lng = ~ df_trenescaba$long,
              lat = ~ df_trenescaba$lat,
-             icon = ~transitoiconos,
-             popup = ~ htmlEscape(paste('Línea:',df_trenescaba$linea,' Estación:',df_trenescaba$nombre))) %>% 
+             icon = iconos$tren,
+             group = 'Estaciones de tren',
+             label = estacionestrenlabels
+             #popup = ~ htmlEscape(paste('Línea:',df_trenescaba$linea,' Estación:',df_trenescaba$nombre))) %>% 
 #  addCircles(lng =  ~ df_trenescaba$long,
 #             lat = ~ df_trenescaba$lat,
 #             color ="purple",
 #             radius = 110,
 #             weight = 10) %>% 
-  
+             ) %>% 
   addLayersControl(
-    overlayGroups = c("Autopistas: Acceso a CABA", "Autopistas: Salida de CABA"),
+    overlayGroups = c("Autopistas: Acceso a CABA", "Autopistas: Salida de CABA",'Casos por Barrio','Estaciones de tren','Estaciones de subte','Cartografía Limpia'),
     options = layersControlOptions(collapsed = FALSE)
     ) %>% 
 
