@@ -182,7 +182,6 @@ df_accesos_40=data.frame()
 df_accesos_40 = df_mapAccesos[ (as.Date(today) - as.Date(df_mapAccesos$fecha))<=40,] #solo me quedo con las filas que cumplen la condicion.
 
 
-
 #Mezclas de DF
 
   #2019  # Revisar, no quedó agrupado
@@ -204,13 +203,14 @@ view(dfmapa2019)
 
 # Mezcla barrios con estaciones
 
+view(molinetesmapa)
 view(dfmapa)
 view(subte)
 dfgeneral <- merge(molinetesmapa,subte,by = 'ESTACION')
 dfgeneral <- dfgeneral %>% select(c(-ID,-geometry)) %>% 
   arrange(desc(total))
 view(dfgeneral)
-# dfgeneral <- merge con ubiación geográfica
+
 
 #   Limpieza DF y Environment
 
@@ -254,8 +254,8 @@ df_sentidoB_junio19 = na.omit(df_accesos2019) %>%
 
   #Addons para visualización
 icon.fa <- makeAwesomeIcon(icon = 'flag', markerColor = 'red', library='fa', iconColor = 'black')
-pal <- colorBin("OrRd", domain = dfnew$casos)
-pal2 <- colorBin("YlOrRd", domain = dfnew$Casos7_5)
+pal <- colorBin("OrRd", domain = df$casos)
+pal2 <- colorBin("YlOrRd", domain = df$Casos7_5)
 
   #Iconos
 transitoiconos <- iconList(
@@ -278,7 +278,7 @@ ggplot(data = molinetes, aes(x=desde,y=estacion,size=total,color=total))+
   )+
   theme_bw()
 
-ggplot(data = molinetesmapa, aes(x=desde,y=estacion,size=total,color=total))+
+ggplot(data = molinetesmapa, aes(x=desde,y=ESTACION,size=total,color=total))+
   geom_jitter()+
   scale_size_continuous(limits=c(250, 7000), breaks=seq(500, 10000, by=500))+
   scale_color_continuous(limits=c(250, 7000), breaks=seq(500, 10000, by=500))+
@@ -303,7 +303,7 @@ ggplot(data = molinetes2019, aes(x=desde,y=estacion,size=total/30,color=total/30
 
   #Mapa
     # Salud
-leaflet(data = dfnew) %>%
+leaflet(data = df) %>%
   addTiles() %>%
   #addProviderTiles(provider = 'CartoDB.Positron') %>%
   
@@ -341,7 +341,7 @@ leaflet(data = dfnew) %>%
 
 barrioslabels <- sprintf(
   "<strong>%s</strong><br/>%g casos",
-  dfnew$Barrio, dfnew$Casos7_5
+  df$Barrio, df$Casos7_5
 ) %>% lapply(htmltools::HTML)
 
 estacioneslabels <- sprintf(
@@ -349,7 +349,7 @@ estacioneslabels <- sprintf(
   dfgeneral$ESTACION, dfgeneral$horario, dfgeneral$total
 ) %>% lapply(htmltools::HTML)
 
-leaflet(data = dfnew) %>%
+leaflet(data = df) %>%
   addTiles() %>%
   addProviderTiles('CartoDB.Positron') %>% 
   addPolygons(label = barrioslabels,
@@ -404,7 +404,7 @@ leaflet(data = dfnew) %>%
     ) %>% 
 
   addLegend(pal = pal2,
-            values = ~dfnew$Casos7_5,
+            values = ~df$Casos7_5,
             opacity = 0.7,
             position = 'bottomright',
             title = 'Cantidad de casos:'
