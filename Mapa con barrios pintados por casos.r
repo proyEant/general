@@ -155,6 +155,22 @@ df_trenescaba= df_trenes%>%
 view(df_trenescaba)
 rm(df_trenes)
 
+#DF Cajeros Automáticos
+
+df_cajeros= read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/cajeros-automaticos.csv',encoding = 'UTF-8', stringsAsFactors = F)
+df_cajeros <- df_cajeros %>% select(banco,red,lat,long,ubicacion,barrio)
+df_cajeros <- df_cajeros %>% rename(
+  'Barrio' = barrio)
+
+  addCircles(lng =  ~ df_cajeros$long,
+             lat = ~ df_cajeros$lat,
+             color ="purple",
+             radius = 35,
+             weight = 6)
+
+view(df_cajeros)
+
+
 # Merge DF con barrios, estaciones de subte y tren, y cantidades en horario matutino y vespertino
 # 2020
 
@@ -320,7 +336,7 @@ iconos <- iconList(
   cajeros = makeIcon('atm.png', 16, 16)
 )
 
-    # Salud
+    # Salud (y Cajeros)
 farmaciaslabels <- sprintf(
   "<strong>Farmacia</strong><br>%s %g<br/>%s",
   df_far$calle, df_far$altura, df_far$CP
@@ -342,35 +358,45 @@ leaflet(data = df) %>%
                                                   weight = 2,
                                                   bringToFront = F)
   ) %>% 
-  addCircleMarkers(lng = Hospitales$long,
+  addCircles(lng = Hospitales$long,
                    lat = Hospitales$lat,
-                   clusterOptions = markerClusterOptions(),
-                   radius = 18,
+                   #clusterOptions = markerClusterOptions(),
+                   radius = 600,
                    color = 'blue',
                    label = Hospitales$nombre,
                    group = 'Hospitales'
                    ) %>%
-  addCircleMarkers(lng = Privados$long,
+  addCircles(lng = Privados$long,
                    lat = Privados$lat,
-                   clusterOptions = markerClusterOptions(),
-                   radius = 12,
+                   #clusterOptions = markerClusterOptions(),
+                   radius = 300,
                    color = 'red',
                    label = Privados$nombre,
                    group = 'Clínicas Privadas'
                    ) %>% 
-# A las farmacias habría que filtrarlas porque son muchas, y cargan el mapa (y no se ven)
+  addCircleMarkers(lng =  ~ df_cajeros$long,
+             lat = ~ df_cajeros$lat,
+             color = 'black',  #"purple",
+             radius = 2,
+             weight = 4,
+             label =paste0(df_cajeros$banco,'. Red: ',df_cajeros$red),
+             group = 'Cajeros') %>% 
+# A las farmacias habría que filtrarlas porque son muchas
   
-  addMarkers(lng = ~df_far$long,
-             lat = ~df_far$lat,
+  addCircleMarkers(lng = ~ df_far$long,
+             lat = ~ df_far$lat,
              label = farmaciaslabels,
-             icon = iconos$farmacias,
+             #icon = iconos$farmacias,
+             color = 'green',
+             radius = 2,
+             weight = 4,
              group = 'Farmacias'
              ) %>% 
 #  addMarkers(lng = df_far$long,
 #             lat = df_far$lat,
 #             icon = iconos$farmacias) %>% 
   addLayersControl(
-    overlayGroups = c('Hospitales','Clínicas Privadas','Farmacias','Casos por Barrio','Cartografía Limpia'),
+    overlayGroups = c('Hospitales','Clínicas Privadas','Farmacias','Cajeros','Casos por Barrio','Cartografía Limpia'),
     options = layersControlOptions(collapsed = FALSE)
   ) %>% 
   
