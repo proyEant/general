@@ -11,6 +11,37 @@ df$Barrio <- df$Barrio %>% toupper()
 df$Barrio[df$Barrio=='VILLA PUYERREDON'] <- 'VILLA PUEYRREDON'
 df$Barrio[df$Barrio=='VILLA GRAL MITE'] <- 'VILLA GRAL MITRE'
 
+df$densidad_casos <-NULL  #df$casos/df$area*100000
+
+view(df)
+
+
+#DF Censo Radial 2010
+
+densidad_casos <- st_read("http://cdn.buenosaires.gob.ar/datosabiertos/datasets/informacion-censal-por-radio/CABA_rc.geojson")
+densidad_casos$BARRIO <- as.character(densidad_casos$BARRIO)
+densidad_casos$geometry <- NULL
+densidad_casos <- densidad_casos %>% select(-c(RADIO_ID,HOGARES_NBI))
+densidad_casos <- densidad_casos %>% rename(
+  'Barrio' = BARRIO)
+densidad_casos <- densidad_casos %>% group_by(Barrio) %>% 
+  summarise(Poblacion = sum(POBLACION), Area_km2 = sum(AREA_KM2), Viviendas = sum(VIVIENDAS))
+densidad_casos$Densidad_pob <- round(densidad_casos$Poblacion/densidad_casos$Area_km2)
+densidad_casos$Prom_viv <- densidad_casos$Poblacion/densidad_casos$Viviendas
+densidad_casos <- merge(densidad_casos,df)
+densidad_casos <- cbind(densidad_casos[1:7],'casos7_5' = densidad_casos$Casos7_5)
+densidad_casos$Densidad_casos <- round(densidad_casos$casos7_5/densidad_casos$Area_km2)
+view(densidad_casos)
+
+#Generación de DF para densidad
+
+
+
+view(densidad_casos)
+
+
+#DF Barrios y limpieza
+
 dfcabanew$Barrio <- toupper(dfcabanew$Barrio)
 names(dfcabanew) = c('Comunas','Barrio','Casos7_5')
 dfcabanew <- dfcabanew %>% drop_na() %>% select(-Comunas)
@@ -57,6 +88,13 @@ df_far <- df_far %>% select(calle_nombre,calle_altura,lat,long,barrio,comuna,cod
 df_far$barrio <- toupper(df_far$barrio)
 names(df_far) = c('calle','altura','lat','long','Barrio','comuna','CP')
 view(df_far)
+
+
+#DF Vacunatorios
+
+df_vacunatorios= read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/vacunatorios-adultos-mayores.csv',encoding = 'UTF-8', stringsAsFactors = F)
+view(df_vacunatorios)
+
 
 #DF Molinetes y limpieza
 
@@ -255,3 +293,8 @@ df_sentidoB_junio19 = na.omit(df_accesos2019) %>%
   filter(fecha>='2019-06-01' && fecha<='2019-06-30', seccion_sentido == 'B' ) %>% 
   group_by(autopista_nombre, disp_nombre, seccion_sentido, lat, long) %>% 
   summarise(promedioMes = round(sum(totalDia)/30))
+
+
+# Armado de DF con densidad de casos por barrio
+
+view(df)

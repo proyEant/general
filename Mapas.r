@@ -1,19 +1,21 @@
 #Mapas
 
 #Addons para visualización
-icon.fa <- makeAwesomeIcon(icon = 'flag', markerColor = 'red', library='fa', iconColor = 'black')
+TilesBA <- 'https://servicios.usig.buenosaires.gob.ar/mapcache/tms/1.0.0/amba_con_transporte_3857@GoogleMapsCompatible/{z}/{x}/{-y}.png'
 pal <- colorBin("OrRd", domain = df$casos)
 pal2 <- colorBin("YlOrRd", domain = df$Casos7_5)
+pal3 <- colorBin("OrRd", domain = censo10$densidad)
 
 #Iconos
 iconos <- iconList(
   tren = makeIcon("trenes.png", 18, 18),
   subte = makeIcon("metro.png", 18, 18),
   farmacias = makeIcon('farmacia.png',16, 16),
-  cajeros = makeIcon('atm.png', 16, 16)
+  cajeros = makeIcon('atm.png', 16, 16),
+  vacunatorios = makeIcon('vacunatorios.png', 15, 15)
 )
 
-# Salud (y Cajeros)
+# Salud (con Vacunatorios y Cajeros)
 farmaciaslabels <- sprintf(
   "<strong>Farmacia</strong><br>%s %g<br/>%s",
   df_far$calle, df_far$altura, df_far$CP
@@ -50,14 +52,21 @@ leaflet(data = df) %>%
              color = 'red',
              label = Privados$nombre,
              group = 'Clínicas Privadas'
-  ) %>% 
+             ) %>% 
   addCircleMarkers(lng =  ~ df_cajeros$long,
                    lat = ~ df_cajeros$lat,
                    color = 'black',  #"purple",
                    radius = 2,
                    weight = 4,
                    label =paste0(df_cajeros$banco,'. Red: ',df_cajeros$red),
-                   group = 'Cajeros') %>% 
+                   group = 'Cajeros'
+                   ) %>% 
+  addMarkers(lng = ~ df_vacunatorios$long,
+             lat = ~ df_vacunatorios$lat,
+             label = df_vacunatorios$tipo,
+             icon = iconos$vacunatorios,
+             group = 'Vacunatorios'
+             ) %>% 
   # A las farmacias habría que filtrarlas porque son muchas
   
   addCircleMarkers(lng = ~ df_far$long,
@@ -68,12 +77,12 @@ leaflet(data = df) %>%
                    radius = 2,
                    weight = 4,
                    group = 'Farmacias'
-  ) %>% 
+                   ) %>% 
   #  addMarkers(lng = df_far$long,
   #             lat = df_far$lat,
   #             icon = iconos$farmacias) %>% 
   addLayersControl(
-    overlayGroups = c('Hospitales','Clínicas Privadas','Farmacias','Cajeros','Casos por Barrio','Cartografía Limpia'),
+    overlayGroups = c('Hospitales','Clínicas Privadas','Farmacias','Vacunatorios','Cajeros','Casos por Barrio','Cartografía Limpia'),
     options = layersControlOptions(collapsed = FALSE)
   ) %>% 
   
@@ -82,7 +91,7 @@ leaflet(data = df) %>%
             opacity = 0.7,
             position = 'bottomright',
             title = 'Cantidad de casos:'
-  )
+            )
 
 
 # Tránsito
@@ -103,16 +112,16 @@ estacionestrenlabels <- sprintf(
 ) %>% lapply(htmltools::HTML)
 
 leaflet(data = df) %>%
-  addTiles() %>%
-  addProviderTiles('CartoDB.Positron',
-                   group = 'Cartografía Limpia') %>% 
+  addTiles(urlTemplate = TilesBA) %>% 
+  #addProviderTiles('CartoDB.Positron',
+  #                 group = 'Cartografía Limpia') %>% 
   addPolygons(label = barrioslabels,
               fillColor = ~pal2(Casos7_5),
               color = "#444444",
               weight = 1,
               smoothFactor = 0.5,
               opacity = 1.0,
-              fillOpacity = 0.38,
+              fillOpacity = 0.42,
               group = 'Casos por Barrio',
               highlightOptions = highlightOptions(color = "white",
                                                   weight = 2,
@@ -158,7 +167,7 @@ leaflet(data = df) %>%
              #             weight = 10) %>% 
   ) %>% 
   addLayersControl(
-    overlayGroups = c("Autopistas: Acceso a CABA", "Autopistas: Salida de CABA",'Casos por Barrio','Estaciones de tren','Estaciones de subte','Cartografía Limpia'),
+    overlayGroups = c("Autopistas: Acceso a CABA", "Autopistas: Salida de CABA",'Casos por Barrio','Estaciones de tren','Estaciones de subte'),
     options = layersControlOptions(collapsed = FALSE)
   ) %>% 
   
@@ -177,9 +186,9 @@ leaflet(data = df) %>%
 # Mapa de calor de barrios infectados (no tiene utilidad)
 
 leaflet(data = df) %>%
-  addTiles() %>%
-  addProviderTiles('CartoDB.Positron',
-                   group = 'Cartografía Limpia') %>% 
+  addTiles(urlTemplate = TilesBA) %>%
+  #addProviderTiles('CartoDB.Positron',
+                   #group = 'Cartografía Limpia') %>% 
   addPolygons(label = barrioslabels,
               fillColor = ~pal2(Casos7_5),
               color = "#444444",
@@ -205,6 +214,30 @@ leaflet(data = df) %>%
     overlayGroups = c('Casos por Barrio','Cartografía Limpia'),
     options = layersControlOptions(collapsed = FALSE)
   ) 
+
+
+# Densidad poblacional (requiere el df limpio sin quitar columnas)
+
+leaflet(data = censo10) %>%
+  addTiles(urlTemplate = TilesBA) %>%
+  addPolygons(#label =censo10$BARRIO,
+    fillColor = ~pal3(densidad),
+    color = "#444444",
+    weight = 1,
+    smoothFactor = 0.5,
+    opacity = 1.0,
+    fillOpacity = 0.75,
+    label = ~densidad,
+    #group = 'Casos por Barrio',
+    highlightOptions = highlightOptions(color = "white",
+                                        weight = 2,
+                                        bringToFront = F)) %>% 
+  addLegend(pal = pal3,
+            values = ~densidad,
+            opacity = 0.7,
+            position = 'bottomright',
+            title = 'Cantidad de habitantes:'
+  )
 
 
 #En caso de utilizar ggplot para armar los barrios:
