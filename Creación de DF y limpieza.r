@@ -16,7 +16,13 @@ df$densidad_casos <-NULL  #df$casos/df$area*100000
 view(df)
 
 
-#DF Censo Radial 2010
+#DF Fallecidos
+
+df_fallecidos <- read_xlsx('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/Fallecidos.xlsx')
+view(df_fallecidos)
+
+
+#DF Censo Radial 2010 - Densidad
 
 densidad_casos <- st_read("http://cdn.buenosaires.gob.ar/datosabiertos/datasets/informacion-censal-por-radio/CABA_rc.geojson")
 densidad_casos$BARRIO <- as.character(densidad_casos$BARRIO)
@@ -31,12 +37,6 @@ densidad_casos$Prom_viv <- densidad_casos$Poblacion/densidad_casos$Viviendas
 densidad_casos <- merge(densidad_casos,df)
 densidad_casos <- cbind(densidad_casos[1:7],'casos7_5' = densidad_casos$Casos7_5)
 densidad_casos$Densidad_casos <- round(densidad_casos$casos7_5/densidad_casos$Area_km2)
-view(densidad_casos)
-
-#Generación de DF para densidad
-
-
-
 view(densidad_casos)
 
 
