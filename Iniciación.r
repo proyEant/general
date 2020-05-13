@@ -1,0 +1,22 @@
+library(ggplot2)
+library(readr)
+library(tidyverse)
+library(readxl)
+library(dplyr)
+library(geojsonR)
+library(sf)
+library(leaflet)
+library(leaflet.extras)
+library(geojsonio)
+library(sp)
+library(viridis)
+library(htmltools)
+library(stringi)
+library(RCurl)
+library(googledrive)
+
+#Iniciación
+rm(list = ls())
+getwd()
+#GDrive <- 'https://drive.google.com/drive/folders/1iOd0UZsg8tqMql9wgUt9Mnxwg6XBZ1jN?usp=sharing'
+dir()
