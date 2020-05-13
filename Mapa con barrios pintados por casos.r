@@ -6,6 +6,7 @@ library(dplyr)
 library(geojsonR)
 library(sf)
 library(leaflet)
+library(leaflet.extras)
 library(geojsonio)
 library(sp)
 library(viridis)
@@ -496,7 +497,39 @@ leaflet(data = df) %>%
 
 # Las estaciones de subte y tren deben estar por día, considerando el total de pases por 1 día.
 
-?addMarkers
+
+    # Mapa de calor de barrios infectados (no tiene utilidad)
+
+leaflet(data = df) %>%
+  addTiles() %>%
+  addProviderTiles('CartoDB.Positron',
+                   group = 'Cartografía Limpia') %>% 
+  addPolygons(label = barrioslabels,
+              fillColor = ~pal2(Casos7_5),
+              color = "#444444",
+              weight = 1,
+              smoothFactor = 0.5,
+              opacity = 1.0,
+              fillOpacity = 0.3,
+              group = 'Casos por Barrio',
+              highlightOptions = highlightOptions(color = "black",
+                                                  weight = 2,
+                                                  bringToFront = F)
+  ) %>% 
+
+  addHeatmap(lng = ~df$lon, 
+             lat = ~df$lat, 
+             intensity = ~df$Casos7_5,
+             blur = 1, 
+             max = max(df$Casos7_5)
+             #radius = 20
+             ) %>% 
+
+  addLayersControl(
+    overlayGroups = c('Casos por Barrio','Cartografía Limpia'),
+    options = layersControlOptions(collapsed = FALSE)
+    ) 
+
 
   #En caso de utilizar ggplot para armar los barrios:
   #esta funcion guarda el mapa como jpg,  quizas nos sea util tenerla a mano
