@@ -19,6 +19,9 @@ view(df)
 #DF Fallecidos
 
 df_fallecidos <- read_xlsx('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/Fallecidos.xlsx')
+df_fallecidos=df_fallecidos %>% 
+  filter(provincia=="CABA")
+
 view(df_fallecidos)
 
 

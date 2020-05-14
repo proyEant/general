@@ -42,6 +42,15 @@ ggplot(data = molinetes2019, aes(x=desde,y=estacion,size=total/30,color=total/30
   theme(legend.position = 'bottom')
 
 
+# GRÁFICO FALLECIDOS POR GENERO
 
+df_fallecidos %>%
+  ggplot(aes(x=sexo,fill=sexo))+  
+  geom_bar(show.legend = F, color='black')+
+  coord_polar()+
+  labs(title='Fallecidos por Género')+
+  theme(plot.title = element_text(hjust=0.5))
+
+###
 view(df_sentidoB_junio19$promedioMes[1]/1000)
 view(df_sentidoA_junio19$promedioMes/1000)
