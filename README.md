@@ -1,4 +1,4 @@
-# Repositorio general de elementos para el proyecto final EANT-Data Analytics
+# Repositorio general de elementos para el proyecto presentación EANT - Data Analytics
 * Mapas generados
 * DS diversos
-* (otro contenido)
+* Fuentes
