@@ -16,7 +16,7 @@ df$Barrio[df$Barrio=='VILLA GRAL MITE'] <- 'VILLA GRAL MITRE'
 drive_download("casos_caba_7mayo.xlsx",overwrite = TRUE)
 dfcabanew<-read_xlsx('casos_caba_7mayo.xlsx')
 #dfcabanew <- read_xlsx('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/casos_caba_7mayo.xlsx')
-view(dfcabanew)
+#view(dfcabanew)
 
 #Se limpia el df y acomoda para futuro merge
 
@@ -30,7 +30,7 @@ dfcabanew$Barrio[dfcabanew$Barrio=='VILLA GENERAL MITRE'] <- 'VILLA GRAL MITRE'
 dfcabanew$Barrio[dfcabanew$Barrio=='MONTSERRAT'] <- 'MONSERRAT'
 dfcabanew$Barrio[dfcabanew$Barrio=='LA PATERNAL'] <- 'PATERNAL'
 dfcabanew$Barrio[dfcabanew$Barrio=='LA BOCA'] <- 'BOCA'
-view(dfcabanew)
+#view(dfcabanew)
 
 # Merge Casos nuevos con DF casos anterior
 
@@ -47,7 +47,7 @@ df_fallecidos<-read_xlsx('Fallecidos.xlsx')
 df_fallecidos=df_fallecidos %>% 
   filter(provincia=="CABA")
 
-view(df_fallecidos)
+#view(df_fallecidos)
 
 
 #DF Censo Radial 2010 - Densidad
@@ -65,7 +65,7 @@ densidad_casos$Prom_viv <- densidad_casos$Poblacion/densidad_casos$Viviendas
 densidad_casos <- merge(densidad_casos,df)
 densidad_casos <- cbind(densidad_casos[1:7],'casos7_5' = densidad_casos$Casos7_5)
 densidad_casos$Densidad_casos <- round(densidad_casos$casos7_5/densidad_casos$Area_km2)
-view(densidad_casos)
+#view(densidad_casos)
 
 
 #DF Barrios (mapeo geográfico)
@@ -75,14 +75,16 @@ barrios <- barrios %>% rename(
 barrios$Barrio <- as.character(barrios$Barrio)
 barrios$Barrio[barrios$Barrio=='VILLA GRAL. MITRE'] <- 'VILLA GRAL MITRE'
 
-view(barrios)
+#view(barrios)
 
 
 # Merge Barrios con casos
 df <- merge(barrios,df)
-view(df)
+    #Considerar borrar "barrios"
 
-unique(df$Barrio) #48 barrios
+#view(df)
+
+#unique(df$Barrio) #48 barrios
 
 # DF Fallecidos CABA (Falta)
 
@@ -94,7 +96,7 @@ df_far <-Leer_gDrive("https://drive.google.com/open?id=1mAwOj_HMrz-d37pH4GU-YMPy
 df_far <- df_far %>% select(calle_nombre,calle_altura,lat,long,barrio,comuna,codigo_postal_argentino)
 df_far$barrio <- toupper(df_far$barrio)
 names(df_far) = c('calle','altura','lat','long','Barrio','comuna','CP')
-view(df_far)
+#view(df_far)
 
 #df_far <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/farmacias.csv',stringsAsFactors = F, encoding = 'UTF-8')
 
@@ -102,13 +104,15 @@ view(df_far)
 
 df_vacunatorios <-Leer_gDrive("https://drive.google.com/open?id=1wh4swah6h-Y9rik2yJ7g8DcBkEsqU9X1",sep=",")
 #df_vacunatorios= read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/vacunatorios-adultos-mayores.csv',encoding = 'UTF-8', stringsAsFactors = F)
-view(df_vacunatorios)
+#view(df_vacunatorios)
 
 
 #DF Molinetes y limpieza
 
-subte_feb20 <-Leer_gDrive("https://drive.google.com/open?id=1fYluNN84P2mFcFGGLY3GI70utm-90Ie7",sep=",")
-#subte_feb20 <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general/molinetes.csv',stringsAsFactors = F, encoding = 'UTF-8')
+# Enlace de gDrive = "https://drive.google.com/open?id=1fYluNN84P2mFcFGGLY3GI70utm-90Ie7"
+#drive_download("molinetes.csv",overwrite = TRUE)
+#subte_feb20<-read.csv('molinetes.csv',stringsAsFactors = F, encoding = 'UTF-8')
+subte_feb20 <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general/molinetes.csv',stringsAsFactors = F, encoding = 'UTF-8')
 subte_feb20$fecha = as.Date(subte_feb20$fecha,'%Y-%m-%d')
 subte_feb20$estacion <- toupper(subte_feb20$estacion)
 subte_feb20$desde <- substring(subte_feb20$desde,1,2)
@@ -147,10 +151,10 @@ rm(filt_top_15)
 #  summarise('total'=sum(total)) %>% 
 #  arrange(desc(total)) 
 
-view(subte_gen_feb20 %>% filter(ESTACION=='CONSTITUCION'))
+#view(subte_gen_feb20 %>% filter(ESTACION=='CONSTITUCION'))
 
-summary(subte_gen_feb20)
-summary(molinetes2019)
+#summary(subte_gen_feb20)
+#summary(molinetes2019)
 
 # Máximos diarios de tránsito de personas en febrero 2020 (ejecutar luego de datos para gráfica de pasajeros)
 subte_feb20 <- subte_feb20 %>% select(desde,estacion,total,fecha) %>%
@@ -174,8 +178,8 @@ subte_feb20 <- subte_feb20 %>% filter(!horario == 'borrar') %>%
   group_by(ESTACION) %>%
   top_n(1,total)
 
-view(subte_feb20 %>%   arrange(desc(total)))
-view(dfgeneral)
+#view(subte_feb20 %>%   arrange(desc(total)))
+#view(dfgeneral)
 
   # Filtrado para que queden 30 estaciones top
 filt_top_30 <- subte_feb20 %>% group_by(ESTACION,dia,horario) %>% 
@@ -197,12 +201,16 @@ rm(filt_top_30)
 subte_feb20 <- merge(dfgeneral,subte_feb20,by='ESTACION') %>% 
   select(ESTACION,'horario'=horario.x,LINEA,lat,lng,dia,'total'=total.y) %>% 
   arrange(desc(total))
-view(subte_feb20)
+#view(subte_feb20)
 
 #DF Molinetes Junio 2019 y limpieza (Para evaluar el impacto de liberación de cuarentena)
 
-molinetes2019 <-Leer_gDrive("https://drive.google.com/open?",sep=",")
-#molinetes2019 <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general/molinetes122019.csv',stringsAsFactors = F, encoding = 'UTF-8')
+#molinetes2019 <-Leer_gDrive("https://drive.google.com/open?id=1j2AqTcKnuHyFXBTlSx9okk9S9vVhSOpK",sep=",")
+molinetes2019 <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general/molinetes122019.csv',stringsAsFactors = F, encoding = 'UTF-8')
+
+#drive_download("molinetes122019.csv",overwrite = TRUE)
+#molinetes2019<-read.csv('molinetes122019.csv',stringsAsFactors = F, encoding = 'UTF-8')
+
 molinetes2019$fecha = as.Date(molinetes2019$fecha,'%Y-%m-%d')
 molinetes2019$estacion <- toupper(molinetes2019$estacion)
 molinetes2019$desde <- substring(molinetes2019$desde,1,2)
@@ -212,12 +220,12 @@ molinetes2019 <- molinetes2019 %>% group_by(estacion,desde,fecha) %>%
 molinetes2019 <- molinetes2019 %>% filter(fecha > '2019-06-01' & fecha < '2019-06-30' & total>quantile(molinetes2019$total,0.85))
 molinetes2019$desde <- as.numeric(molinetes2019$desde)
 #molinetes2019feb$desde <- as.numeric(molinetes2019feb$desde)
-view(molinetes2019)
+#view(molinetes2019)
 
 #DF Estaciones Subte
 
 subte <- st_read('http://cdn.buenosaires.gob.ar/datosabiertos/datasets/subte-estaciones/subte_estaciones.geojson')
-view(subte)
+#view(subte)
 
 #DF Hospitales y clínicas privadas
 
@@ -225,11 +233,11 @@ Hospitales <-Leer_gDrive("https://drive.google.com/open?id=1nKXotqOrhg3IDewhLM9O
 #Hospitales<- read.csv('hospitales.csv',encoding = 'UTF-8')
 Hospitales <- Hospitales %>% select(barrio, lat, long, nombre, comuna, calle_nombre, telefono,calle_altura, tipo_espec) %>% 
   filter(!tipo_espec %in% c('SALUD MENTAL','MED. FISICA/REHABILITACION'))
-view(head(Hospitales))
+#view(head(Hospitales))
 Privados <-Leer_gDrive("https://drive.google.com/open?id=1OJ9QLniLAG5h1WIntOI5wlBlCrALt3ku",sep=",")
 Privados<- read.csv('centros-de-salud-privados.csv',encoding = 'UTF-8')
 Privados <- Privados %>% select(lat,long,nombre,telefonos,barrio)
-view(head(Privados))
+#view(head(Privados))
 
 
 #DF Estaciones de Tren
@@ -241,7 +249,7 @@ df_trenescaba= df_trenes%>%
   select(long,lat,nombre,linea,ramal,barrio,comuna) %>% 
   filter(comuna %in% c('Comuna 14','Comuna 13','Comuna 12', 'Comuna 11', 'Comuna 10', 'Comuna 9','Comuna 8', 'Comuna 7','Comuna 6', 'Comuna 5','Comuna 4', 'Comuna 3','Comuna 2', 'Comuna 1','Comuna 15'))
 
-view(df_trenescaba)
+#view(df_trenescaba)
 rm(df_trenes)
 
 #DF Cajeros Automáticos
@@ -252,36 +260,15 @@ df_cajeros <- df_cajeros %>% select(banco,red,lat,long,ubicacion,barrio)
 df_cajeros <- df_cajeros %>% rename(
   'Barrio' = barrio)
 
-addCircles(lng =  ~ df_cajeros$long,
-           lat = ~ df_cajeros$lat,
-           color ="purple",
-           radius = 35,
-           weight = 6)
 
-view(df_cajeros)
+#view(df_cajeros)
 
 
 # Merge DF con barrios, estaciones de subte y tren, y cantidades en horario matutino y vespertino
-# 2020
 
-dfmapa <- molinetes
-dfmapa <- dfmapa %>% 
-  mutate('horario'=
-           case_when(desde >= 16 & desde <= 20 ~ 'vespertino',
-                     desde >= 06 & desde <= 10 ~ 'matutino',
-                     TRUE ~ 'borrar')
-  )
-view(dfmapa)
-dfmapa <- dfmapa %>% group_by(estacion,horario) %>% 
-  select(-desde) %>%
-  filter(!horario=='borrar') %>%
-  summarise(sum(total))
-names(dfmapa) = c('estacion','horario','total')
-dfmapa <- dfmapa %>% arrange(desc(total))
-names(dfmapa) = c('ESTACION','horario','total')
 
-view(dfmapa)
-rm(molinetes)
+
+
 
 #DF Tráfico Vehicular
 
@@ -308,7 +295,7 @@ df_accesos_40 = df_mapAccesos[ (as.Date(today) - as.Date(df_mapAccesos$fecha))<=
 #Mezclas de DF
 
 #2019  # Revisar, no quedó agrupado
-view(dfmapa)
+#view(dfmapa)
 dfmapa2019 <- molinetes2019
 dfmapa2019 <- dfmapa2019 %>% 
   mutate('horario'=
@@ -322,7 +309,7 @@ dfmapa2019 <- dfmapa2019 %>% group_by(estacion,fecha,horario) %>%
   filter(!horario=='borrar') %>%
   summarise(sum(total))
 names(dfmapa2019) = c('ESTACION','fecha','horario','total')
-view(dfmapa2019)
+#view(dfmapa2019)
 
 # Mezcla barrios con estaciones
 
@@ -332,7 +319,7 @@ view(subte)
 dfgeneral <- merge(molinetesmapa,subte,by = 'ESTACION')
 dfgeneral <- dfgeneral %>% select(c(-ID,-geometry)) %>% 
   arrange(desc(total))
-view(dfgeneral)
+#view(dfgeneral)
 
 
 #   Limpieza DF y Environment
@@ -347,7 +334,7 @@ subte_xy <- as.data.frame(subte_xy)
 subte <- mutate(subte,'lat'=subte_xy$Y,'lng'=subte_xy$X)
 
 rm(subte_xy)
-view(subte)
+#view(subte)
 
 
 ######## CODIGO MAPA PROMEDIO ACCESO PARA JUNIO 2019 SENTIDO A Y B################
@@ -374,4 +361,4 @@ df_sentidoB_junio19 = na.omit(df_accesos2019) %>%
 
 # Armado de DF con densidad de casos por barrio
 
-view(df)
+#view(df)

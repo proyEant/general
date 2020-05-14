@@ -16,6 +16,7 @@ library(RCurl)
 library(googledrive)
 library(plotly)
 library(purrr)
+library(gsheet)
 
 
 #Iniciación
