@@ -15,6 +15,7 @@ library(stringi)
 library(RCurl)
 library(googledrive)
 library(plotly)
+library(purrr)
 
 #Iniciación
 rm(list = ls())
@@ -23,5 +24,13 @@ getwd()
 TilesBA <- 'https://servicios.usig.buenosaires.gob.ar/mapcache/tms/1.0.0/amba_con_transporte_3857@GoogleMapsCompatible/{z}/{x}/{-y}.png'
 dir()
 
-leaflet() %>% 
-  addTiles(urlTemplate = TilesBA)
+# Función para leer archivos de Google Drive
+Leer_gDrive<-function(link_drive,sep=",",dec=".") {
+  require(data.table)
+  id<-strsplit(link_drive,"id=")[[1]][2]
+  return(fread(sprintf("https://docs.google.com/uc?id=%s&export=download", id),
+               sep=sep,dec=dec,encoding = 'UTF-8',stringsAsFactors = F,integer64 = "character"))
+}
+
+# Puede requerir autenticación
+#      googledrive::drive_auth()
