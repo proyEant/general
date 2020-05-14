@@ -98,42 +98,77 @@ view(df_vacunatorios)
 
 #DF Molinetes y limpieza
 
-molinetes <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general/molinetes.csv',stringsAsFactors = F, encoding = 'UTF-8')
-molinetes$fecha = as.Date(molinetes$fecha,'%Y-%m-%d')
-molinetes$estacion <- toupper(molinetes$estacion)
-#molinetes$desde <- substring(molinetes$desde,1,5)
-molinetes$desde <- substring(molinetes$desde,1,2)
-molinetes$desde <- as.numeric(molinetes$desde)
-molinetes <- molinetes %>% filter(fecha > '2020-02-01' & fecha < '2020-02-29')
-molinetes <- molinetes %>% select(desde,estacion,total)
-molinetes <- molinetes %>% group_by(estacion,desde) %>% 
-  summarise(total = sum(total))
-#molinetes <- molinetes %>% filter(fecha > '2020-02-01' & fecha < '2020-02-29' & desde >= 5 & desde <= 21 & total>quantile(molinetes$total,0.95))
-molinetes <- molinetes %>% filter(desde >= 5 & desde <= 21 & total>quantile(molinetes$total,0.85))
-molinetes$total <- round(molinetes$total/29)
+subte_feb20 <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general/molinetes.csv',stringsAsFactors = F, encoding = 'UTF-8')
+subte_feb20$fecha = as.Date(subte_feb20$fecha,'%Y-%m-%d')
+subte_feb20$estacion <- toupper(subte_feb20$estacion)
+subte_feb20$desde <- substring(subte_feb20$desde,1,2)
+subte_feb20$desde <- as.numeric(subte_feb20$desde)
+subte_feb20 <- subte_feb20 %>% filter(fecha > '2020-02-01' & fecha < '2020-02-29')
 
-unique(molinetes$estacion) #66
-view(molinetes)
+# Datos para gráfica de pasajeros
+
+subte_gen_feb20 <- subte_feb20
+subte_gen_feb20 <- subte_gen_feb20 %>% select(desde,estacion,fecha,linea,total) %>% 
+  filter (desde >= 5 & desde <= 21 & total > quantile(total,0.8) # & fecha == '2020-02-11' 
+          ) %>% 
+  group_by()
+names(subte_gen_feb20) = c('desde','ESTACION','fecha','linea','total')
+
+filt_top_15 <- subte_gen_feb20 %>% group_by(ESTACION,desde) %>% 
+  summarise('total' = sum(total)) %>% 
+  group_by(ESTACION) %>% 
+  top_n(1,total) %>% 
+  arrange(desc(total)) %>% 
+  head(15) %>% 
+  select(ESTACION)
+
+#view(filt_top_15)  
+
+subte_gen_feb20 <- subte_gen_feb20 %>% filter(ESTACION %in% filt_top_15$ESTACION) %>% 
+  group_by(desde,ESTACION,fecha) %>% 
+  summarise('total'=sum(total))
+rm(filt_top_15)
 
 
-# Máximos diarios (promedio mensual) de tránsito de personas en febrero 2020  ## VER SI SIRVE PROMEDIO##
-molinetesmapa<- molinetes %>% group_by(estacion) %>% top_n(1,total) %>% arrange(desc(total))
+#view(head(subte_gen_feb20))
 
-molinetesmapa <- molinetesmapa %>% 
+# Se verifica que el 11 de febrero se da el pico de tránsito
+#subte_gen_feb20 %>% group_by(fecha) %>% 
+#  summarise('total'=sum(total)) %>% 
+#  arrange(desc(total)) 
+
+view(subte_gen_feb20 %>% filter(ESTACION=='CONSTITUCION'))
+
+summary(subte_gen_feb20)
+summary(molinetes2019)
+
+# Máximos diarios de tránsito de personas en febrero 2020 (ejecutar luego de datos para gráfica de pasajeros)
+subte_feb20$desde <- substring(subte_feb20$desde,1,5)
+subte_feb20 <- subte_feb20 %>% select(desde,estacion,total,fecha) %>%
+  group_by(estacion,desde,fecha) %>%
+  summarise(total = sum(total)) %>%
+  filter(desde >= 5 & desde <= 21)
+subte_feb20$dia <- weekdays(subte_feb20$fecha)
+subte_feb20$fecha <- NULL
+subte_feb20 <- subte_feb20 %>% group_by(estacion,desde,dia) %>% 
+  top_n(1,c(total))
+subte_feb20 <- subte_feb20 %>% 
   mutate('horario'=
            case_when(desde >= 16 & desde <= 21 ~ 'vespertino',
                      desde >= 05 & desde <= 12 ~ 'matutino',
                      TRUE ~ 'borrar')
-  )
+         )
+subte_feb20$desde <- NULL
+subte_feb20<- subte_feb20 %>% group_by(estacion,horario,dia) %>% top_n(1,total) %>% arrange(desc(total))
+names(subte_feb20) = c('ESTACION','total','dia','horario')
+subte_feb20 <- subte_feb20 %>% filter(!horario == 'borrar') %>% 
+  group_by(ESTACION) %>%
+  top_n(1,total)
 
-molinetesmapa<- molinetesmapa %>% group_by(estacion,horario) %>% top_n(1,total) %>% arrange(desc(total))
-names(molinetesmapa) = c('ESTACION','desde','total','horario')
-molinetesmapa <- molinetesmapa %>% filter(!horario == 'borrar')
-view(molinetesmapa)
+view(subte_feb20)
+# Faltaría filtrado para que queden 20 estaciones top
 
-
-
-#DF Molinetes 2019 y limpieza (Para evaluar el impacto de liberación de cuarentena)
+#DF Molinetes Junio 2019 y limpieza (Para evaluar el impacto de liberación de cuarentena)
 molinetes2019 <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general/molinetes122019.csv',stringsAsFactors = F, encoding = 'UTF-8')
 molinetes2019$fecha = as.Date(molinetes2019$fecha,'%Y-%m-%d')
 molinetes2019$estacion <- toupper(molinetes2019$estacion)
