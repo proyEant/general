@@ -143,7 +143,6 @@ summary(subte_gen_feb20)
 summary(molinetes2019)
 
 # Máximos diarios de tránsito de personas en febrero 2020 (ejecutar luego de datos para gráfica de pasajeros)
-subte_feb20$desde <- substring(subte_feb20$desde,1,5)
 subte_feb20 <- subte_feb20 %>% select(desde,estacion,total,fecha) %>%
   group_by(estacion,desde,fecha) %>%
   summarise(total = sum(total)) %>%
@@ -165,8 +164,30 @@ subte_feb20 <- subte_feb20 %>% filter(!horario == 'borrar') %>%
   group_by(ESTACION) %>%
   top_n(1,total)
 
+view(subte_feb20 %>%   arrange(desc(total)))
+view(dfgeneral)
+
+  # Filtrado para que queden 30 estaciones top
+filt_top_30 <- subte_feb20 %>% group_by(ESTACION,dia,horario) %>% 
+  summarise('total' = sum(total)) %>% 
+  group_by(ESTACION) %>% 
+  top_n(1,total) %>% 
+  arrange(desc(total)) %>% 
+  head(30) %>% 
+  select(ESTACION)
+
+#view(filt_top_30)  
+
+subte_feb20 <- subte_feb20 %>% filter(ESTACION %in% filt_top_30$ESTACION) %>% 
+  group_by(ESTACION,dia,horario) %>% 
+  summarise('total'=sum(total)) %>% 
+  arrange(desc(total))
+rm(filt_top_30)
+
+subte_feb20 <- merge(dfgeneral,subte_feb20,by='ESTACION') %>% 
+  select(ESTACION,'horario'=horario.x,LINEA,lat,lng,dia,'total'=total.y) %>% 
+  arrange(desc(total))
 view(subte_feb20)
-# Faltaría filtrado para que queden 20 estaciones top
 
 #DF Molinetes Junio 2019 y limpieza (Para evaluar el impacto de liberación de cuarentena)
 molinetes2019 <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general/molinetes122019.csv',stringsAsFactors = F, encoding = 'UTF-8')

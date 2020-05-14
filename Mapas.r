@@ -104,8 +104,8 @@ barrioslabels <- sprintf(
 ) %>% lapply(htmltools::HTML)
 
 estacioneslabels <- sprintf(
-  "<strong>Estación: %s</strong><br/><strong>Horario:</strong> %s<br/><strong>Pasajeros:</strong> %g",
-  subte_feb20$ESTACION, subte_feb20$horario, subte_feb20$total #dfgeneral$horario, dfgeneral$total
+  "<strong>Estación: %s</strong><br/><strong>Horario:</strong> %s<br/><strong>Línea:</strong> %s<br/><strong>Máx. pasajeros x hora:</strong> %g",
+  subte_feb20$ESTACION, subte_feb20$horario, subte_feb20$LINEA, subte_feb20$total #, dfgeneral$total
 ) %>% lapply(htmltools::HTML)
 
 estacionestrenlabels <- sprintf(
