@@ -51,6 +51,7 @@ df_fallecidos %>%
   labs(title='Fallecidos por Género')+
   theme(plot.title = element_text(hjust=0.5))
 
+
 ###
 view(df_sentidoB_junio19$promedioMes[1]/1000)
 view(df_sentidoA_junio19$promedioMes/1000)

@@ -17,6 +17,7 @@ library(googledrive)
 library(plotly)
 library(purrr)
 
+
 #Iniciación
 rm(list = ls())
 getwd()

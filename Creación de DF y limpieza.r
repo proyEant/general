@@ -98,7 +98,6 @@ view(df_far)
 
 #df_far <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/farmacias.csv',stringsAsFactors = F, encoding = 'UTF-8')
 
-
 #DF Vacunatorios
 
 df_vacunatorios <-Leer_gDrive("https://drive.google.com/open?id=1wh4swah6h-Y9rik2yJ7g8DcBkEsqU9X1",sep=",")

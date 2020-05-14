@@ -255,6 +255,7 @@ leaflet(data = densidad_casos) %>%
   )
 
 
+
 #En caso de utilizar ggplot para armar los barrios:
 #esta funcion guarda el mapa como jpg,  quizas nos sea util tenerla a mano
 #ggsave("mapa_barrios_poligonos.jpg", width = 50, height = 20, units = "cm", dpi = 200, limitsize = TRUE) #guardar mapa en jpg#
