@@ -107,11 +107,12 @@ df_vacunatorios <-Leer_gDrive("https://drive.google.com/open?id=1wh4swah6h-Y9rik
 #view(df_vacunatorios)
 
 
-#DF Molinetes y limpieza
+#DF Molinetes y limpieza #MOLINETES Y MOLINETES122019 se deben descargar manualmente el Gdrive.
 
 # Enlace de gDrive = "https://drive.google.com/open?id=1fYluNN84P2mFcFGGLY3GI70utm-90Ie7"
 #drive_download("molinetes.csv",overwrite = TRUE)
 #subte_feb20<-read.csv('molinetes.csv',stringsAsFactors = F, encoding = 'UTF-8')
+
 subte_feb20 <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general/molinetes.csv',stringsAsFactors = F, encoding = 'UTF-8')
 subte_feb20$fecha = as.Date(subte_feb20$fecha,'%Y-%m-%d')
 subte_feb20$estacion <- toupper(subte_feb20$estacion)
@@ -314,7 +315,6 @@ names(dfmapa2019) = c('ESTACION','fecha','horario','total')
 # Mezcla barrios con estaciones
 
 view(molinetesmapa)
-view(dfmapa)
 view(subte)
 dfgeneral <- merge(molinetesmapa,subte,by = 'ESTACION')
 dfgeneral <- dfgeneral %>% select(c(-ID,-geometry)) %>% 
