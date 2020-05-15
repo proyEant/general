@@ -211,7 +211,7 @@ rm(filt_top_30)
 subte_feb20 <- merge(subte,subte_feb20,by='ESTACION')
 subte_feb20 <- subte_feb20%>% select(ESTACION,'horario'=horario,LINEA,lat,lng,dia,'total'=total) %>% 
   arrange(desc(total))
-view(subte_feb20)
+#view(subte_feb20)
 
 
 #DF Molinetes Junio 2019 y limpieza (Para evaluar el impacto de liberación de cuarentena)
@@ -259,7 +259,7 @@ Hospitales <- Hospitales %>% select(barrio, lat, long, nombre, comuna, calle_nom
   filter(!tipo_espec %in% c('SALUD MENTAL','MED. FISICA/REHABILITACION'))
 #view(head(Hospitales))
 Privados <-Leer_gDrive("https://drive.google.com/open?id=1OJ9QLniLAG5h1WIntOI5wlBlCrALt3ku",sep=",")
-Privados<- read.csv('centros-de-salud-privados.csv',encoding = 'UTF-8')
+#Privados<- read.csv('centros-de-salud-privados.csv',encoding = 'UTF-8')
 Privados <- Privados %>% select(lat,long,nombre,telefonos,barrio)
 #view(head(Privados))
 

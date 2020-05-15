@@ -22,9 +22,10 @@ library(gsheet)
 #Iniciación
 rm(list = ls())
 getwd()
-#GDrive <- 'https://drive.google.com/drive/folders/1iOd0UZsg8tqMql9wgUt9Mnxwg6XBZ1jN?usp=sharing'
-TilesBA <- 'https://servicios.usig.buenosaires.gob.ar/mapcache/tms/1.0.0/amba_con_transporte_3857@GoogleMapsCompatible/{z}/{x}/{-y}.png'
-dir()
+  
+  #gDrive
+#Google Drive <- 'https://drive.google.com/drive/folders/1iOd0UZsg8tqMql9wgUt9Mnxwg6XBZ1jN?usp=sharing'
+
 
 # Función para leer archivos de Google Drive
 Leer_gDrive<-function(link_drive,sep=",",dec=".") {

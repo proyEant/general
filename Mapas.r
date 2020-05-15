@@ -17,7 +17,7 @@ iconos <- iconList(
   ingreso = makeIcon('exit.png', 18, 18)
 )
 
-# Salud (con Vacunatorios y Cajeros)
+#Labels
 
 barrioslabels <- sprintf(
   "<strong>%s</strong><br/>%g casos",
@@ -29,6 +29,30 @@ farmaciaslabels <- sprintf(
   df_far$calle, df_far$altura, df_far$CP
 ) %>% lapply(htmltools::HTML)
 
+estacioneslabels <- sprintf(
+  "<strong>Estación: %s</strong><br/><strong>Línea: </strong>%s<br/><strong>Máx. pasajeros x hora: </strong>%g, se da en horario: <strong>%s</strong>",
+  subte_feb20$ESTACION, subte_feb20$LINEA, subte_feb20$total, subte_feb20$horario
+) %>% lapply(htmltools::HTML)
+
+estacionestrenlabels <- sprintf(
+  "<strong>Estación: %s</strong><br/><strong>Línea: </strong>%s<br/><strong>Ramal: </strong>%s",
+  df_trenescaba$nombre, df_trenescaba$linea, df_trenescaba$ramal
+) %>% lapply(htmltools::HTML)
+
+autaccesolabels <- sprintf(
+  "<strong>Acceso: %s</strong><br/><strong>Sentido: </strong>Hacia CABA<br/><strong>Vehículos: </strong>%g",
+  df_sentidoA_junio19$disp_nombre, df_sentidoA_junio19$promedioMes
+) %>% lapply(htmltools::HTML)
+
+autsalidalabels <- sprintf(
+  "<strong>Acceso: %s</strong><br/><strong>Sentido: </strong>Hacia Provincia<br/><strong>Vehículos: </strong>%g",
+  df_sentidoB_junio19$disp_nombre, df_sentidoB_junio19$promedioMes
+) %>% lapply(htmltools::HTML)
+
+
+
+# Salud (con Vacunatorios y Cajeros)
+mapa_s <-
 leaflet(data = df) %>%
   addTiles() %>%
   addProviderTiles('CartoDB.Positron',
@@ -47,7 +71,7 @@ leaflet(data = df) %>%
               ) %>% 
   addCircles(lng = Hospitales$long,
              lat = Hospitales$lat,
-             #clusterOptions = markerClusterOptions(),
+             #clusterOptions = markerClusterOptions(), #Se deben dejar si se usan CircleMarkers
              radius = 300,
              color = 'blue',
              label = Hospitales$nombre,
@@ -55,7 +79,7 @@ leaflet(data = df) %>%
   ) %>%
   addCircles(lng = Privados$long,
              lat = Privados$lat,
-             #clusterOptions = markerClusterOptions(),
+             #clusterOptions = markerClusterOptions(), #Se deben dejar si se usan CircleMarkers
              radius = 220,
              color = 'red',
              label = Privados$nombre,
@@ -75,7 +99,7 @@ leaflet(data = df) %>%
              icon = iconos$vacunatorios,
              group = 'Vacunatorios'
              ) %>% 
-  # A las farmacias habría que filtrarlas porque son muchas
+  # Se podrían filtrar las farmacias para reducir la cantidad a mostrar
   
   addCircleMarkers(lng = ~ df_far$long,
                    lat = ~ df_far$lat,
@@ -104,26 +128,7 @@ leaflet(data = df) %>%
 
 # Tránsito
 
-estacioneslabels <- sprintf(
-  "<strong>Estación: %s</strong><br/><strong>Línea: </strong>%s<br/><strong>Máx. pasajeros x hora: </strong>%g, se da en horario: <strong>%s</strong>",
-  subte_feb20$ESTACION, subte_feb20$LINEA, subte_feb20$total, subte_feb20$horario
-) %>% lapply(htmltools::HTML)
-
-estacionestrenlabels <- sprintf(
-  "<strong>Estación: %s</strong><br/><strong>Línea: </strong>%s<br/><strong>Ramal: </strong>%s",
-  df_trenescaba$nombre, df_trenescaba$linea, df_trenescaba$ramal
-) %>% lapply(htmltools::HTML)
-
-autaccesolabels <- sprintf(
-  "<strong>Acceso: %s</strong><br/><strong>Sentido: </strong>Hacia CABA<br/><strong>Vehículos: </strong>%g",
-  df_sentidoA_junio19$disp_nombre, df_sentidoA_junio19$promedioMes
-) %>% lapply(htmltools::HTML)
-
-autsalidalabels <- sprintf(
-  "<strong>Acceso: %s</strong><br/><strong>Sentido: </strong>Hacia Provincia<br/><strong>Vehículos: </strong>%g",
-  df_sentidoB_junio19$disp_nombre, df_sentidoB_junio19$promedioMes
-) %>% lapply(htmltools::HTML)
-
+mapa_t <-
 leaflet(data = df) %>%
   addTiles(urlTemplate = TilesBA) %>% 
   addProviderTiles('CartoDB.Positron',
@@ -150,11 +155,8 @@ leaflet(data = df) %>%
                    ) %>% 
   addCircles(lng = df_sentidoA_junio19$long,
                    lat = df_sentidoA_junio19$lat,
-#                   clusterOptions = markerClusterOptions(), 
+#                   clusterOptions = markerClusterOptions(), #Se deben dejar si se usan CircleMarkers
                    label = autaccesolabels,
-#                   popup = paste0("<b>Acceso: </b>",df_sentidoA_junio19$disp_nombre, "<br>",
-#                                  "<b>Sentido: </b>",df_sentidoA_junio19$seccion_sentido, "<br>",
-#                                  "<b>Cant: </b>",df_sentidoA_junio19$promedioMes),
                    radius= df_sentidoA_junio19$promedioMes/180,
                    color = "green",
                    group = "Autopistas: Acceso a CABA"
@@ -162,11 +164,8 @@ leaflet(data = df) %>%
   
   addCircles(lng = df_sentidoB_junio19$long,
                    lat = df_sentidoB_junio19$lat,
-#                   clusterOptions = markerClusterOptions(), 
+#                   clusterOptions = markerClusterOptions(), #Se deben dejar si se usan CircleMarkers
                    label = autsalidalabels,
-#                   popup = paste0("<b>Acceso: </b>",df_sentidoB_junio19$disp_nombre, "<br>",
-#                                  "<b>Sentido: </b>",df_sentidoB_junio19$seccion_sentido, "<br>",
-#                                  "<b>Cant: </b>",df_sentidoB_junio19$promedioMes),
                    radius= df_sentidoB_junio19$promedioMes/180, #Tenía el [1]
                    color = "purple",
                    group = "Autopistas: Salida de CABA") %>%
@@ -175,12 +174,6 @@ leaflet(data = df) %>%
              icon = iconos$tren,
              group = 'Estaciones de tren',
              label = estacionestrenlabels
-             #popup = ~ htmlEscape(paste('Línea:',df_trenescaba$linea,' Estación:',df_trenescaba$nombre))) %>% 
-             #  addCircles(lng =  ~ df_trenescaba$long,
-             #             lat = ~ df_trenescaba$lat,
-             #             color ="purple",
-             #             radius = 110,
-             #             weight = 10) %>% 
   ) %>% 
   addLayersControl(
     overlayGroups = c("Autopistas: Acceso a CABA", "Autopistas: Salida de CABA",'Casos por Barrio','Estaciones de tren','Estaciones de subte','Cartografía Limpia'),
@@ -199,65 +192,3 @@ leaflet(data = df) %>%
 # Las estaciones de subte y tren deben estar por día, considerando el total de pases por 1 día.
 
 
-# Mapa de calor de barrios infectados (no tiene utilidad)
-
-leaflet(data = df) %>%
-  addTiles(urlTemplate = TilesBA) %>%
-  addProviderTiles('CartoDB.Positron',
-                   group = 'Cartografía Limpia') %>% 
-  addPolygons(label = barrioslabels,
-              fillColor = ~pal2(Casos7_5),
-              color = "#444444",
-              weight = 1,
-              smoothFactor = 0.5,
-              opacity = 1.0,
-              fillOpacity = 0.3,
-              group = 'Casos por Barrio',
-              highlightOptions = highlightOptions(color = "black",
-                                                  weight = 2,
-                                                  bringToFront = F)
-  ) %>% 
-  
-  addHeatmap(lng = ~df$lon, 
-             lat = ~df$lat, 
-             intensity = ~df$Casos7_5,
-             blur = 1, 
-             max = max(df$Casos7_5)
-             #radius = 20
-  ) %>% 
-  
-  addLayersControl(
-    overlayGroups = c('Casos por Barrio','Cartografía Limpia'),
-    options = layersControlOptions(collapsed = FALSE)
-  ) 
-
-
-# Densidad poblacional (requiere el df limpio sin quitar columnas)
-
-leaflet(data = densidad_casos) %>%
-  addTiles(urlTemplate = TilesBA) %>%
-  addPolygons(#label =censo10$BARRIO,
-    fillColor = ~pal3(densidad),
-    color = "#444444",
-    weight = 1,
-    smoothFactor = 0.5,
-    opacity = 1.0,
-    fillOpacity = 0.75,
-    label = ~densidad,
-    #group = 'Casos por Barrio',
-    highlightOptions = highlightOptions(color = "white",
-                                        weight = 2,
-                                        bringToFront = F)
-    ) %>% 
-  addLegend(pal = pal3,
-            values = ~densidad,
-            opacity = 0.7,
-            position = 'bottomright',
-            title = 'Cantidad de habitantes:'
-  )
-
-
-
-#En caso de utilizar ggplot para armar los barrios:
-#esta funcion guarda el mapa como jpg,  quizas nos sea util tenerla a mano
-#ggsave("mapa_barrios_poligonos.jpg", width = 50, height = 20, units = "cm", dpi = 200, limitsize = TRUE) #guardar mapa en jpg#

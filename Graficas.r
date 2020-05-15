@@ -67,5 +67,5 @@ df_fallecidos %>%
 
 
 ###
-view(df_sentidoB_junio19$promedioMes[1]/1000)
-view(df_sentidoA_junio19$promedioMes/1000)
+#view(df_sentidoB_junio19$promedioMes[1]/1000)
+#view(df_sentidoA_junio19$promedioMes/1000)
