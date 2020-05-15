@@ -106,7 +106,7 @@ leaflet(data = df) %>%
 
 estacioneslabels <- sprintf(
   "<strong>Estación: %s</strong><br/><strong>Línea: </strong>%s<br/><strong>Máx. pasajeros x hora: </strong>%g, se da en horario: <strong>%s</strong>",
-  subte_feb20_$ESTACION, subte_feb20_$LINEA, subte_feb20_$total, subte_feb20_$horario  #, dfgeneral$total
+  subte_feb20$ESTACION, subte_feb20$LINEA, subte_feb20$total, subte_feb20$horario
 ) %>% lapply(htmltools::HTML)
 
 estacionestrenlabels <- sprintf(
@@ -140,9 +140,9 @@ leaflet(data = df) %>%
                                                   weight = 2,
                                                   bringToFront = F)
               ) %>% 
-  addCircleMarkers(lng = subte_feb20_$lng,
-                   lat = subte_feb20_$lat,
-                   radius = subte_feb20_$total/600,
+  addCircleMarkers(lng = subte_feb20$lng,
+                   lat = subte_feb20$lat,
+                   radius = subte_feb20$total/600,
                    color = 'red',
                    icons(iconos$subte),
                    group = 'Estaciones de subte',

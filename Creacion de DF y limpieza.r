@@ -90,6 +90,18 @@ rm(barrios)
 
 #df_fallecidos <- read_xlsx('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/Fallecidos.xlsx')
 
+
+#DF Estaciones Subte
+
+subte <- st_read('http://cdn.buenosaires.gob.ar/datosabiertos/datasets/subte-estaciones/subte_estaciones.geojson')
+
+subte_xy <- sf::st_coordinates(subte)
+subte_xy <- as.data.frame(subte_xy)
+subte <- mutate(subte,'lat'=subte_xy$Y,'lng'=subte_xy$X)
+
+rm(subte_xy)
+#view(subte)
+
 # DF Farmacias
 
 df_far <-Leer_gDrive("https://drive.google.com/open?id=1mAwOj_HMrz-d37pH4GU-YMPyoPdN2Y8o",sep=",")
@@ -120,7 +132,7 @@ subte_feb20$desde <- substring(subte_feb20$desde,1,2)
 subte_feb20$desde <- as.numeric(subte_feb20$desde)
 subte_feb20 <- subte_feb20 %>% filter(fecha > '2020-02-01' & fecha < '2020-02-29')
 
-# Datos para gráfica de pasajeros # Sobre año 2020, resta armar con 2019 ###
+# Datos para gráfica de pasajeros # Sobre año 2020
 
 subte_gen_feb20 <- subte_feb20
 subte_gen_feb20 <- subte_gen_feb20 %>% select(desde,estacion,fecha,linea,total) %>% 
@@ -143,7 +155,7 @@ subte_gen_feb20 <- subte_gen_feb20 %>% filter(ESTACION %in% filt_top_15$ESTACION
 rm(filt_top_15)
 
 
-#view(head(subte_gen_feb20))
+#view(subte_gen_feb20)
 
 # Se verifica que el 11 de febrero se da el pico de tránsito. Se considera esa fecha para los picos por estación (2020).
 #subte_gen_feb20 %>% group_by(fecha) %>% 
@@ -153,7 +165,6 @@ rm(filt_top_15)
 #view(subte_gen_feb20 %>% filter(ESTACION=='CONSTITUCION'))
 
 #summary(subte_gen_feb20)
-#summary(molinetes2019)
 
 # Máximos diarios de tránsito de personas en febrero 2020 (ejecutar luego de datos para gráfica de pasajeros)
 subte_feb20 <- subte_feb20 %>% select(desde,estacion,total,fecha) %>%
@@ -177,7 +188,7 @@ subte_feb20 <- subte_feb20 %>% filter(!horario == 'borrar') %>%
   group_by(ESTACION) %>%
   top_n(1,total)
 
-view(subte_feb20 %>%   arrange(desc(total)))
+#view(subte_feb20 %>%   arrange(desc(total)))
 #view(dfgeneral)
 
   # Filtrado para que queden 30 estaciones top
@@ -197,38 +208,48 @@ rm(filt_top_30)
 
 # DF Final para mapa de tránsito
 
-subte_feb20_ <- merge(subte,subte_feb20,by='ESTACION')
-subte_feb20_ <- subte_feb20_ %>% select(ESTACION,'horario'=horario,LINEA,lat,lng,dia,'total'=total) %>% 
+subte_feb20 <- merge(subte,subte_feb20,by='ESTACION')
+subte_feb20 <- subte_feb20%>% select(ESTACION,'horario'=horario,LINEA,lat,lng,dia,'total'=total) %>% 
   arrange(desc(total))
-subte_feb20_$geometry <- NULL
-view(head(subte_feb20_))
+view(subte_feb20)
 
-view(df)
 
 #DF Molinetes Junio 2019 y limpieza (Para evaluar el impacto de liberación de cuarentena)
+# Datos para gráfica de pasajeros # Sobre año 2019 [Top estaciones con mayor caudal de pasajeros]
 
-#molinetes2019 <-Leer_gDrive("https://drive.google.com/open?id=1j2AqTcKnuHyFXBTlSx9okk9S9vVhSOpK",sep=",")
-molinetes2019 <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general/molinetes122019.csv',stringsAsFactors = F, encoding = 'UTF-8')
+#subte_gen_jun19 <-Leer_gDrive("https://drive.google.com/open?id=1j2AqTcKnuHyFXBTlSx9okk9S9vVhSOpK",sep=",")
+subte_gen_jun19 <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general/molinetes122019.csv',stringsAsFactors = F, encoding = 'UTF-8')
 
 #drive_download("molinetes122019.csv",overwrite = TRUE)
-#molinetes2019<-read.csv('molinetes122019.csv',stringsAsFactors = F, encoding = 'UTF-8')
+#subte_gen_jun19<-read.csv('molinetes122019.csv',stringsAsFactors = F, encoding = 'UTF-8')
 
-molinetes2019$fecha = as.Date(molinetes2019$fecha,'%Y-%m-%d')
-molinetes2019$estacion <- toupper(molinetes2019$estacion)
-molinetes2019$desde <- substring(molinetes2019$desde,1,2)
-molinetes2019 <- molinetes2019 %>% select(desde,estacion,fecha,total)
-molinetes2019 <- molinetes2019 %>% group_by(estacion,desde,fecha) %>% 
-  summarise(total = sum(total))
-molinetes2019 <- molinetes2019 %>% filter(fecha > '2019-06-01' & fecha < '2019-06-30' & total>quantile(molinetes2019$total,0.85))
-molinetes2019$desde <- as.numeric(molinetes2019$desde)
-#molinetes2019feb$desde <- as.numeric(molinetes2019feb$desde)
-view(molinetes2019)
+subte_gen_jun19$fecha = as.Date(subte_gen_jun19$fecha,'%Y-%m-%d')
+subte_gen_jun19$estacion <- toupper(subte_gen_jun19$estacion)
+subte_gen_jun19$desde <- substring(subte_gen_jun19$desde,1,2)
+subte_gen_jun19$desde <- as.numeric(subte_gen_jun19$desde)
+subte_gen_jun19 <- subte_gen_jun19 %>% select(desde,estacion,fecha,linea,total) %>% 
+  filter (desde >= 5 & desde <= 21 & total > quantile(total,0.8) & fecha > '2019-06-01' & fecha < '2019-06-30' 
+  ) %>% 
+  group_by()
+names(subte_gen_jun19) = c('desde','ESTACION','fecha','linea','total')
+
+  #Se filtra el top 15 de estaciones
+filt_top_15 <- subte_gen_jun19 %>% group_by(ESTACION,desde) %>% 
+  summarise('total' = sum(total)) %>% 
+  group_by(ESTACION) %>% 
+  top_n(1,total) %>% 
+  arrange(desc(total)) %>% 
+  head(15) %>% 
+  select(ESTACION)
+
+subte_gen_jun19 <- subte_gen_jun19 %>% filter(ESTACION %in% filt_top_15$ESTACION) %>% 
+  group_by(desde,ESTACION,fecha) %>% 
+  summarise('total'=sum(total))
+rm(filt_top_15)
+
+#view(subte_gen_jun19)
 
 
-#DF Estaciones Subte
-
-subte <- st_read('http://cdn.buenosaires.gob.ar/datosabiertos/datasets/subte-estaciones/subte_estaciones.geojson')
-#view(subte)
 
 #DF Hospitales y clínicas privadas
 
@@ -267,11 +288,6 @@ df_cajeros <- df_cajeros %>% rename(
 #view(df_cajeros)
 
 
-# Merge DF con barrios, estaciones de subte y tren, y cantidades en horario matutino y vespertino
-
-
-
-
 
 #DF Tráfico Vehicular
 
@@ -293,23 +309,6 @@ df_mapAccesos= df_flujoVehic2020 %>%
 today= Sys.Date()
 df_accesos_40=data.frame()
 df_accesos_40 = df_mapAccesos[ (as.Date(today) - as.Date(df_mapAccesos$fecha))<=40,] #solo me quedo con las filas que cumplen la condicion.
-
-
-
-
-#   Limpieza DF y Environment
-
-#Centroids (en caso de aplicar los casos de los infectados como heatmap en el centro de cada barrio)
-#barrios_centroides <- sf::st_centroid(barrios)
-#barrios_xy <- as.data.frame(sf::st_coordinates(barrios_centroides))
-#barrios_xy = barrios_xy %>% mutate(nombre = barrios$Barrio)
-
-subte_xy <- sf::st_coordinates(subte)
-subte_xy <- as.data.frame(subte_xy)
-subte <- mutate(subte,'lat'=subte_xy$Y,'lng'=subte_xy$X)
-
-rm(subte_xy)
-#view(subte)
 
 
 ######## CODIGO MAPA PROMEDIO ACCESO PARA JUNIO 2019 SENTIDO A Y B################

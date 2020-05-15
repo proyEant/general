@@ -12,7 +12,7 @@ ggplot(data = subte_gen_feb20 , aes(x=desde,y=ESTACION,size=total,color=total))+
   )+
   theme_bw()
 
-# Estaciones más frecuentadas, en scatter para ver concentración (consideran fechas de febrero/19)
+# Estaciones más frecuentadas, en scatter para ver concentración por horario (consideran fechas de febrero/20)
 
 
 ggplot(data = subte_gen_feb20, aes(x=desde,y=ESTACION,size=total,color=total))+
@@ -27,19 +27,33 @@ ggplot(data = subte_gen_feb20, aes(x=desde,y=ESTACION,size=total,color=total))+
   )+
   theme_bw()
 
-# Quitar estaciones, que queden solo 20
+# Top 15 estaciones más frecuentadas, en scatter para ver concentración por horario (consideran fechas de junio/19)
 
-ggplot(data = molinetes2019, aes(x=desde,y=estacion,size=total/30,color=total/30))+
+ggplot(data = subte_gen_jun19, aes(x=desde,y=ESTACION,size=total,color=total))+
   geom_jitter()+
-  scale_size_continuous(limits=c(50, 700), breaks=seq(50, 600, by=50))+
-  scale_color_continuous(limits=c(50, 700), breaks=seq(50, 600, by=50))+
-  guides(color= guide_legend('Cantidad de pasajeros en horario pico'), size=guide_legend('Cantidad de pasajeros en horario pico'))+
-  scale_x_continuous(breaks = seq(5,22,by = 1))+
+  scale_size_continuous(limits=c(100, 16000), breaks=seq(2000, 16000, by=2000))+
+  scale_color_continuous(limits=c(100, 16000), breaks=seq(2000, 16000, by=2000))+
+  guides(color= guide_legend(), size=guide_legend())+
+  scale_x_continuous(breaks = seq(5,21,by = 1))+
   labs(title = 'Focos de concentración en estaciones',
-       x = 'Horarios de ingreso al molinete',
-       y = 'Total de personas'
-       )+
-  theme(legend.position = 'bottom')
+       x = 'Horarios de ingreso al molinete por día',
+       y = 'Estaciones'
+  )+
+  theme_bw()
+
+# Top 15 estaciones más frecuentadas, en scatter para ver concentración por horario (consideran fechas de abril/19)
+
+ggplot(data = subte_gen_abr19, aes(x=desde,y=ESTACION,size=total,color=total))+
+  geom_jitter()+
+  scale_size_continuous(limits=c(100, 16000), breaks=seq(2000, 16000, by=2000))+
+  scale_color_continuous(limits=c(100, 16000), breaks=seq(2000, 16000, by=2000))+
+  guides(color= guide_legend(), size=guide_legend())+
+  scale_x_continuous(breaks = seq(5,21,by = 1))+
+  labs(title = 'Focos de concentración en estaciones',
+       x = 'Horarios de ingreso al molinete por día',
+       y = 'Estaciones'
+  )+
+  theme_bw()
 
 
 # GRÁFICO FALLECIDOS POR GENERO
