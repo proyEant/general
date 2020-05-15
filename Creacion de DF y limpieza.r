@@ -1,4 +1,4 @@
-#DF Casos CABA y nueva fuente con datos 7 de Mayo 2020
+#DF Casos CABA y nueva fuente con datos 7 de Mayo 2020 (principal DF)
 
 df <-Leer_gDrive("https://drive.google.com/open?id=1i1APIKryoLNlJzdZuLjAacZ1jV4cvh3j",sep=",")
 #df= read.csv('Covid19arData - Prov_CABA.csv',encoding = 'UTF-8')
@@ -80,7 +80,7 @@ barrios$Barrio[barrios$Barrio=='VILLA GRAL. MITRE'] <- 'VILLA GRAL MITRE'
 
 # Merge Barrios con casos
 df <- merge(barrios,df)
-    #Considerar borrar "barrios"
+rm(barrios)
 
 #view(df)
 
@@ -120,7 +120,7 @@ subte_feb20$desde <- substring(subte_feb20$desde,1,2)
 subte_feb20$desde <- as.numeric(subte_feb20$desde)
 subte_feb20 <- subte_feb20 %>% filter(fecha > '2020-02-01' & fecha < '2020-02-29')
 
-# Datos para gráfica de pasajeros
+# Datos para gráfica de pasajeros # Sobre año 2020, resta armar con 2019 ###
 
 subte_gen_feb20 <- subte_feb20
 subte_gen_feb20 <- subte_gen_feb20 %>% select(desde,estacion,fecha,linea,total) %>% 
@@ -137,8 +137,6 @@ filt_top_15 <- subte_gen_feb20 %>% group_by(ESTACION,desde) %>%
   head(15) %>% 
   select(ESTACION)
 
-#view(filt_top_15)  
-
 subte_gen_feb20 <- subte_gen_feb20 %>% filter(ESTACION %in% filt_top_15$ESTACION) %>% 
   group_by(desde,ESTACION,fecha) %>% 
   summarise('total'=sum(total))
@@ -147,7 +145,7 @@ rm(filt_top_15)
 
 #view(head(subte_gen_feb20))
 
-# Se verifica que el 11 de febrero se da el pico de tránsito
+# Se verifica que el 11 de febrero se da el pico de tránsito. Se considera esa fecha para los picos por estación (2020).
 #subte_gen_feb20 %>% group_by(fecha) %>% 
 #  summarise('total'=sum(total)) %>% 
 #  arrange(desc(total)) 
@@ -179,7 +177,7 @@ subte_feb20 <- subte_feb20 %>% filter(!horario == 'borrar') %>%
   group_by(ESTACION) %>%
   top_n(1,total)
 
-#view(subte_feb20 %>%   arrange(desc(total)))
+view(subte_feb20 %>%   arrange(desc(total)))
 #view(dfgeneral)
 
   # Filtrado para que queden 30 estaciones top
@@ -190,19 +188,22 @@ filt_top_30 <- subte_feb20 %>% group_by(ESTACION,dia,horario) %>%
   arrange(desc(total)) %>% 
   head(30) %>% 
   select(ESTACION)
-
-#view(filt_top_30)  
-
+  # Se filtran las top 30 estaciones para no sobrecargar el mapa
 subte_feb20 <- subte_feb20 %>% filter(ESTACION %in% filt_top_30$ESTACION) %>% 
   group_by(ESTACION,dia,horario) %>% 
   summarise('total'=sum(total)) %>% 
   arrange(desc(total))
 rm(filt_top_30)
 
-subte_feb20 <- merge(dfgeneral,subte_feb20,by='ESTACION') %>% 
-  select(ESTACION,'horario'=horario.x,LINEA,lat,lng,dia,'total'=total.y) %>% 
+# DF Final para mapa de tránsito
+
+subte_feb20_ <- merge(subte,subte_feb20,by='ESTACION')
+subte_feb20_ <- subte_feb20_ %>% select(ESTACION,'horario'=horario,LINEA,lat,lng,dia,'total'=total) %>% 
   arrange(desc(total))
-#view(subte_feb20)
+subte_feb20_$geometry <- NULL
+view(head(subte_feb20_))
+
+view(df)
 
 #DF Molinetes Junio 2019 y limpieza (Para evaluar el impacto de liberación de cuarentena)
 
@@ -221,7 +222,8 @@ molinetes2019 <- molinetes2019 %>% group_by(estacion,desde,fecha) %>%
 molinetes2019 <- molinetes2019 %>% filter(fecha > '2019-06-01' & fecha < '2019-06-30' & total>quantile(molinetes2019$total,0.85))
 molinetes2019$desde <- as.numeric(molinetes2019$desde)
 #molinetes2019feb$desde <- as.numeric(molinetes2019feb$desde)
-#view(molinetes2019)
+view(molinetes2019)
+
 
 #DF Estaciones Subte
 
@@ -293,33 +295,6 @@ df_accesos_40=data.frame()
 df_accesos_40 = df_mapAccesos[ (as.Date(today) - as.Date(df_mapAccesos$fecha))<=40,] #solo me quedo con las filas que cumplen la condicion.
 
 
-#Mezclas de DF
-
-#2019  # Revisar, no quedó agrupado
-#view(dfmapa)
-dfmapa2019 <- molinetes2019
-dfmapa2019 <- dfmapa2019 %>% 
-  mutate('horario'=
-           case_when(desde >= 16 & desde <= 20 ~ 'vespertino',
-                     desde >= 06 & desde <= 10 ~ 'matutino',
-                     TRUE ~ 'borrar')
-  )
-
-dfmapa2019 <- dfmapa2019 %>% group_by(estacion,fecha,horario) %>% 
-  select(-desde) %>%
-  filter(!horario=='borrar') %>%
-  summarise(sum(total))
-names(dfmapa2019) = c('ESTACION','fecha','horario','total')
-#view(dfmapa2019)
-
-# Mezcla barrios con estaciones
-
-view(molinetesmapa)
-view(subte)
-dfgeneral <- merge(molinetesmapa,subte,by = 'ESTACION')
-dfgeneral <- dfgeneral %>% select(c(-ID,-geometry)) %>% 
-  arrange(desc(total))
-#view(dfgeneral)
 
 
 #   Limpieza DF y Environment

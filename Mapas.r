@@ -4,7 +4,7 @@
 TilesBA <- 'https://servicios.usig.buenosaires.gob.ar/mapcache/tms/1.0.0/amba_con_transporte_3857@GoogleMapsCompatible/{z}/{x}/{-y}.png'
 pal <- colorBin("OrRd", domain = df$casos)
 pal2 <- colorBin("YlOrRd", domain = df$Casos7_5)
-pal3 <- colorBin("OrRd", domain = censo10$densidad)
+#pal3 <- colorBin("OrRd", domain = censo10$densidad)
 
 #Iconos
 iconos <- iconList(
@@ -18,6 +18,12 @@ iconos <- iconList(
 )
 
 # Salud (con Vacunatorios y Cajeros)
+
+barrioslabels <- sprintf(
+  "<strong>%s</strong><br/>%g casos",
+  df$Barrio, df$Casos7_5
+) %>% lapply(htmltools::HTML)
+
 farmaciaslabels <- sprintf(
   "<strong>Farmacia</strong><br>%s %g<br/>%s",
   df_far$calle, df_far$altura, df_far$CP
@@ -98,14 +104,9 @@ leaflet(data = df) %>%
 
 # Tránsito
 
-barrioslabels <- sprintf(
-  "<strong>%s</strong><br/>%g casos",
-  df$Barrio, df$Casos7_5
-) %>% lapply(htmltools::HTML)
-
 estacioneslabels <- sprintf(
-  "<strong>Estación: %s</strong><br/><strong>Horario:</strong> %s<br/><strong>Línea:</strong> %s<br/><strong>Máx. pasajeros x hora:</strong> %g",
-  subte_feb20$ESTACION, subte_feb20$horario, subte_feb20$LINEA, subte_feb20$total #, dfgeneral$total
+  "<strong>Estación: %s</strong><br/><strong>Línea: </strong>%s<br/><strong>Máx. pasajeros x hora: </strong>%g, se da en horario: <strong>%s</strong>",
+  subte_feb20_$ESTACION, subte_feb20_$LINEA, subte_feb20_$total, subte_feb20_$horario  #, dfgeneral$total
 ) %>% lapply(htmltools::HTML)
 
 estacionestrenlabels <- sprintf(
@@ -139,9 +140,9 @@ leaflet(data = df) %>%
                                                   weight = 2,
                                                   bringToFront = F)
               ) %>% 
-  addCircleMarkers(lng = subte_feb20$lng,
-                   lat = subte_feb20$lat,
-                   radius = subte_feb20$total/600,
+  addCircleMarkers(lng = subte_feb20_$lng,
+                   lat = subte_feb20_$lat,
+                   radius = subte_feb20_$total/600,
                    color = 'red',
                    icons(iconos$subte),
                    group = 'Estaciones de subte',
@@ -246,7 +247,8 @@ leaflet(data = densidad_casos) %>%
     #group = 'Casos por Barrio',
     highlightOptions = highlightOptions(color = "white",
                                         weight = 2,
-                                        bringToFront = F)) %>% 
+                                        bringToFront = F)
+    ) %>% 
   addLegend(pal = pal3,
             values = ~densidad,
             opacity = 0.7,
