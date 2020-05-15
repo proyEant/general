@@ -17,6 +17,7 @@ library(googledrive)
 library(plotly)
 library(purrr)
 library(gsheet)
+library(googlesheets)
 
 
 #Iniciación
@@ -32,7 +33,7 @@ Leer_gDrive<-function(link_drive,sep=",",dec=".") {
   require(data.table)
   id<-strsplit(link_drive,"id=")[[1]][2]
   return(fread(sprintf("https://docs.google.com/uc?id=%s&export=download", id),
-               sep=sep,dec=dec,encoding = 'UTF-8',stringsAsFactors = F,integer64 = "character"))
+               sep=sep,dec=dec,encoding = 'UTF-8',stringsAsFactors = F,integer64 = "character",header = T))
 }
 
 # Puede requerir autenticación

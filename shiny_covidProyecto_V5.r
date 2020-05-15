@@ -1,20 +1,3 @@
-# 1. Remover todos los objetos del global environment.
-rm(list=ls())
-
-# Librerias.
-library(shiny)
-library(DT)
-library(tidyverse)
-library(tidytext)
-library(wordcloud2)
-library(tidytext)
-library(wordcloud2)
-library(plotly)
-library(ggplot2)
-library(leaflet)
-library(viridis)
-library(googledrive)
-
 source('https://raw.githubusercontent.com/proyEant/general/master/Iniciacion.r')
 source('https://raw.githubusercontent.com/proyEant/general/master/Creacion de DF y limpieza.r')
 source('Mapas.r')
