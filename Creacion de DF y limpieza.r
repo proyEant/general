@@ -13,24 +13,21 @@ df$Barrio[df$Barrio=='VILLA GRAL MITE'] <- 'VILLA GRAL MITRE'
 
 #view(df)
 
-drive_download("casos_caba_7mayo.xlsx",overwrite = TRUE)
-dfcabanew<-read_xlsx('casos_caba_7mayo.xlsx')
-#dfcabanew <- read_xlsx('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/casos_caba_7mayo.xlsx')
+dfcabanew <- read.csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vR6ypAY36GnF5KZgwEYPkid2IDoF69eW3aBfmUyTCq_8y-8IfDB5p6ts2DFG-nP7w/pub?output=csv',stringsAsFactors = F,header = T,encoding = 'UTF-8')
 #view(dfcabanew)
 
 #Se limpia el df y acomoda para futuro merge
-
 dfcabanew$Barrio <- toupper(dfcabanew$Barrio)
-names(dfcabanew) = c('Comunas','Barrio','Casos7_5')
-dfcabanew <- dfcabanew %>% drop_na() %>% select(-Comunas)
-
+dfcabanew <- dfcabanew %>% filter(!Casos == max(Casos)) %>%
+  select(-Comunas)
+names(dfcabanew) = c('Barrio','Casos7_5')
 dfcabanew$Barrio <- stri_trans_general(dfcabanew$Barrio,"Latin-ASCII")
 dfcabanew$Barrio[dfcabanew$Barrio=='NUNEZ'] <- 'NUÑEZ'
 dfcabanew$Barrio[dfcabanew$Barrio=='VILLA GENERAL MITRE'] <- 'VILLA GRAL MITRE'
 dfcabanew$Barrio[dfcabanew$Barrio=='MONTSERRAT'] <- 'MONSERRAT'
 dfcabanew$Barrio[dfcabanew$Barrio=='LA PATERNAL'] <- 'PATERNAL'
 dfcabanew$Barrio[dfcabanew$Barrio=='LA BOCA'] <- 'BOCA'
-#view(dfcabanew)
+view(dfcabanew)
 
 # Merge Casos nuevos con DF casos anterior
 
