@@ -52,14 +52,16 @@ traf_mar_20 <- ggplot(df_accesos_marzo2020, aes(x = fecha, y = totalDia ,color=a
   geom_point() +
   scale_color_viridis(discrete = T, option = 'D',direction = 1)+
   facet_wrap(~ autopista_nombre)+
-  theme(axis.text.x = element_text(angle = 90))+
+  theme(axis.text.x = element_text(angle = 90),
+        legend.title = element_text('Autopista:'))+
   geom_hline(yintercept = 40000, colour="orange")+
-  geom_hline(yintercept = 70000, colour="red")
+  geom_hline(yintercept = 70000, colour="red")+
+  theme_bw()
 
 traf_mar_20_p <- ggplotly(traf_mar_20)
 traf_mar_20_p$x$layout$title <- 'Cantidad de Accesos periodo 13/3 a 27/3 del año 2020'
-#traf_mar_20_p
-
+traf_mar_20_p$x$layout$xaxis$tickangle <- 90
+traf_mar_20_p
 
 
 #misma grafica pero para 2019
