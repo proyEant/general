@@ -1,7 +1,7 @@
 source('https://raw.githubusercontent.com/proyEant/general/master/Iniciacion.r')
 source('https://raw.githubusercontent.com/proyEant/general/master/Creacion de DF y limpieza.r')
-source('Mapas.r')
-source('Graficas.r')
+source('https://raw.githubusercontent.com/proyEant/general/master/Mapas.r')
+source('https://raw.githubusercontent.com/proyEant/general/master/Graficas.r')
 
 ######## CODIGO GRAFICO comparando 2020/2019 DESDE 13/3 AL 27/3 ################
 
@@ -56,18 +56,17 @@ ui<- fluidPage(
   
   
   h1(img( src='https://images.unsplash.com/photo-1584118624012-df056829fbd0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80',
-          
           height="30%", 
           width="30%", 
-          strong('COVID19 en CABA'), align= "center",
-          
-          br() )),
-  h1(img( src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/724px-R_logo.svg.png',
-          height=320, 
-          width=320, 
-          align = 'right'
-          )
-     ), # fin h1,
+          strong('COVID19 en CABA'), 
+          align= "center"),
+     img( src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/724px-R_logo.svg.png',
+          height=200, 
+          width=200, 
+          align = 'right')
+  ),
+     br(),
+      # fin h1,
   h2("Qué tenes que saber antes de que se levante la Cuarentena.", align="center",
      hr()),
   
