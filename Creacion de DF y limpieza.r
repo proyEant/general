@@ -27,7 +27,7 @@ dfcabanew$Barrio[dfcabanew$Barrio=='VILLA GENERAL MITRE'] <- 'VILLA GRAL MITRE'
 dfcabanew$Barrio[dfcabanew$Barrio=='MONTSERRAT'] <- 'MONSERRAT'
 dfcabanew$Barrio[dfcabanew$Barrio=='LA PATERNAL'] <- 'PATERNAL'
 dfcabanew$Barrio[dfcabanew$Barrio=='LA BOCA'] <- 'BOCA'
-view(dfcabanew)
+#view(dfcabanew)
 
 # Merge Casos nuevos con DF casos anterior
 
@@ -310,7 +310,7 @@ df_accesos_40=data.frame()
 df_accesos_40 = df_mapAccesos[ (as.Date(today) - as.Date(df_mapAccesos$fecha))<=40,] #solo me quedo con las filas que cumplen la condicion.
 
 
-######## CODIGO MAPA PROMEDIO ACCESO PARA JUNIO 2019 SENTIDO A Y B################
+# CODIGO MAPA PROMEDIO ACCESO PARA JUNIO 2019 SENTIDO A Y B########
 
 ##Armo el data frame por dia. obtengo valor por acceso por dia.
 
@@ -318,7 +318,6 @@ df_accesos_40 = df_mapAccesos[ (as.Date(today) - as.Date(df_mapAccesos$fecha))<=
 df_accesos2019 = na.omit(df_flujoVehic2019) %>%
   group_by(fecha, autopista_nombre, disp_nombre, seccion_sentido, lat, long) %>% 
   summarise(totalDia= sum(cantidad))
-
 
 ##armo loa data Frame de junio por acceso y promedio por mes
 
@@ -334,19 +333,19 @@ df_sentidoB_junio19 = na.omit(df_accesos2019) %>%
 
 
 
-######## CODIGO GRAFICO comparando 2020/2019 DESDE 13/3 AL 27/3 ################
+# CODIGO GRAFICO comparando 2020/2019 DESDE 13/3 AL 27/3 ######
 
 #suma la cantidad por dispo_nombre por dia
 ##2020
 
 df_mapAccesos2020= df_flujoVehic2020 %>% 
-  group_by(fecha, autopista_nombre, disp_nombre, lat, long) %>% 
+  group_by(fecha, autopista_nombre, disp_nombre, seccion_sentido,lat, long) %>% 
   summarise(totalDia= sum(cantidad))
 
 ##lo mismo para 2019
 
 df_mapAccesos2019= df_flujoVehic2019 %>% 
-  group_by(fecha, autopista_nombre, disp_nombre, lat, long) %>% 
+  group_by(fecha, autopista_nombre, disp_nombre, seccion_sentido,lat, long) %>% 
   summarise(totalDia= sum(cantidad))
 
 
@@ -361,13 +360,11 @@ df_accesos_marzo_2019 <- data.frame()
 df_accesos_marzo_2019 <- df_mapAccesos2019 %>% 
   filter( as.character((as.Date(fecha) + 366)) %in% c(unique(df_accesos_marzo2020$fecha)))
 
-
-
 #TOMO SOLO del 13 al 27 DE MARZO sentidoA.
 sentidoA=data.frame()
 sentidoA = df_mapAccesos2020 %>%
   filter(as.Date(fecha)>='2020-03-13' && as.Date(fecha)<='2020-03-27', seccion_sentido == 'A') #solo me quedo con las filas que cumplen la condicion.
-
+#view(sentidoA)
 #TOMO SOLO del 13 al 27 DE MARZO sentidoB.
 sentidoB=data.frame()
 sentidoB = df_mapAccesos2020 %>%
@@ -378,4 +375,3 @@ sentidoB = df_mapAccesos2020 %>%
 
 # Armado de DF con densidad de casos por barrio
 
-#view(df)
