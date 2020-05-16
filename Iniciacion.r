@@ -18,6 +18,7 @@ library(plotly)
 library(purrr)
 library(gsheet)
 library(googlesheets)
+library(shiny)
 
 
 #Iniciación
