@@ -250,7 +250,6 @@ rm(filt_top_15)
 #view(subte_gen_jun19)
 
 
-
 #DF Hospitales y clínicas privadas
 
 Hospitales0 <- getURL("https://raw.githubusercontent.com/proyEant/general/master/hospitales.csv")
@@ -339,6 +338,7 @@ df_sentidoB_junio19 = na.omit(df_accesos2019) %>%
   group_by(autopista_nombre, disp_nombre, seccion_sentido, lat, long) %>% 
   summarise(promedioMes = round(sum(totalDia)/30))
 
+rm(df_accesos_40)
 
 # Armado de DF con densidad de casos por barrio
 

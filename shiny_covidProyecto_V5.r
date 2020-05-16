@@ -3,19 +3,6 @@ source('https://raw.githubusercontent.com/proyEant/general/master/Creacion de DF
 source('Mapas.r')
 source('Graficas.r')
 
-
-##########SE DEFINEN LOS DATA FRAMES PARA LEVANTAR 
-
-#Levantar csv
-getwd()
-setwd()
-
-df_flujoVehic2020 = read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/flujo-vehicular-por-radares-2020.csv', header = T, encoding = 'UTF-8', stringsAsFactors = F)
-df_flujoVehic2019 = read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/flujo-vehicular-por-radares-2019.csv', header = T, encoding = 'UTF-8', stringsAsFactors = F)
-
-
-### df para el plotly
-
 ######## CODIGO GRAFICO comparando 2020/2019 DESDE 13/3 AL 27/3 ################
 
 #suma la cantidad por dispo_nombre por dia
@@ -31,7 +18,6 @@ df_mapAccesos2020= df_flujoVehic2020 %>%
 df_accesos_marzo2020=data.frame()
 df_accesos_marzo2020 = df_mapAccesos2020 %>%
   filter(as.Date(fecha)>='2020-03-13' && as.Date(fecha)<='2020-03-27') #solo me quedo con las filas que cumplen la condicion.
-
 
 
 
@@ -64,8 +50,6 @@ df_sentidoB_junio = na.omit(df_) %>%
 
 
 
-
-
 #UI
 
 ui<- fluidPage( 
@@ -76,7 +60,14 @@ ui<- fluidPage(
           height="30%", 
           width="30%", 
           strong('COVID19 en CABA'), align= "center",
-          br() ) ),
+          
+          br() )),
+  h1(img( src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/724px-R_logo.svg.png',
+          height=320, 
+          width=320, 
+          align = 'right'
+          )
+     ), # fin h1,
   h2("Qué tenes que saber antes de que se levante la Cuarentena.", align="center",
      hr()),
   
@@ -181,15 +172,24 @@ ui<- fluidPage(
                
                tabPanel("Subte: Estaciones y su concentración por horario", 
                         tags$br(),
-                        tags$h1('Cuáles son los barrios más afectados y su relación con el transporte'),
+                        tags$h1('¿Cuáles son los focos de concentración de pasajeros más importantes de la red?'),
                         tags$br(),
                         tags$br(),
-                        tags$p('texto.'),
-                        tags$p('texto.'),
+                        tags$br(),
+                        tags$p('En el gráfico de tipo scatterplot a continuación se pueden visualizar las estaciones y horarios que 
+                               mayor concentración de pasajeros presentan. El horario establecido para el análisis es el comprendido 
+                               entre las 5hs y las 21hs, considerando todo el mes de junio de 2019'),
+                        tags$br(), 
+                        tags$p('Se utilizaron los datos del último mes de junio que se tienen registros para estimar la cantidad de 
+                               pasajeros que podrían circular en caso de abrirse la cuarentena.'),
+                        tags$br(), 
+                        tags$p('Esto nos servirá para identificar qué estaciones deben tener mayor presencia y rigurosidad tanto en el 
+                               control de salubridad de los pasajeros como en la cartelería informativa para generar conciencia en los 
+                               ciudadanos.'),
                         tags$br(), 
                         tags$p('Se observan que las siguientes zonas serían las más expuestas:'),
                         
-                        plotlyOutput(outputId = 'graf_subte'),
+                        plotOutput(outputId = 'graf_subte'),
                         tags$br(),
                         tags$br(),
                         tags$br(),
