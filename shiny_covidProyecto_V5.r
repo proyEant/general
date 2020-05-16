@@ -77,6 +77,7 @@ ui<- fluidPage(
                       
                       
                ),#CIERRA 8
+               column(2), #Cierra 2
              ),
     ),
     
@@ -87,14 +88,13 @@ ui<- fluidPage(
                         tags$br(),
                         tags$h1('Cuáles son los barrios más afectados y su relación con el transporte'),
                         tags$br(),
-                        tags$br(),
                         tags$p('En el siguiente mapa te mostramos cuáles son los barrios que tienen más casos confirmados de 
                                COVID19.'),
                         tags$p('Ahora, teniendo en cuenta esas cifras y si a la vez añadimos información sobre la cantidad de circulantes en las
                                zonas aledañas de acceso a los barrios porteños, tomando los datos sobre tráfico en autopistas, subtes y trenes
                                podemos ver cuál sería el nivel de circulación que  existiría a la hora de levantar la cuarentena completamente.'),
                         tags$br(), 
-                        tags$p('Se observan que las siguientes zonas serian las mas expuestas:'),
+                        tags$p(strong('Se observan que las siguientes zonas serian las mas expuestas:')),
                         tags$ul(
                           tags$li('Las Zonas cercanas a la línea D de Subtes'),
                           tags$li('La Zona de Retiro. Primeramente por ser una de las zonas que posee mas casos  de contagio y por otro lado 
@@ -218,40 +218,41 @@ ui<- fluidPage(
     
     
     tabPanel("Análisis según Servicios",
-             
-             navlistPanel( #Habría que considerar eliminarlo, y dejar solo título. Para abarcar más espacio con el mapa.
-               tabPanel("Mapa de ubicación Servicios", 
-                        tags$br(),
-                        tags$h1('Cuáles son los barrios más afectados y su relación con los Servicios'),
-                        tags$br(),
-                        tags$br(),
-                        tags$p('Analizando los diferentes servicios se observa lo siguiente:'),
-                        tags$br(),
-                        tags$p('Las clínicas privadas se concentran justamente en los barrios que tienen entre 50 y 150 casos de contagios 
+             fluidRow(
+               column(1),
+               column(10,
+                      tags$br(),
+                      tags$h1('Cuáles son los barrios más afectados y su relación con los Servicios'),
+                      tags$br(),
+                      tags$p('Analizando los diferentes servicios se observa lo siguiente:'),
+                      tags$br(),
+                      tags$p('Las clínicas privadas se concentran justamente en los barrios que tienen entre 50 y 150 casos de contagios 
                         - Recoleta, Balvanera, Almagro, Palermo, Caballito y Belgrano- o próximos a barrios cómo Retiro y Flores con más de 
                         200 casos.'),
-                        tags$p('En cambio, los Hospitales se concentran mayormente en zona Sur dónde los casos de contagios no son tan elevados, 
+                      tags$p('En cambio, los Hospitales se concentran mayormente en zona Sur dónde los casos de contagios no son tan elevados, 
                         menos de 50 casos por barrio. También hay concentración de Hospitales, pero en menor medida, en Recoleta y Caballito que 
                         son barrios con número de casos de contagio intermedio.'),
-                        tags$p('Los vacunatorios se encuentran distribuidos uniformente a lo largo de toda la Ciudad, sin embargo se observa 
+                      tags$p('Los vacunatorios se encuentran distribuidos uniformente a lo largo de toda la Ciudad, sin embargo se observa 
                         mayor concentración en Palermo y Recoleta -contagios moderados- muy cerca de la alta concentración de Clínicas y 
                         Hospitales en dichos barrios.'),
-                        tags$p('En cuanto a Farmacias y Cajeros Automáticos - servicios que aglomeran una gran cantidad de personas- se observa 
+                      tags$p('En cuanto a Farmacias y Cajeros Automáticos - servicios que aglomeran una gran cantidad de personas- se observa 
                         una alta concentración en zona Norte y Centro de la Ciudad dónde se encuentran los barrios con mayores casos de contagios.'), 
-                        tags$br(), 
-                        tags$br(), 
-                        tags$br(),
-                        tags$br(),
-                        leafletOutput(outputId = 'mapa_s'),
-                        tags$br(),
-                        tags$br(),
-                        tags$br()
-               )
-             )#fin navlispanel   
-             
-             
-             
-    ), # fin tabPanel Analsis servicios
+                      tags$br(), 
+                      tags$br(), 
+                      tags$br(),
+                      tags$br(),
+                      leafletOutput(outputId = 'mapa_s'),
+                      tags$br(),
+                      tags$br(),
+                      tags$br(),
+                      tags$br(),
+                      tags$br(),
+                      tags$br(),
+
+
+               ),#CIERRA 8
+             ) #fin fluidRow
+             ), # fin tabPanel Analsis servicios
     
     
     
@@ -260,64 +261,67 @@ ui<- fluidPage(
              column(2),
              column(8, 
                     tags$br(),
-                    tags$h1('Ahora que tenes esta info que pensás?'),
+                    tags$h1('Ahora que tenes esta info, ¿que pensás?'),
                     tags$br(),
                     tags$br(),
-                    tags$p('Repasemos cuáles son los barrios que poseen más casos de infectados confirmados hasta la fecha:'),
+                    tags$p(strong('Repasemos cuáles son los barrios que poseen más casos de infectados confirmados hasta la fecha:')),
                     tags$br(), 
                     tags$ul(
-                      tags$li('zona1.'),
-                      tags$li('zona2'),
-                      tags$li(' '),
-                      tags$li(' .'),
-                      tags$li(' '),
-                      tags$li(' '),
-                      tags$li(' .'),
-                      tags$li(' .'),
-                      
+                      tags$li('Retiro: 293 casos'),
+                      tags$li('Flores: 238 casos'),
+                      tags$li('Palermo: 111 casos '),
+                      tags$li('Balvanera: 91 casos'),
+                      tags$li('Belgrano: 89 casos'),
+                      tags$li('Recoleta: 88 casos '),
+                      tags$li('Balvanera: 91 casos'),
+
                     ),#cierre ul
                     
                     tags$br(),
-                    tags$p('Teniendo en cuenta los focos de concentración de personas según lo estudiado, cuando se libere 
-                      completamente la cuarentena, los sectores que tendrán mayor circulación de peatones son:'),
+                    tags$p(strong('Teniendo en cuenta los focos de concentración de personas según lo estudiado, cuando se libere 
+                      completamente la cuarentena, los sectores que tendrán mayor circulación de peatones son:')),
                     tags$br(), 
                     tags$ul(
-                      tags$li('zona1.'),
-                      tags$li('zona2'),
+                      tags$li('Micro Centro'),
+                      tags$li('Retiro'),
+                      tags$li('Constitución'),
+                      tags$li('Palermo'),
+                      tags$li('Belgrano'),
                       tags$li(' '),
-                      tags$li(' .'),
-                      tags$li(' '),
-                      tags$li(' '),
-                      tags$li(' .'),
-                      tags$li(' .'),
+
                     ), #fin ul
                     
                     tags$br(), 
                     tags$br(),
-                    tags$p('Por lo que si no tenemos los cuidados necesarios, podrían propagarse los contagios rapidamente y perder todo el trabajo
-                      logrado en cuestion de días.'),
+                    h3(tags$p('Considerando la cantidad de casos y la cantidad de las personas en circulación, si no tenemos los 
+                    cuidados necesarios, podrían propagarse los contagios rápidamente y perder todo el trabajo
+                    logrado en cuestion de días.')),
                     tags$br(),
                     tags$p('Para evitar esto tenemos algunas sugerencias:'),
                     tags$p('Como individuos, tenemos la obligación de seguir cumpliendo con las recomendaciones del uso de tapa bocas,
-                      alcohol en gel, guantes descartables, higienizarte las manos con agua y jabón, limpiar bien lo que uses o 
+                      alcohol en gel, guantes descartables, higiene de las manos con agua y jabón, limpiar bien lo que uses o 
                       traigas de la calle según recomendaciones.'),
                     tags$p('Como tarea por parte del estado, deberá incrementar el personal de vigilancia para recordar a los circulantes
-                      las medidas de distanciamiento social, el uso obligatorio de tapa boca.'),
+                      las medidas de distanciamiento social, el uso obligatorio de tapa boca y alcohol en gel.'),
                     
                     tags$p('Es importante realizar campañas para que las entidades u organizaciones de atención al público brinden los elementos 
-                      necesarios para ayudar a las personas con la higiene y los cuidados correspondientes, facilitando el 
-                      acceso al alcohol en gel, guantes de latex y en caso de accidente con la mascarilla poder proporcionar 
-                      una de emergencia.'),
+                      necesarios para ayudar a las personas con la higiene y con los cuidados correspondientes, facilitando el 
+                      acceso al alcohol en gel, guantes de latex y en caso de algún inconveniente con el barbijo poder proporcionar 
+                      uno de emergencia.'),
                     
-                    tags$p('En caso de entidades como bancos, clínicas, hospitales y vacunatorios lograr un manejo de distribución 
-                      de las personas alternativo. Para esto es importante conocer cuáles son las zonas con menor circulación de personas.'),
+                    tags$p('Laboralmente el gobierno podria realizar y promover propuestas de jornadas laborales alternativas como trabajo
+                      remoto, jornadas partidas, extención de horarios, entre otros.'),
                     
-                    tags$p('Concientizar a los ciudadanos que la circulación únicamente sea si es necesario, y de tener la posibilidad
+                    tags$p('En caso de entidades como bancos, clínicas, hospitales y vacunatorios una posible opción podría ser procurar
+                    un manejo de distribución de las personas alternativo. Para poder decidir como canalizar la distribución es importante 
+                    conocer cuáles son las zonas con mayor cantidad de casos y transeúntes y derivarlo a las de menor circulación de personas.'),
+                    
+                    tags$p('Concientizar a los ciudadanos que la circulación sea si únicamente es necesario, y de tener la posibilidad
                       de elegir, elegir zonas que sean aquellas donde menos concentración haya.'),
                     
                     tags$p('Sabemos Qué accesos son los de mayor caudal, por lo que se debería agilizar los controles pertinentes
                       para el ingreso a CABA, para así no resulten demoras en las autopistas ya que podría ser de utilidad 
-                      un flujo más agil ante urgencias.'),
+                      un flujo más agil ante urgencias. Estos controles de ingreso deberían seguir siendo justificados.'),
                     tags$br(), 
              ),#fin col8
     ), # fin conclusiones
@@ -330,20 +334,14 @@ ui<- fluidPage(
                     entero y nos pareció interesante poder emplear las herramientas que hemos aprendido durante el curso
                     de "Data Analytics".'),
                     tags$br(),
-                    
-                    img( src='https://drive.google.com/file/d/1Mdb_Rsx70X7vO7Xxj9z59qYM2yElNI79/preview',
-                         width="640",
-                         height="480"),
-                    
+
                     tags$p('Hemos realizado primeramente una investigación de los Data Sets disponibles que propone el Gobierno
                     de la Ciudad y en base a nuestro interés sobre el COVID19 aplicamos la metodología "Data thinking" para decidir
                     que potencial teníamos en frente.'),
                     tags$p('Luego lo que hicimos fue dividir el proyecto en tareas hacibles,ordenanando las mismas en
                            un tablero de Trello. Una vez identificadas las tareas, se le asignó un responsable a cada una de ellas.'),
                     
-                    
-                    
-                    img( src='https://drive.google.com/file/d/1Mdb_Rsx70X7vO7Xxj9z59qYM2yElNI79',
+                    img( src='https://github.com/proyEant/general/raw/master/mapaconceptual.png',
                          height="80%", 
                          width="80%",
                          align= "center",
@@ -358,7 +356,7 @@ ui<- fluidPage(
                       tags$li(a('https://data.buenosaires.gob.ar/dataset/farmacias/archivo/juqdkmgo-1101-resource')),
                       tags$li(a('https://data.buenosaires.gob.ar/dataset/flujo-vehicular-por-radares-ausa/archivo/e8a5b66e-ffcd-47a1-a0af-e1caf0f5c8ab')),
                       tags$li(a('https://data.buenosaires.gob.ar/dataset/flujo-vehicular-por-radares-ausa/archivo/66bbccae-d6e0-43f4-b874-dbdece04dfd1')),
-                      tags$li(a('https://data.buenosaires.gob.ar/dataset/subte-viajes-molinetes ')),
+                      tags$li(a('https://data.buenosaires.gob.ar/dataset/subte-viajes-molinetes')),
                       tags$li(a('https://docs.google.com/spreadsheets/d/16-bnsDdmmgtSxdWbVMboIHo5FRuz76DBxsz_BbsEVWA/edit#gid=1627928258')),
                       tags$li(a('https://data.buenosaires.gob.ar/dataset/cajeros-automaticos')),
                       tags$li(a('https://data.buenosaires.gob.ar/dataset/vacunatorios-adultos-mayores')),
@@ -428,21 +426,20 @@ ui<- fluidPage(
                              
                     ),
                     tags$div(tags$p(strong('Nuestra experiencia en el trabajo de COVID19.')),
-                             
                              tags$br(),
-                             tags$p('El curso nos brindó herramientas para introducirnos en el mundo del 
-                                    "Data Analytics" y "R".'),
-                             tags$br(),
-                             tags$br()
-                             
-                             
-                             
-                             
+                             tags$div(tags$p(strong('Nuestra experiencia en el trabajo de COVID19.')),
+                                      tags$br(),
+                                      tags$p('El curso nos brindó herramientas para introducirnos en el mundo del 
+                                    "Data Analytics" y "R". Nos dió la base para pensar qué tipo de graficos y mapas podían ser los mas
+                                    adecuados para este trabajo.'),
+                                      tags$p('Con esa base, hemos además investigado nuevas posibilidades que aplicamos al proyecto como por ejemplo
+                                    mapas interactivos, levantar archivos en formato excel, acceso a google drive, googlesheets, etc.'),
+                                      tags$br(),
+                                      tags$br(),
+                                      ),
                     )
                     
-                    
-                    
-                    
+
              )#cierra column8
              
     )#cierra About us
