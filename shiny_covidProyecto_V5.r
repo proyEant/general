@@ -58,10 +58,15 @@ ui<- fluidPage(
                           
                         ),#cierre ul
                       ),#cierre del div
+               ), #Cierra 8
+               column(2), #Cierra 2
+             ), #Cierre Fluid 1
+             fluidRow(
+               column(2),
+               column(10,
                       tags$br(),
                       tags$br(),
                       tags$div(
-                        
                         img( src='https://images.unsplash.com/photo-1534126874-5f6762c6181b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80',
                              height="80%", 
                              width="80%",
@@ -73,18 +78,16 @@ ui<- fluidPage(
                         tags$br(),
                         tags$br(),
                         tags$br(),
-                      ),  
+                      ),
+               ), #Cierra 10
+             ), #Cierra fluid 2
+    ), #Cierra tabpanel
                       
-                      
-               ),#CIERRA 8
-               column(2), #Cierra 2
-             ),
-    ),
-    
     tabPanel("Análisis según transporte",
              
              navlistPanel(
-               tabPanel("Mapa Circulación por Medio de Transporte", 
+               'Mapa',
+               tabPanel("Circulación por Medio de Transporte", 
                         tags$br(),
                         tags$h1('Cuáles son los barrios más afectados y su relación con el transporte'),
                         tags$br(),
@@ -120,8 +123,8 @@ ui<- fluidPage(
                         tags$br(),
                         tags$br()
                ),
-               
-               tabPanel("Subte: Estaciones y su concentración por horario", 
+               'Gráfico Subte',
+               tabPanel("Estaciones y su concentración por horario", 
                         tags$br(),
                         tags$h1('¿Cuáles son los focos de concentración de pasajeros más importantes de la red?'),
                         tags$br(),
@@ -149,8 +152,8 @@ ui<- fluidPage(
                         tags$br()
                ),
                
-               
-               tabPanel("Accesos: Comparación de Circulacion",
+               'Gráficos Accesos',
+               tabPanel("Comparación de Circulacion",
                         tags$br(),
                         tags$h1('Cómo se redujo el volumen de circulación desde la cuarentena.'),
                         tags$br(),
@@ -181,7 +184,7 @@ ui<- fluidPage(
                         
                ),
                
-               tabPanel("Accesos: Circulación semana pre y post cuarentena",
+               tabPanel("Circulación semana pre y post cuarentena",
                         tags$br(),
                         tags$h1('Qué pasó con el flujo de circulación durante la semana anterior y posterior al confinamiento'),
                         tags$br(),
@@ -327,6 +330,7 @@ ui<- fluidPage(
     
     tabPanel("Recursos",
              tags$br(),
+          fluidRow(
              column(2),
              column(8,
                     tags$p('Se nos ocurrió analizar este tema ya que es una situación nueva y extraordinaria que afecta al mundo
@@ -348,7 +352,7 @@ ui<- fluidPage(
                          VSPACE= 3,
                          align= "right"),
                     
-                    tags$p('Data set que utilizamos:'),
+                    tags$p('Data sets que utilizamos:'),
                     tags$ul(
                       tags$li(a('https://data.buenosaires.gob.ar/dataset/centros-salud-privados/archivo/juqdkmgo-461-resource')),
                       tags$li(a('https://data.buenosaires.gob.ar/dataset/hospitales/archivo/juqdkmgo-1191-resource')),
@@ -363,38 +367,41 @@ ui<- fluidPage(
                       
                       
                     ),#cierre ul
-                    
-                    
-                    tags$p('Las librerías que empleamos son las siquientes:'),
-                    tags$ul(
-                      
-                      tags$li('library(shiny)'),
-                      tags$li('library(DT)'),
-                      tags$li('library(tidyverse)'),
-                      tags$li('library(tidytext)'),
-                      tags$li('library(wordcloud2)'),
-                      tags$li('library(tidytext)'),
-                      tags$li('library(wordcloud2)'),
-                      tags$li('library(plotly)'),
-                      tags$li('library(ggplot2)'),
-                      tags$li('library(leaflet)'),
-                      tags$li('library(viridis)'),
-                      tags$li('library(googledrive)'),
-                      
-                    ),#cierre ul
-                    tags$br(),
-                    tags$br(),
-                    img( src='https://agrippadataconsulting.com/blog/content/images/2019/01/r-packages-hexagons.png',
-                         height="60%", 
-                         width="60%",
-                         align= "center",
-                         HSPACE=4,
-                         VSPACE= 3,
-                    )
-                    
-                    
+
              ),# fin column 8  
-             
+          ), #Cierre fluid 1
+             fluidRow(
+               column(2),
+               column(3,
+                      tags$p('Las librerías que empleamos son las siquientes:'),
+                      tags$ul(
+                        
+                        tags$li('library(shiny)'),
+                        tags$li('library(DT)'),
+                        tags$li('library(tidyverse)'),
+                        tags$li('library(tidytext)'),
+                        tags$li('library(wordcloud2)'),
+                        tags$li('library(tidytext)'),
+                        tags$li('library(wordcloud2)'),
+                        tags$li('library(plotly)'),
+                        tags$li('library(ggplot2)'),
+                        tags$li('library(leaflet)'),
+                        tags$li('library(viridis)'),
+                        tags$li('library(googledrive)'),
+                        
+                      ),#cierre ul
+               ), #Cierre 3
+               column(6,
+                      img( src='https://agrippadataconsulting.com/blog/content/images/2019/01/r-packages-hexagons.png',
+                           height="60%", 
+                           width="60%",
+                           align= "center",
+                           HSPACE=4,
+                           VSPACE= 3,
+                      ),
+               ) #Cierre 6
+             ), #Cierre fluid 2
+                      
     ), # fin recursos
     
     
@@ -432,13 +439,16 @@ ui<- fluidPage(
                     ),
                     tags$div(tags$p(strong('Nuestra experiencia en el trabajo de COVID19.')),
                              tags$br(),
-                             tags$br(),
                              tags$p('El curso nos brindó herramientas para introducirnos en el mundo del 
                                     "Data Analytics" y "R". Nos dió la base para pensar qué tipo de graficos y mapas podían ser los mas
                                     adecuados para este trabajo.'),
                              tags$p('Con esa base, hemos además investigado nuevas posibilidades que aplicamos al proyecto como por ejemplo
                                     mapas interactivos, levantar archivos en formato excel, acceso a google drive, googlesheets, etc.'),
                              tags$br(),
+                             tags$p('En el transcurso del trabajo se nos presentaron muchas dificultades para modelar, integrar y reproducir 
+                                    los distintos dataset con los gráficos y entre las distintas plataformas de repositorios en la nube.'),
+                             tags$p('A pesar de lo anterior, logramos avanzar resolviendo todos los imprevistos generando una aplicación de
+                                    visualización en Shiny funcional, con los datos que buscamos representar y en la disposición deseada.'),
                              tags$br(),
                              ),
 
