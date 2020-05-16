@@ -19,6 +19,11 @@ library(purrr)
 library(gsheet)
 library(googlesheets)
 library(shiny)
+library(httr)
+library(rio)
+library(magrittr)
+library(XML)
+library(gdata)
 
 
 #Iniciación
@@ -37,5 +42,7 @@ Leer_gDrive<-function(link_drive,sep=",",dec=".") {
                sep=sep,dec=dec,encoding = 'UTF-8',stringsAsFactors = F,integer64 = "character",header = T))
 }
 
+
+GitHub_token <- 'cd4846e1dd0aa120be195e0c54404839ba317540'
 # Puede requerir autenticación
 #      googledrive::drive_auth()

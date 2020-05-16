@@ -38,16 +38,17 @@ df <- merge(df,dfcabanew)
 #View(df)
 rm(dfcabanew)
 
+
 #DF Fallecidos
 
-drive_download("Fallecidos.xlsx",overwrite = TRUE)
-df_fallecidos<-read_xlsx('Fallecidos.xlsx')
-
-#df_fallecidos <- read_xlsx('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/Fallecidos.xlsx')
+df_fallecidos <- read.csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vTum1u-ykKxIqkzkG5Hz-rsAiBIYUGFx3qBsRWAiesJo8JjJrUKzv_Kg8z1S07Wdw/pub?output=csv',stringsAsFactors = F,header = T)
+df_fallecidos$fecha <- as.Date(df_fallecidos$fecha,'%d/%m/%Y')
 df_fallecidos=df_fallecidos %>% 
   filter(provincia=="CABA")
 
+
 #view(df_fallecidos)
+
 
 
 #DF Censo Radial 2010 - Densidad
@@ -119,13 +120,12 @@ df_vacunatorios <-Leer_gDrive("https://drive.google.com/open?id=1wh4swah6h-Y9rik
 #view(df_vacunatorios)
 
 
-#DF Molinetes y limpieza #MOLINETES Y MOLINETES122019 se deben descargar manualmente el Gdrive.
+#DF Molinetes y limpieza #MOLINETES Y MOLINETES122019 se deben descargar manualmente del Gdrive.
 
 # Enlace de gDrive = "https://drive.google.com/open?id=1fYluNN84P2mFcFGGLY3GI70utm-90Ie7"
-#drive_download("molinetes.csv",overwrite = TRUE)
-#subte_feb20<-read.csv('molinetes.csv',stringsAsFactors = F, encoding = 'UTF-8')
 
-subte_feb20 <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general/molinetes.csv',stringsAsFactors = F, encoding = 'UTF-8')
+
+subte_feb20 <- read.csv(paste0(getwd(),'/molinetes.csv'),stringsAsFactors = F, encoding = 'UTF-8')
 subte_feb20$fecha = as.Date(subte_feb20$fecha,'%Y-%m-%d')
 subte_feb20$estacion <- toupper(subte_feb20$estacion)
 subte_feb20$desde <- substring(subte_feb20$desde,1,2)
@@ -217,11 +217,9 @@ subte_feb20 <- subte_feb20%>% select(ESTACION,'horario'=horario,LINEA,lat,lng,di
 #DF Molinetes Junio 2019 y limpieza (Para evaluar el impacto de liberación de cuarentena)
 # Datos para gráfica de pasajeros # Sobre año 2019 [Top estaciones con mayor caudal de pasajeros]
 
-#subte_gen_jun19 <-Leer_gDrive("https://drive.google.com/open?id=1j2AqTcKnuHyFXBTlSx9okk9S9vVhSOpK",sep=",")
-subte_gen_jun19 <- read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/general/molinetes122019.csv',stringsAsFactors = F, encoding = 'UTF-8')
+#gDrive <- ("https://drive.google.com/open?id=1j2AqTcKnuHyFXBTlSx9okk9S9vVhSOpK")
 
-#drive_download("molinetes122019.csv",overwrite = TRUE)
-#subte_gen_jun19<-read.csv('molinetes122019.csv',stringsAsFactors = F, encoding = 'UTF-8')
+subte_gen_jun19 <- read.csv(paste0(getwd(),'/molinetes122019.csv'),stringsAsFactors = F, encoding = 'UTF-8')
 
 subte_gen_jun19$fecha = as.Date(subte_gen_jun19$fecha,'%Y-%m-%d')
 subte_gen_jun19$estacion <- toupper(subte_gen_jun19$estacion)
@@ -300,8 +298,6 @@ df_cajeros <- df_cajeros %>% rename(
 df_flujoVehic2020 <-Leer_gDrive("https://drive.google.com/open?id=18k_T6sHYIBLwjHq9MCeqPhuNvpXaAy-m",sep=",")
 df_flujoVehic2019 <-Leer_gDrive("https://drive.google.com/open?id=1864w0n2-CAGUOLnJExPmYVZPXNY0RGD7",sep=",")
 
-#df_flujoVehic2020 = read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/flujo-vehicular-por-radares-2020.csv', header = T, encoding = 'UTF-8', stringsAsFactors = F)
-#df_flujoVehic2019 = read.csv('C:/Users/Bruno/Documents/Bruno/Emprender/Formacion/EANT - Data Analytics/Proyecto Final/Datos/flujo-vehicular-por-radares-2019.csv', header = T, encoding = 'UTF-8', stringsAsFactors = F)
 
 #suma la cantidad por dispo_nombre por dia
 df_mapAccesos= df_flujoVehic2020 %>% 
@@ -326,6 +322,7 @@ df_accesos2019 = na.omit(df_flujoVehic2019) %>%
   group_by(fecha, autopista_nombre, disp_nombre, seccion_sentido, lat, long) %>% 
   summarise(totalDia= sum(cantidad))
 
+
 ##armo loa data Frame de junio por acceso y promedio por mes
 
 df_sentidoA_junio19 = na.omit(df_accesos2019) %>%
@@ -338,7 +335,49 @@ df_sentidoB_junio19 = na.omit(df_accesos2019) %>%
   group_by(autopista_nombre, disp_nombre, seccion_sentido, lat, long) %>% 
   summarise(promedioMes = round(sum(totalDia)/30))
 
-rm(df_accesos_40)
+
+
+######## CODIGO GRAFICO comparando 2020/2019 DESDE 13/3 AL 27/3 ################
+
+#suma la cantidad por dispo_nombre por dia
+##2020
+
+df_mapAccesos2020= df_flujoVehic2020 %>% 
+  group_by(fecha, autopista_nombre, disp_nombre, lat, long) %>% 
+  summarise(totalDia= sum(cantidad))
+
+##lo mismo para 2019
+
+df_mapAccesos2019= df_flujoVehic2019 %>% 
+  group_by(fecha, autopista_nombre, disp_nombre, lat, long) %>% 
+  summarise(totalDia= sum(cantidad))
+
+
+#TOMO SOLO del 13 al 27 DE MARZO.
+df_accesos_marzo2020 <- data.frame()
+df_accesos_marzo2020 <- df_mapAccesos2020 %>%
+  filter(as.Date(fecha)>='2020-03-13' && as.Date(fecha)<='2020-03-27') #solo me quedo con las filas que cumplen la condicion.
+
+##2019 tomo mismas fechas de marzo que df_accesos_marzo2020
+
+df_accesos_marzo_2019 <- data.frame()
+df_accesos_marzo_2019 <- df_mapAccesos2019 %>% 
+  filter( as.character((as.Date(fecha) + 366)) %in% c(unique(df_accesos_marzo2020$fecha)))
+
+
+
+#TOMO SOLO del 13 al 27 DE MARZO sentidoA.
+sentidoA=data.frame()
+sentidoA = df_mapAccesos2020 %>%
+  filter(as.Date(fecha)>='2020-03-13' && as.Date(fecha)<='2020-03-27', seccion_sentido == 'A') #solo me quedo con las filas que cumplen la condicion.
+
+#TOMO SOLO del 13 al 27 DE MARZO sentidoB.
+sentidoB=data.frame()
+sentidoB = df_mapAccesos2020 %>%
+  filter(as.Date(fecha)>='2020-03-13' && as.Date(fecha)<='2020-03-27', seccion_sentido == 'B') #solo me quedo con las filas que cumplen la condicion.
+
+
+
 
 # Armado de DF con densidad de casos por barrio
 

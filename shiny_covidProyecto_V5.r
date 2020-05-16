@@ -3,52 +3,6 @@ source('https://raw.githubusercontent.com/proyEant/general/master/Creacion de DF
 source('https://raw.githubusercontent.com/proyEant/general/master/Mapas.r')
 source('https://raw.githubusercontent.com/proyEant/general/master/Graficas.r')
 
-######## CODIGO GRAFICO comparando 2020/2019 DESDE 13/3 AL 27/3 ################
-
-#suma la cantidad por dispo_nombre por dia
-##2020
-
-df_mapAccesos2020= df_flujoVehic2020 %>% 
-  group_by(fecha, autopista_nombre, disp_nombre, lat, long) %>% 
-  summarise(totalDia= sum(cantidad))
-
-
-
-#TOMO SOLO del 13 al 27 DE MARZO.
-df_accesos_marzo2020=data.frame()
-df_accesos_marzo2020 = df_mapAccesos2020 %>%
-  filter(as.Date(fecha)>='2020-03-13' && as.Date(fecha)<='2020-03-27') #solo me quedo con las filas que cumplen la condicion.
-
-
-
-##########df para el mapa
-
-
-df_ = na.omit(df_flujoVehic2019) %>%
-  group_by(fecha, autopista_nombre, disp_nombre, seccion_sentido, lat, long) %>% 
-  summarise(totalDia= sum(cantidad))
-
-##armo loa data Frame de junio por acceso y promedio por mes
-
-df_sentidoA_junio = na.omit(df_) %>%
-  filter(fecha>='2019-06-01' && fecha<='2019-06-30', seccion_sentido == 'A' ) %>% 
-  group_by(autopista_nombre, disp_nombre, seccion_sentido, lat, long) %>% 
-  summarise(promedioMes = round(sum(totalDia)/30))
-
-df_sentidoB_junio = na.omit(df_) %>%
-  filter(fecha>='2019-06-01' && fecha<='2019-06-30', seccion_sentido == 'B' ) %>% 
-  group_by(autopista_nombre, disp_nombre, seccion_sentido, lat, long) %>% 
-  summarise(promedioMes = round(sum(totalDia)/30))
-
-
-
-##############
-
-
-
-
-
-
 
 #UI
 
@@ -59,11 +13,11 @@ ui<- fluidPage(
           height="30%", 
           width="30%", 
           strong('COVID19 en CABA'), 
-          align= "center"),
-     img( src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/724px-R_logo.svg.png',
-          height=200, 
-          width=200, 
-          align = 'right')
+          align= "center")#,
+#     img( src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/724px-R_logo.svg.png',
+#          height=200, 
+#          width=200, 
+#          align = 'right')
   ),
      br(),
       # fin h1,
@@ -501,31 +455,23 @@ server<- function(input, output){
   
   # GRAFICO, subte       
   output$graf_subte=renderPlot({
+    
     graf_subte
+    
   })# fin render plot  
   
   
   # GRAFICO 2020 DESDE 13/3 AL 27/3  
   output$id_grc_2020=renderPlotly({
     
-    p <- ggplot(df_accesos_marzo2020, aes(x = fecha, y = totalDia ,color=autopista_nombre, text = paste("Acceso:",disp_nombre))) + 
-      geom_point() +
-      scale_color_viridis(discrete = T, option = 'D',direction = 1)+
-      facet_wrap(~ autopista_nombre)+
-      theme(axis.text.x = element_text(angle = 90))+
-      geom_hline(yintercept = 40000, colour="orange")+
-      geom_hline(yintercept = 70000, colour="red")
-    
-    fig <- ggplotly(p)
-    fig$x$layout$title <- 'Cantidad de Accesos periodo 13/3 a 27/3 del año 2020'
-    fig
+    traf_mar_20_p
     
   })# fin render plot
   
   # GRAFICO 2019 DESDE 13/3 AL 27/3  
   output$id_grc_2019=renderPlotly({
     
-    
+    traf_mar_19_p
     
   })# fin render plot
   
@@ -533,17 +479,16 @@ server<- function(input, output){
   #GRAFICO 2020 DESDE 13/3 AL 27/3 para sentido A    
   output$id_grc_A=renderPlotly({
     
-    
+    traf_mar20_sentidoA_p
     
   })# fin render plot
   
   #GRAFICO 2020 DESDE 13/3 AL 27/3 para sentido B        
   output$id_grc_B=renderPlotly({
     
-    
+    traf_mar20_sentidoB_p
     
   })# fin render plot
-  
   
   
   
