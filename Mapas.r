@@ -54,7 +54,7 @@ autsalidalabels <- sprintf(
 # Salud (con Vacunatorios y Cajeros)
 mapa_s <-
 leaflet(data = df) %>%
-  addTiles() %>%
+  addTiles(urlTemplate = TilesBA) %>%
   addProviderTiles('CartoDB.Positron',
                    group = 'Cartografía Limpia') %>% 
   addPolygons(label = barrioslabels,
@@ -186,9 +186,5 @@ leaflet(data = df) %>%
             position = 'bottomright',
             title = 'Cantidad de casos:'
   )
-
-
-
-# Las estaciones de subte y tren deben estar por día, considerando el total de pases por 1 día.
 
 
