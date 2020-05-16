@@ -1,7 +1,7 @@
 source('https://raw.githubusercontent.com/proyEant/general/master/Iniciacion.r')
 source('https://raw.githubusercontent.com/proyEant/general/master/Creacion de DF y limpieza.r')
 source('Mapas.r')
-#source('Graficas.r') # todavía no está listo
+source('Graficas.r')
 
 
 ##########SE DEFINEN LOS DATA FRAMES PARA LEVANTAR 
@@ -164,7 +164,6 @@ ui<- fluidPage(
                           tags$li('Barrio de Palermo'),
                           tags$li('Barrio de Balvanera'),
                           tags$li('Barrio de Belgrano '),
-                          tags$li(' '),
                           tags$li(' .'),
                           tags$li(' .'),
                           
@@ -291,11 +290,6 @@ ui<- fluidPage(
                         tags$br(),
                         tags$br(),
                         tags$br()
-               ),
-               
-               tabPanel("Mapa de barrios más comprometidos",
-                        br(),
-                        plotOutput(outputId = 'id_mapaC')
                )
              )#fin navlispanel   
              
@@ -504,11 +498,11 @@ ui<- fluidPage(
 server<- function(input, output){
   
   
-  ### RENDER PLOTLY  
+  ### RENDER PLOTLY Y GGPLOT 
   
   # GRAFICO, subte       
-  output$graf_subte=renderPlotly({
-    
+  output$graf_subte=renderPlot({
+    graf_subte
   })# fin render plot  
   
   
