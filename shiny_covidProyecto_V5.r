@@ -1,7 +1,7 @@
-source('https://raw.githubusercontent.com/proyEant/general/master/Iniciacion.r')
-source('https://raw.githubusercontent.com/proyEant/general/master/Creacion de DF y limpieza.r')
-source('https://raw.githubusercontent.com/proyEant/general/master/Mapas.r')
-source('https://raw.githubusercontent.com/proyEant/general/master/Graficas.r')
+source('https://raw.githubusercontent.com/proyEant/general/master/Iniciacion.r',encoding = 'UTF-8')
+source('https://raw.githubusercontent.com/proyEant/general/master/Creacion de DF y limpieza.r',encoding = 'UTF-8')
+source('https://raw.githubusercontent.com/proyEant/general/master/Mapas.r',encoding = 'UTF-8')
+source('https://raw.githubusercontent.com/proyEant/general/master/Graficas.r',encoding = 'UTF-8')
 
 
 #UI
@@ -27,7 +27,7 @@ ui<- fluidPage(
   br(),
   
   tabsetPanel(
-    tabPanel("Covid19: Analisis",
+    tabPanel("Covid19: Análisis",
              br(),
              fluidRow(
                column(2),

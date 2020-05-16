@@ -65,7 +65,7 @@ leaflet(data = df) %>%
               opacity = 1.0,
               fillOpacity = 0.5,
               group = 'Casos por Barrio',
-              highlightOptions = highlightOptions(color = "white",
+              highlightOptions = highlightOptions(color = "black",
                                                   weight = 2,
                                                   bringToFront = F)
               ) %>% 
@@ -141,7 +141,7 @@ leaflet(data = df) %>%
               opacity = 1.0,
               fillOpacity = 0.42,
               group = 'Casos por Barrio',
-              highlightOptions = highlightOptions(color = "white",
+              highlightOptions = highlightOptions(color = "black",
                                                   weight = 2,
                                                   bringToFront = F)
               ) %>% 
@@ -179,7 +179,6 @@ leaflet(data = df) %>%
     overlayGroups = c("Autopistas: Acceso a CABA", "Autopistas: Salida de CABA",'Casos por Barrio','Estaciones de tren','Estaciones de subte','Cartografía Limpia'),
     options = layersControlOptions(collapsed = FALSE)
   ) %>% 
-  
   addLegend(pal = pal2,
             values = ~df$Casos7_5,
             opacity = 0.7,
