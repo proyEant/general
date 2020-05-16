@@ -292,8 +292,7 @@ ui<- fluidPage(
                     ), #fin ul
                     
                     tags$br(), 
-                    tags$br(),
-                    h3(tags$p('Considerando la cantidad de casos y la cantidad de las personas en circulación, si no tenemos los 
+                    h4(tags$p('Considerando la cantidad de casos y la cantidad de las personas en circulación, si no tenemos los 
                     cuidados necesarios, podrían propagarse los contagios rápidamente y perder todo el trabajo
                     logrado en cuestion de días.')),
                     tags$br(),
@@ -382,11 +381,16 @@ ui<- fluidPage(
                       tags$li('library(viridis)'),
                       tags$li('library(googledrive)'),
                       
-                      
                     ),#cierre ul
                     tags$br(),
                     tags$br(),
-                    
+                    img( src='https://agrippadataconsulting.com/blog/content/images/2019/01/r-packages-hexagons.png',
+                         height="60%", 
+                         width="60%",
+                         align= "center",
+                         HSPACE=4,
+                         VSPACE= 3,
+                    )
                     
                     
              ),# fin column 8  
@@ -423,22 +427,21 @@ ui<- fluidPage(
                              tags$p( em('"Mi interés por La tecnología, los números, la estadística, y la inteligencia en datos fue creciendo
                                     a lo largo de mi vida. Descubrir el potencial de trabajar con todo lo anterior me llevó a introducirme
                                     al universo de los datos y su representación para la toma de decisiones y conciencia."')),
-                             
+                             tags$br(),
+                             tags$br(),
                     ),
                     tags$div(tags$p(strong('Nuestra experiencia en el trabajo de COVID19.')),
                              tags$br(),
-                             tags$div(tags$p(strong('Nuestra experiencia en el trabajo de COVID19.')),
-                                      tags$br(),
-                                      tags$p('El curso nos brindó herramientas para introducirnos en el mundo del 
+                             tags$br(),
+                             tags$p('El curso nos brindó herramientas para introducirnos en el mundo del 
                                     "Data Analytics" y "R". Nos dió la base para pensar qué tipo de graficos y mapas podían ser los mas
                                     adecuados para este trabajo.'),
-                                      tags$p('Con esa base, hemos además investigado nuevas posibilidades que aplicamos al proyecto como por ejemplo
+                             tags$p('Con esa base, hemos además investigado nuevas posibilidades que aplicamos al proyecto como por ejemplo
                                     mapas interactivos, levantar archivos en formato excel, acceso a google drive, googlesheets, etc.'),
-                                      tags$br(),
-                                      tags$br(),
-                                      ),
-                    )
-                    
+                             tags$br(),
+                             tags$br(),
+                             ),
+
 
              )#cierra column8
              
