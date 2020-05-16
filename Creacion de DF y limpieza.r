@@ -253,18 +253,18 @@ rm(filt_top_15)
 
 #DF Hospitales y clínicas privadas
 
-#Hospitales <-Leer_gDrive("https://drive.google.com/open?id=1x4IXhXYM7XGy2hkBjFjZ2cVa2iTvvvMR",sep=",") #Este no está funcionando porque lo mal-decodifica google spreadsheets primero
-
 Hospitales0 <- getURL("https://raw.githubusercontent.com/proyEant/general/master/hospitales.csv")
-Hospitales <- read.csv(text = Hospitales0,stringsAsFactors = F,encoding = 'UTF-8')
-
+Hospitales <- read.csv(text = Hospitales0,stringsAsFactors = F,encoding = 'UTF-8',header = T)
+Hospitales$long <- as.numeric(Hospitales$long)
+Hospitales <- Hospitales %>%  drop_na()
+# En caso de error en importación, se puede descargar el archivo del repositorio que sigue,y abrirlo.
+#Hospitales <-Leer_gDrive("https://drive.google.com/open?id=1x4IXhXYM7XGy2hkBjFjZ2cVa2iTvvvMR",sep=",") #Este no está funcionando porque lo mal-decodifica google spreadsheets primero
+#Hospitales <- read.csv('hospitales.csv',encoding = 'UTF-8')
 rm(Hospitales0)
-
-#Hospitales<- read.csv('hospitales.csv',encoding = 'UTF-8')
-
 Hospitales <- Hospitales %>% select(barrio, lat, long, nombre, comuna, calle_nombre, telefono,calle_altura, tipo_espec) %>% 
   filter(!tipo_espec %in% c('SALUD MENTAL','MED. FISICA/REHABILITACION'))
 #view(head(Hospitales))
+
 Privados <-Leer_gDrive("https://drive.google.com/open?id=1OJ9QLniLAG5h1WIntOI5wlBlCrALt3ku",sep=",")
 #Privados<- read.csv('centros-de-salud-privados.csv',encoding = 'UTF-8')
 Privados <- Privados %>% select(lat,long,nombre,telefonos,barrio)
