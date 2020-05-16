@@ -83,33 +83,31 @@ ui<- fluidPage(
     tabPanel("Análisis según transporte",
              
              navlistPanel(
-               tabPanel("Mapa Circulación por medio de transporte", 
+               tabPanel("Mapa Circulación por Medio de Transporte", 
                         tags$br(),
                         tags$h1('Cuáles son los barrios más afectados y su relación con el transporte'),
                         tags$br(),
                         tags$br(),
                         tags$p('En el siguiente mapa te mostramos cuáles son los barrios que tienen más casos confirmados de 
-                               COVID19 y su relación con los medios de transporte.'),
-                        tags$p('Ahora, teniendo en cuenta esas cifras y a la vez si sumamos la cantidad de circulantes en las
-                               zonas aledañas de acceso a los barrios porteños, podemos ver el nivel de circulación que existiría a la 
-                               hora de comenzar con la libre circulación.'),
-                        tags$p('Se puede observar una clara relación entre la cantidad de pasajeros que circulan (en ascenso al subte) por 
-                        las estaciones de mayor caudal, y los barrios con mayor afectación por el COVID-19.
-                        Los barrios de Flores, Retiro, Palermo, y Belgrano concentran más del 50% [A COLOCAR DATO CORRECTO] de los casos de 
-                        la ciudad de Buenos Aires, siendo 3 de ellos las que poseen cabeceras de 3 líneas de subte (con picos de accesos).
-                        A su vez, toda la franja barrial de las líneas A y D (que concentran la mayor circulación de pasajeros) se vio 
-                        considerablemente más afectada que el resto de los barrios, esto se explica por la abundante circulación y 
-                               aglomeración de personas..'),
+                               COVID19.'),
+                        tags$p('Ahora, teniendo en cuenta esas cifras y si a la vez añadimos información sobre la cantidad de circulantes en las
+                               zonas aledañas de acceso a los barrios porteños, tomando los datos sobre tráfico en autopistas, subtes y trenes
+                               podemos ver cuál sería el nivel de circulación que  existiría a la hora de levantar la cuarentena completamente.'),
                         tags$br(), 
                         tags$p('Se observan que las siguientes zonas serian las mas expuestas:'),
                         tags$ul(
-                          tags$li('Barrio de Flores'),
-                          tags$li('Barrio de Retiro'),
-                          tags$li('Barrio de Palermo'),
-                          tags$li('Barrio de Balvanera'),
-                          tags$li('Barrio de Belgrano '),
-                          tags$li(' .'),
-                          tags$li(' .'),
+                          tags$li('Las Zonas cercanas a la línea D de Subtes'),
+                          tags$li('La Zona de Retiro. Primeramente por ser una de las zonas que posee mas casos  de contagio y por otro lado 
+                                  por ser cabecera de varias líneas de trenes y subte C.'),
+                          tags$li('Zonas por la que atraviesa las principales autopistas, siendo el micro centro el mas expuesto ya que es
+                                  el nexo de las mismas.'),
+                          tags$li('Palermo también es una posible zona para estar en alerta, ya que posee un alto
+                                  grado de casos identificados, cruza la línea de tren Mitre, Subte D y autopista Lugones.'),
+                          tags$li('La zona de Constitución si bien no se destaca por los casos localizados, claramente concentra
+                                  un alto grado de ingresantes provenientes del sur del conurbano bonaerense No olvidemos la línea C 
+                                  que transporta gente hacia cabeceras relevantes.'),
+                          tags$li('La zonad de Flores también concentra muchos casos, lo cual tiene relación directa con la cantidad de pasajeros 
+                                  que registra el subte, ubicación donde existe una cabecera de la línea A.'),
                           
                         ),#cierre ul
                         tags$br(),
@@ -152,22 +150,22 @@ ui<- fluidPage(
                ),
                
                
-               tabPanel("Accesos: Comparación de circulacion",
+               tabPanel("Accesos: Comparación de Circulacion",
                         tags$br(),
-                        tags$h1('Cómo se redujo el volumen de circulación.'),
+                        tags$h1('Cómo se redujo el volumen de circulación desde la cuarentena.'),
                         tags$br(),
                         tags$br(),
                         tags$p('Realizamos una comparativa según el volumen de circulación proveniente de los diferentes
                           accesos a las autopistas bonaerenses que comunican el conurbano con CABA.
                           Teniendo en cuenta que la cuarentena fué declarada el 19 de Marzo de 2020, tomamos el período
-                          del 13 de marzo al 20 de marzo para hacer una observación comparativa del flujo de accesos entre
+                          del 13 de marzo al 27 de marzo para hacer una observación comparativa del flujo de accesos entre
                           el 2019 y el 2020.'),
                         tags$br(), 
-                        tags$p('Se observa como se redujo notablemente a partir del día 20 de marzo de 2020 la cantidad de 
+                        tags$p('Se observa cómo se redujo notablemente a partir del día 20 de marzo de 2020 la cantidad de 
                           circulación dentro de la Ciudad Autónoma.
-                          Por otro lado, podemos observar comparando con el mismo peródo del 2019, la diferencia en circulantes
+                          Por otro lado, podemos observar comparando con el mismo periodo del 2019, la diferencia en circulantes
                           que hubiera tenido para las mismas fechas de la muestra.'),
-                        tags$br(), 
+                        
                         tags$p('Con este dato, queremos dejar en evidencia que al momento que se levante el confinamiento social 
                               obligatorio, cuál podría ser el flujo de circulantes ingresantes a CABA provenientes de los
                               alrededores.'),
@@ -183,21 +181,21 @@ ui<- fluidPage(
                         
                ),
                
-               tabPanel("Accesos: Circulación dos primeras semanas de cuarentena",
+               tabPanel("Accesos: Circulación semana pre y post cuarentena",
                         tags$br(),
-                        tags$h1('Qué pasó con el flujo de circulación durante las dos primeras semana de confinamiento'),
+                        tags$h1('Qué pasó con el flujo de circulación durante la semana anterior y posterior al confinamiento'),
                         tags$br(),
                         tags$br(),
-                        tags$p('En estos gráficos se observa la variación de actividad en las bajadas y subidas de cada acceso 
-                               a las autopistas.'),
+                        tags$p('En estos gráficos se observa la variación de actividad tanto en sentido hacia CABA como en sentido hacia
+                        provincia de cada acceso a las autopistas.'),
                         tags$br(), 
-                        tags$p('En la gráfica de las bajadas, tanto Lugones como Dellepiane son las que mayor caudal de tráfico
-                               cuenta por lo que los barrios donde desemboca la misma son barrios que requerirán particular atención.'),
+                        tags$p('En la gráfica sentido hacia CABA, tanto Lugones como Dellepiane son las que mayor caudal de tráfico
+                               cuenta por lo que los barrios donde desembocan las mismas son barrios que requerirán particular atención.'),
                         tags$br(),
                         tags$br(),
                         plotlyOutput(outputId = 'id_grc_A'),
                         tags$br(),
-                        tags$p('En cambio para las subidas, Cantilo y Dellepiane son las que mayor caudal de tráfico
+                        tags$p('En cambio en el gráfico sentido hacia provincia, Cantilo y Dellepiane son las que mayor caudal de tráfico
                                manejan.'),
                         tags$br(),
                         plotlyOutput(outputId = 'id_grc_B'),
@@ -221,21 +219,26 @@ ui<- fluidPage(
     
     tabPanel("Análisis según Servicios",
              
-             navlistPanel(
+             navlistPanel( #Habría que considerar eliminarlo, y dejar solo título. Para abarcar más espacio con el mapa.
                tabPanel("Mapa de ubicación Servicios", 
                         tags$br(),
                         tags$h1('Cuáles son los barrios más afectados y su relación con los Servicios'),
                         tags$br(),
                         tags$br(),
-                        tags$p('Así como para transporte, en el siguiente mapa tenemos visibilidad de los barrios con mayor
-                               cantidad de contagiados y los puntos de concentración posibles de personas, tal como son los
-                               hospitales, clínicas, farmacias, vacunatorios y cajeros automáticos.'),
+                        tags$p('Analizando los diferentes servicios se observa lo siguiente:'),
+                        tags$br(),
+                        tags$p('Las clínicas privadas se concentran justamente en los barrios que tienen entre 50 y 150 casos de contagios 
+                        - Recoleta, Balvanera, Almagro, Palermo, Caballito y Belgrano- o próximos a barrios cómo Retiro y Flores con más de 
+                        200 casos.'),
+                        tags$p('En cambio, los Hospitales se concentran mayormente en zona Sur dónde los casos de contagios no son tan elevados, 
+                        menos de 50 casos por barrio. También hay concentración de Hospitales, pero en menor medida, en Recoleta y Caballito que 
+                        son barrios con número de casos de contagio intermedio.'),
+                        tags$p('Los vacunatorios se encuentran distribuidos uniformente a lo largo de toda la Ciudad, sin embargo se observa 
+                        mayor concentración en Palermo y Recoleta -contagios moderados- muy cerca de la alta concentración de Clínicas y 
+                        Hospitales en dichos barrios.'),
+                        tags$p('En cuanto a Farmacias y Cajeros Automáticos - servicios que aglomeran una gran cantidad de personas- se observa 
+                        una alta concentración en zona Norte y Centro de la Ciudad dónde se encuentran los barrios con mayores casos de contagios.'), 
                         tags$br(), 
-                        tags$p('	Se puede observar que la mayor concentración de casos confirmados se da en las ubicaciones con mayor
-                        cantidad de cajeros y farmacias (incluso en proporción). Existen algunas excepciones que se explican por la 
-                        movilidad urbana y la densidad poblacional de cada barrio, ya que el microcentro concentra una gran densidad 
-                               poblacional solo a efectos de actividad laboral, mientras que esa población se traslada a los barrios 
-                               con mayor densidad de hogares.'),
                         tags$br(), 
                         tags$br(),
                         tags$br(),
