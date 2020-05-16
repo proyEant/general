@@ -341,8 +341,6 @@ ui<- fluidPage(
                     tags$p('Hemos realizado primeramente una investigación de los Data Sets disponibles que propone el Gobierno
                     de la Ciudad y en base a nuestro interés sobre el COVID19 aplicamos la metodología "Data thinking" para decidir
                     que potencial teníamos en frente.'),
-                    tags$p('Luego lo que hicimos fue dividir el proyecto en tareas hacibles,ordenanando las mismas en
-                           un tablero de Trello. Una vez identificadas las tareas, se le asignó un responsable a cada una de ellas.'),
                     
                     img( src='https://github.com/proyEant/general/raw/master/mapaconceptual.png',
                          height="80%", 
@@ -351,19 +349,22 @@ ui<- fluidPage(
                          HSPACE=3,
                          VSPACE= 3,
                          align= "right"),
+                    tags$br(), 
+                    tags$p('Luego lo que hicimos fue dividir el proyecto en tareas hacibles,ordenanando las mismas en
+                           un tablero de Trello. Una vez identificadas las tareas, se le asignó un responsable a cada una de ellas.'),
                     
                     tags$p('Data sets que utilizamos:'),
                     tags$ul(
-                      tags$li(a('https://data.buenosaires.gob.ar/dataset/centros-salud-privados/archivo/juqdkmgo-461-resource')),
-                      tags$li(a('https://data.buenosaires.gob.ar/dataset/hospitales/archivo/juqdkmgo-1191-resource')),
-                      tags$li(a('https://data.buenosaires.gob.ar/dataset/farmacias/archivo/juqdkmgo-1101-resource')),
-                      tags$li(a('https://data.buenosaires.gob.ar/dataset/flujo-vehicular-por-radares-ausa/archivo/e8a5b66e-ffcd-47a1-a0af-e1caf0f5c8ab')),
-                      tags$li(a('https://data.buenosaires.gob.ar/dataset/flujo-vehicular-por-radares-ausa/archivo/66bbccae-d6e0-43f4-b874-dbdece04dfd1')),
-                      tags$li(a('https://data.buenosaires.gob.ar/dataset/subte-viajes-molinetes')),
-                      tags$li(a('https://docs.google.com/spreadsheets/d/16-bnsDdmmgtSxdWbVMboIHo5FRuz76DBxsz_BbsEVWA/edit#gid=1627928258')),
-                      tags$li(a('https://data.buenosaires.gob.ar/dataset/cajeros-automaticos')),
-                      tags$li(a('https://data.buenosaires.gob.ar/dataset/vacunatorios-adultos-mayores')),
-                      tags$li(a('https://data.buenosaires.gob.ar/dataset/estaciones-ferrocarril')),
+                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/centros-salud-privados/archivo/juqdkmgo-461-resource', "Centros de Salud Privados")),
+                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/hospitales/archivo/juqdkmgo-1191-resource','Hospitales')),
+                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/farmacias/archivo/juqdkmgo-1101-resource','Farmacias')),
+                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/vacunatorios-adultos-mayores','Vacunatorios')),
+                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/flujo-vehicular-por-radares-ausa/archivo/e8a5b66e-ffcd-47a1-a0af-e1caf0f5c8ab','Flujo vehicular radares 2019')),
+                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/flujo-vehicular-por-radares-ausa/archivo/66bbccae-d6e0-43f4-b874-dbdece04dfd1','Flujo vehicular radares 2020')),
+                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/subte-viajes-molinetes/archivo/26b65146-7f9d-4c9c-a162-87ad44806546','Contabilización de pase por molinetes 2019')),
+                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/subte-viajes-molinetes/archivo/a43d8d7e-0e5e-4706-853b-303f567d82d0','Contabilización de pase por molinetes 2020')),
+                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/cajeros-automaticos','Cajeros automáticos')),
+                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/estaciones-ferrocarril','Estaciones ferrocarril')),
                       
                       
                     ),#cierre ul
@@ -377,24 +378,38 @@ ui<- fluidPage(
                       tags$ul(
                         
                         tags$li('library(shiny)'),
-                        tags$li('library(DT)'),
                         tags$li('library(tidyverse)'),
-                        tags$li('library(tidytext)'),
-                        tags$li('library(wordcloud2)'),
-                        tags$li('library(tidytext)'),
                         tags$li('library(wordcloud2)'),
                         tags$li('library(plotly)'),
                         tags$li('library(ggplot2)'),
                         tags$li('library(leaflet)'),
+                        tags$li('library(leaflet.extras)'),
                         tags$li('library(viridis)'),
-                        tags$li('library(googledrive)'),
+                        tags$li('library(sp)'),
+                        tags$li('library(htmltools)'),
+                        tags$li('library(rio)'),
+                        tags$li('library(gdata)'),
+                        tags$li('library(magrittr)'),
+                        tags$li('library(XML)'),
+                        tags$li('library(RCurl)'),
+                        tags$li('library(stringi)'),
+                        tags$li('library(geo)'),
+                        tags$li('library(geojsonio)'),
+                        tags$li('library(geoJsonR)'),
+                        tags$li('library(sf)'),
+                        tags$li('library(readxl)'),
+                        tags$li('library(readr)'),
+                        tags$br(),
+                        tags$br(),
+                        tags$br(),
                         
                       ),#cierre ul
                ), #Cierre 3
                column(6,
+                      tags$br(),
                       img( src='https://agrippadataconsulting.com/blog/content/images/2019/01/r-packages-hexagons.png',
-                           height="60%", 
-                           width="60%",
+                           height="75%", 
+                           width="75%",
                            align= "center",
                            HSPACE=4,
                            VSPACE= 3,
