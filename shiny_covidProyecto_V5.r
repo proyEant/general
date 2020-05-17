@@ -7,11 +7,11 @@ source('https://raw.githubusercontent.com/proyEant/general/master/Graficas.r',en
 #UI
 
 ui<- fluidPage(
-#  setBackgroundColor(
-#    color = c("#F7FBFF", "#2171B5"),
-#    gradient = "linear",
-#    direction = "bottom"
-#  ),
+  setBackgroundColor(
+    color = c("#F7FBFF", "#2171B5"),
+    gradient = "linear",
+    direction = "bottom"
+  ),
   
   h1(     img( src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/724px-R_logo.svg.png',
                height=200, 

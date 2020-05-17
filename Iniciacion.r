@@ -24,8 +24,7 @@ library(httr)
 library(magrittr)
 library(XML)
 #library(gdata)
-#install.packages('shinyWidgets')
-#library(shinyWidgets)
+library(shinyWidgets)
 
 #Iniciación
 rm(list = ls())
