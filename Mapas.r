@@ -200,8 +200,8 @@ leaflet(data = df) %>%
 mapa_d <-
   leaflet(data = densidad) %>%
   addTiles(urlTemplate = TilesBA) %>% 
-  addProviderTiles('CartoDB.Positron',
-                   group = 'Cartografía Limpia') %>% 
+#  addProviderTiles('CartoDB.Positron',
+#                   group = 'Cartografía Limpia') %>% 
   addPolygons(label = ~barrios_poblabels,
               fillColor = ~pal3(densidad$Densidad_pob),
               color = "Blues",
@@ -229,7 +229,7 @@ mapa_d <-
                    label = estacioneslabels
   ) %>% 
   addLayersControl(
-    overlayGroups = c('Densidad de Población','Estaciones de subte','Estaciones de tren','Cartografía Limpia'),
+    overlayGroups = c('Densidad de Población','Estaciones de subte','Estaciones de tren'), #,'Cartografía Limpia'),
     options = layersControlOptions(collapsed = FALSE)
   ) %>% 
   addLegend(pal = pal3,
