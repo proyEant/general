@@ -53,17 +53,18 @@ df_fallecidos=df_fallecidos %>%
 
 densidad <- st_read("http://cdn.buenosaires.gob.ar/datosabiertos/datasets/informacion-censal-por-radio/CABA_rc.geojson")
 densidad$BARRIO <- as.character(densidad$BARRIO)
-densidad$geometry <- NULL
+#densidad$geometry <- NULL
 densidad <- densidad %>% select(-c(RADIO_ID,HOGARES_NBI))
 densidad <- densidad %>% rename(
   'Barrio' = BARRIO)
-densidad <- densidad %>% group_by(Barrio) %>% 
-  summarise(Poblacion = sum(POBLACION), Area_km2 = sum(AREA_KM2), Viviendas = sum(VIVIENDAS))
-densidad$Densidad_pob <- round(densidad$Poblacion/densidad$Area_km2)
-densidad$Prom_viv <- densidad$Poblacion/densidad$Viviendas
-densidad <- merge(densidad,df)
-densidad <- cbind(densidad[1:7],'casos7_5' = densidad$Casos7_5)
-densidad$Densidad_casos <- round(densidad$casos7_5/densidad$Area_km2)
+
+#densidad <- densidad %>% group_by(Barrio) %>% 
+#  summarise(Poblacion = sum(POBLACION), Area_km2 = sum(AREA_KM2), Viviendas = sum(VIVIENDAS))
+densidad$Densidad_pob <- round(densidad$POBLACION/densidad$AREA_KM2)
+densidad$Prom_viv <- densidad$POBLACION/densidad$VIVIENDAS
+#densidad <- merge(densidad,df)
+#densidad <- cbind(densidad[1:7],'casos7_5' = densidad$Casos7_5)
+#densidad$Densidad_casos <- round(densidad$casos7_5/densidad$Area_km2) #Tengo demasiados sectores por barrio para considerar los casos
 #view(densidad)
 
 
