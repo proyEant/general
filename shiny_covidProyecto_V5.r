@@ -136,7 +136,7 @@ ui<- fluidPage(
                         ),#cierre ul
                         tags$br(),
                         tags$br(),
-                        leafletOutput(outputId = 'mapa_t'),
+                        leafletOutput(outputId = 'mapa_t', width = "100%", height = 800),
                         tags$br(),
                         tags$br(),
                         tags$br(),
@@ -268,7 +268,7 @@ ui<- fluidPage(
                       tags$br(), 
                       tags$br(),
                       tags$br(),
-                      leafletOutput(outputId = 'mapa_s'),
+                      leafletOutput(outputId = 'mapa_s', width = "100%", height = 800),
                       tags$br(),
                       tags$br(),
                       tags$br(),
