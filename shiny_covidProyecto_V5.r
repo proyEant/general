@@ -6,21 +6,27 @@ source('https://raw.githubusercontent.com/proyEant/general/master/Graficas.r',en
 
 #UI
 
-ui<- fluidPage( 
+ui<- fluidPage(
+#  setBackgroundColor(
+#    color = c("#F7FBFF", "#2171B5"),
+#    gradient = "linear",
+#    direction = "bottom"
+#  ),
   
-  
-  h1(img( src='https://images.unsplash.com/photo-1584118624012-df056829fbd0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80',
-          height="30%", 
-          width="30%", 
-          strong('COVID19 en CABA'), 
-          align= "center")#,
-#     img( src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/724px-R_logo.svg.png',
-#          height=200, 
-#          width=200, 
-#          align = 'right')
-  ),
-     br(),
-      # fin h1,
+  h1(     img( src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/724px-R_logo.svg.png',
+               height=200, 
+               width=200, 
+               align = 'right'),
+          img(src='https://images.unsplash.com/photo-1584118624012-df056829fbd0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80',
+              height="30%", 
+              width="30%", 
+              strong('COVID19 en CABA'), 
+              align= "center"),
+
+          
+  ), # fin h1,
+  br(),
+
   h2("Qué tenes que saber antes de que se levante la Cuarentena.", align="center",
      hr()),
   
@@ -122,7 +128,7 @@ ui<- fluidPage(
                         tags$br(),
                         tags$br(),
                         tags$br()
-               ),
+                        ),
                'Gráfico Subte',
                tabPanel("Estaciones y su concentración por horario", 
                         tags$br(),
@@ -180,9 +186,7 @@ ui<- fluidPage(
                         plotlyOutput(outputId = 'id_grc_2019'),
                         tags$br(),
                         tags$br()
-                        
-                        
-               ),
+                        ),
                
                tabPanel("Circulación semana pre y post cuarentena",
                         tags$br(),
@@ -204,16 +208,17 @@ ui<- fluidPage(
                         plotlyOutput(outputId = 'id_grc_B'),
                         tags$br(),
                         tags$br()
-                        
-                        
-               )
+                        ),
                
-             ),#fin navlistPanel 
-             h1(img( src='https://images.unsplash.com/photo-1580094687196-cbc2bdab67e4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80',
-                     
-                     height="30%", 
-                     width="30%", 
-                     br() ) ),
+               h1(img( src='https://images.unsplash.com/photo-1580094687196-cbc2bdab67e4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80',
+                       
+                       height="30%", 
+                       width="30%", 
+                       br() 
+                       ) 
+                  )
+               ),#fin navlistPanel 
+             
              
              
     ),#fin tab panel analisis transporte
@@ -518,9 +523,7 @@ server<- function(input, output){
     
   })# fin render plot
   
-  
-  
-  
+
   #RENDER LEAFLET  
   
   #mapa de transportes  
@@ -537,8 +540,6 @@ server<- function(input, output){
   })# fin render plot
   
   
-  
 }# fin server.
 
 shinyApp(ui=ui, server=server)
-

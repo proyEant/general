@@ -20,11 +20,12 @@ library(gsheet)
 library(googlesheets)
 library(shiny)
 library(httr)
-library(rio)
+#library(rio)
 library(magrittr)
 library(XML)
-library(gdata)
-
+#library(gdata)
+#install.packages('shinyWidgets')
+#library(shinyWidgets)
 
 #Iniciación
 rm(list = ls())

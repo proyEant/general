@@ -48,31 +48,39 @@ df_fallecidos %>%
 #muestra por dia los accesos a una autopista del 13/3 al 27/3. los puntos del mismo color son los diferentes accesos
 #podemos observar que hay mas cantidad de autos en Dellepiane
 
-traf_mar_20 <- ggplot(df_accesos_marzo2020, aes(x = fecha, y = totalDia ,color=autopista_nombre, text = paste("Acceso:",disp_nombre))) + 
+traf_mar_20 <- 
+  ggplot(df_accesos_marzo2020, aes(x = fecha, y = totalDia ,color=autopista_nombre, text = paste("Acceso:",disp_nombre))) + 
   geom_point() +
   scale_color_viridis(discrete = T, option = 'D',direction = 1)+
   facet_wrap(~ autopista_nombre)+
   theme(axis.text.x = element_text(angle = 90),
-        legend.title = element_text('Autopista:'))+
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(label = scales::comma)+
   geom_hline(yintercept = 40000, colour="orange")+
   geom_hline(yintercept = 70000, colour="red")+
-  theme_bw()
+  labs(color='Autopista:')
 
 traf_mar_20_p <- ggplotly(traf_mar_20)
 traf_mar_20_p$x$layout$title <- 'Cantidad de Accesos periodo 13/3 a 27/3 del año 2020'
-traf_mar_20_p$x$layout$xaxis$tickangle <- 90
-traf_mar_20_p
+#traf_mar_20_p
 
 
 #misma grafica pero para 2019
 
-traf_mar_19 <- ggplot(df_accesos_marzo_2019, aes(x = fecha, y = totalDia,color=autopista_nombre, text = paste("Acceso:",disp_nombre))) + 
+traf_mar_19 <- 
+  ggplot(df_accesos_marzo_2019, aes(x = fecha, y = totalDia,color=autopista_nombre, text = paste("Acceso:",disp_nombre))) + 
   geom_point() +
   scale_color_viridis(discrete = T, option = 'D',direction = 1)+
   facet_wrap(~ autopista_nombre)+
-  theme(axis.text.x = element_text(angle = 90))+
+  theme(axis.text.x = element_text(angle = 90),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(label = scales::comma)+
   geom_hline(yintercept = 40000, colour="orange")+
-  geom_hline(yintercept = 70000, colour="red")
+  geom_hline(yintercept = 70000, colour="red")+
+  labs(color='Autopista:')
+
 traf_mar_19_p <- ggplotly(traf_mar_19)
 traf_mar_19_p$x$layout$title <- 'Cantidad de Accesos periodo 13/3 a 27/3 del año 2019'
 #traf_mar_19
@@ -85,10 +93,15 @@ traf_mar20_sentidoA <- ggplot(sentidoA, aes(x = fecha, y = totalDia,color=autopi
   geom_point() +
   scale_color_viridis(discrete = T, option = 'D',direction = 1)+
   facet_wrap(~ autopista_nombre)+
-  theme(axis.text.x = element_text(angle = 90))+
+  theme(axis.text.x = element_text(angle = 90),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(label = scales::comma)+
   geom_hline(yintercept = 40000, colour="orange")+
   geom_hline(yintercept = 70000, colour="red")
-traf_mar20_sentidoA_p <- ggplotly(traf_mar20_sentidoA)
+traf_mar20_sentidoA_p <- ggplotly(traf_mar20_sentidoA)+
+  labs(color='Autopista:')
+
 traf_mar20_sentidoA_p$x$layout$title <- 'Cantidad de Accesos periodo 13/3 a 27/3 del año 2020 sentidoA'
 #traf_mar20_sentidoA_p
 
@@ -100,9 +113,14 @@ traf_mar20_sentidoB <- ggplot(sentidoB, aes(x = fecha, y = totalDia,color=autopi
   geom_point() +
   scale_color_viridis(discrete = T, option = 'D',direction = 1)+
   facet_wrap(~ autopista_nombre)+
-  theme(axis.text.x = element_text(angle = 90))+
+  theme(axis.text.x = element_text(angle = 90),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank())+
+  scale_y_continuous(label = scales::comma)+
   geom_hline(yintercept = 40000, colour="orange")+
-  geom_hline(yintercept = 70000, colour="red")
+  geom_hline(yintercept = 70000, colour="red")+
+  labs(color='Autopista:')
+
 traf_mar20_sentidoB_p <- ggplotly(traf_mar20_sentidoB)
 traf_mar20_sentidoB_p$x$layout$title <- 'Cantidad de Accesos periodo 13/3 a 27/3 del año 2020 sentidoB'
 #traf_mar20_sentidoB_p
