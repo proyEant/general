@@ -469,16 +469,16 @@ ui<- fluidPage(
                     ),
                     tags$div(tags$p(strong('Nuestra experiencia en el trabajo de COVID19.')),
                              tags$br(),
-                             tags$p('El curso nos brindó herramientas para introducirnos en el mundo del 
-                                    "Data Analytics" y "R". Nos dió la base para pensar qué tipo de graficos y mapas podían ser los mas
-                                    adecuados para este trabajo.'),
-                             tags$p('Con esa base, hemos además investigado nuevas posibilidades que aplicamos al proyecto como por ejemplo
-                                    mapas interactivos, levantar archivos en formato excel, acceso a google drive, googlesheets, etc.'),
+                             tags$p('El curso nos brindó herramientas para introducirnos en el mundo de 
+                                    "Data Analytics" y "R". Nos dió la base para pensar: Qué preguntas queremos responder, cómo limpiar y curar 
+                                    los datos, Cuáles son los gráficos y mapas más adecuados para este trabajo y Obtener conclusiones.'),     
+                             tags$p('Con esa base, hemos además investigado nuevas herramientas y posibilidades que aplicamos al proyecto como 
+                                    por ejemplo mapas interactivos, levantar archivos en formato excel, acceso a google drive, googlesheets, etc.'),
                              tags$br(),
                              tags$p('En el transcurso del trabajo se nos presentaron muchas dificultades para modelar, integrar y reproducir 
-                                    los distintos dataset con los gráficos y entre las distintas plataformas de repositorios en la nube.'),
+                                    los distintos datasets con los gráficos y entre las distintas plataformas de repositorios en la nube.'),
                              tags$p('A pesar de lo anterior, logramos avanzar resolviendo todos los imprevistos generando una aplicación de
-                                    visualización en Shiny funcional, con los datos que buscamos representar y en la disposición deseada.'),
+                                    visualización en Shiny funcional, con la información que teníamos como objetivo representar y en la disposición deseada.'),
                              tags$br(),
                              ),
 
