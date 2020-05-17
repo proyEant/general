@@ -144,6 +144,30 @@ ui<- fluidPage(
                         tags$br(),
                         tags$br()
                ),
+               tabPanel("Densidad de Población", 
+                        tags$br(),
+                        tags$h1('¿Cuáles son los barrios con mayor concentración de población?'),
+                        tags$br(),
+                        tags$p('En el siguiente mapa te mostramos cuáles son los barrios que tienen más habitantes por kilómetro cuadrado.'),
+                        tags$br(), 
+
+                        tags$ul(
+                          tags$li('Las Zonas cercanas a la línea D de Subtes.'),
+                          tags$li('La Zona de Retiro.'),
+                          tags$li('Barrio de Flores.'),
+                          tags$li('La zonas de Flores concentra muchos habitantes por km2, lo cual tiene correlación directa con la cantidad 
+                                  de casos de COVID-19 registrados hasta la fecha.'),
+                        ),#cierre ul
+                        tags$br(),
+                        tags$br(),
+                        leafletOutput(outputId = 'mapa_d', width = "100%", height = 800),
+                        tags$br(),
+                        tags$br(),
+                        tags$br(),
+                        tags$br(),
+                        tags$br(),
+                        tags$br()
+               ),
                'Gráfico Subte',
                tabPanel("Estaciones y su concentración por horario", 
                         tags$br(),
@@ -577,6 +601,11 @@ server<- function(input, output){
     
   })# fin render plot
   
+  #mapa de transportes  
+  output$mapa_d=renderLeaflet({
+    mapa_d
+    
+  })# fin render plot
   
 }# fin server.
 

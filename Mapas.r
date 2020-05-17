@@ -4,7 +4,7 @@
 TilesBA <- 'https://servicios.usig.buenosaires.gob.ar/mapcache/tms/1.0.0/amba_con_transporte_3857@GoogleMapsCompatible/{z}/{x}/{-y}.png'
 pal <- colorBin("OrRd", domain = df$casos)
 pal2 <- colorBin("YlOrRd", domain = df$Casos7_5)
-#pal3 <- colorBin("OrRd", domain = censo10$densidad)
+pal3 <- colorBin("Blues", domain = densidad$Densidad_pob, bins = 9)
 
 #Iconos
 iconos <- iconList(
@@ -22,6 +22,11 @@ iconos <- iconList(
 barrioslabels <- sprintf(
   "<strong>%s</strong><br/>%g casos",
   df$Barrio, df$Casos7_5
+) %>% lapply(htmltools::HTML)
+
+barrios_poblabels <- sprintf(
+  "<strong>%s</strong><br/>%g habitantes por km2",
+  densidad$Barrio, densidad$Densidad_pob
 ) %>% lapply(htmltools::HTML)
 
 farmaciaslabels <- sprintf(
@@ -51,7 +56,7 @@ autsalidalabels <- sprintf(
 
 
 
-# Salud (con Vacunatorios y Cajeros)
+#### Mapa Salud (con Vacunatorios y Cajeros)  ####
 mapa_s <-
 leaflet(data = df) %>%
   addTiles(urlTemplate = TilesBA) %>%
@@ -126,7 +131,7 @@ leaflet(data = df) %>%
             )
 
 
-# Tránsito
+#### Mapa Tránsito ####
 
 mapa_t <-
 leaflet(data = df) %>%
@@ -188,3 +193,50 @@ leaflet(data = df) %>%
   )
 
 #mapa_t
+
+
+#### Mapa densidad población y casos  ####
+
+mapa_d <-
+  leaflet(data = densidad) %>%
+  addTiles(urlTemplate = TilesBA) %>% 
+  addProviderTiles('CartoDB.Positron',
+                   group = 'Cartografía Limpia') %>% 
+  addPolygons(label = ~barrios_poblabels,
+              fillColor = ~pal3(densidad$Densidad_pob),
+              color = "Blues",
+              weight = 1,
+              smoothFactor = 0.5,
+              opacity = 1.0,
+              fillOpacity = 0.6,
+              group = 'Densidad de Población',
+              highlightOptions = highlightOptions(color = "black",
+                                                  weight = 2,
+                                                  bringToFront = F)
+  ) %>% 
+  addMarkers(lng = ~ df_trenescaba$long,
+             lat = ~ df_trenescaba$lat,
+             icon = iconos$tren,
+             group = 'Estaciones de tren',
+             label = estacionestrenlabels
+  ) %>% 
+  addCircleMarkers(lng = subte_feb20$lng,
+                   lat = subte_feb20$lat,
+                   radius = subte_feb20$total/600,
+                   color = 'red',
+                   icons(iconos$subte),
+                   group = 'Estaciones de subte',
+                   label = estacioneslabels
+  ) %>% 
+  addLayersControl(
+    overlayGroups = c('Densidad de Población','Estaciones de subte','Estaciones de tren','Cartografía Limpia'),
+    options = layersControlOptions(collapsed = FALSE)
+  ) %>% 
+  addLegend(pal = pal3,
+            values = ~densidad$Densidad_pob,
+            opacity = 0.7,
+            position = 'bottomright',
+            title = 'Cantidad de habitantes:'
+  )
+
+#mapa_d
