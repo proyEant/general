@@ -7,26 +7,42 @@ source('https://raw.githubusercontent.com/proyEant/general/master/Graficas.r',en
 #UI
 
 ui<- fluidPage(
-  setBackgroundColor(
-    color = c("#FFD3BA", "#F29763"),
-    gradient = "linear",
-    direction = "bottom"
-  ),
-  
-  h1(     img( src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/724px-R_logo.svg.png',
-               height=110, 
-               width=110, 
-               align = 'right'),
-          img(src='https://upload.wikimedia.org/wikipedia/commons/8/82/SARS-CoV-2_without_background.png',
-              height="16%", 
-              width="16%", 
-              strong('COVID19 en CABA'), 
-              align= "center"),
-
-          
-  ), # fin h1,
+  fluidRow(
+    setBackgroundColor(
+      color = c("#FCFDC7", "#FBE29D"),
+      gradient = "linear",
+      direction = "bottom"
+    ),
+    column(2,
+           br(),
+           br(),
+           img(src='https://upload.wikimedia.org/wikipedia/commons/8/82/SARS-CoV-2_without_background.png',
+               height="90%", 
+               width="90%", 
+               align= "left"),
+    ),
+    column(8,
+           br(),
+           br(),
+           br(),
+           br(),
+           br(),
+           h1(strong('COVID-19 en CABA'),
+              align = 'center')
+    ),
+    column(2,
+           img( src='https://github.com/proyEant/general/raw/master/eant.png',
+                height='100%', 
+                width='100%', 
+                align = 'right'),
+           img( src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/724px-R_logo.svg.png',
+                height=70, 
+                width=70, 
+                align = 'right'),
+    ),
+    
+  ), # Cierre fluid
   br(),
-
   h2("Qué tenes que saber antes de que se levante la Cuarentena.", align="center",
      hr()),
   
@@ -41,14 +57,13 @@ ui<- fluidPage(
                       h3('¿Cómo afectaría la apertura de la cuarentena en ', strong('CABA'), '?', height="30%", width="30%"),
                       tags$br(),
                       tags$div(
-                        tags$p('CABA fué declarada bajo aislamiento social, preventivo y obligatorio a partir del día 19 de
+                        tags$p('CABA fue declarada bajo aislamiento social, preventivo y obligatorio a partir del día 19 de
                         marzo de 2020, con el propósito de frenar la pandemia conocida como COVID-19 que afecta al mundo entero.
                         Sólo determinados sectores y profesionales habilitados, tienen permitida la libre circulación dentro de
-                        la Ciudad Autónoma.
-                        Si bien se está aperturando la circulación de modo controlado y bajo ciertos criterios por edades, terminación de DNI y 
+                        la Ciudad Autónoma.'),
+                        tags$p('Si bien se está aperturando la circulación de modo controlado y bajo ciertos criterios por edades, terminación de DNI y 
                         franja horaria, hemos realizado un análisis sobre el impacto al liberar el libre tránsito sobre cada
                         barrio porteño.'),
-                        
                         tags$br(),
                         tags$p('Nos hemos basado en la siguiente información para recaudar datos:'),
                         tags$ul(
@@ -88,7 +103,7 @@ ui<- fluidPage(
                ), #Cierra 10
              ), #Cierra fluid 2
     ), #Cierra tabpanel
-                      
+    
     tabPanel("Análisis según transporte",
              
              navlistPanel(
@@ -128,7 +143,7 @@ ui<- fluidPage(
                         tags$br(),
                         tags$br(),
                         tags$br()
-                        ),
+               ),
                'Gráfico Subte',
                tabPanel("Estaciones y su concentración por horario", 
                         tags$br(),
@@ -186,7 +201,7 @@ ui<- fluidPage(
                         plotlyOutput(outputId = 'id_grc_2019'),
                         tags$br(),
                         tags$br()
-                        ),
+               ),
                
                tabPanel("Circulación semana pre y post cuarentena",
                         tags$br(),
@@ -208,8 +223,8 @@ ui<- fluidPage(
                         plotlyOutput(outputId = 'id_grc_B'),
                         tags$br(),
                         tags$br()
-                        )
-               ),#fin navlistPanel 
+               )
+             ),#fin navlistPanel 
              
              
              
@@ -260,11 +275,11 @@ ui<- fluidPage(
                       tags$br(),
                       tags$br(),
                       tags$br(),
-
-
+                      
+                      
                ),#CIERRA 8
              ) #fin fluidRow
-             ), # fin tabPanel Analsis servicios
+    ), # fin tabPanel Analsis servicios
     
     
     
@@ -273,7 +288,7 @@ ui<- fluidPage(
              column(2),
              column(8, 
                     tags$br(),
-                    tags$h1('Ahora que tenes esta info, ¿que pensás?'),
+                    tags$h1('Ahora que tenes esta info, ¿qué pensás?'),
                     tags$br(),
                     tags$br(),
                     tags$p(strong('Repasemos cuáles son los barrios que poseen más casos de infectados confirmados hasta el 7 de mayo:')),
@@ -285,7 +300,7 @@ ui<- fluidPage(
                       tags$li('Balvanera: 91 casos'),
                       tags$li('Belgrano: 89 casos'),
                       tags$li('Recoleta: 88 casos '),
-
+                      
                     ),#cierre ul
                     
                     tags$br(),
@@ -299,7 +314,7 @@ ui<- fluidPage(
                       tags$li('Palermo'),
                       tags$li('Belgrano'),
                       tags$li('Recoleta'),
-
+                      
                     ), #fin ul
                     
                     tags$br(), 
@@ -307,7 +322,7 @@ ui<- fluidPage(
                     cuidados necesarios, podrían propagarse los contagios rápidamente y perder todo el trabajo
                     logrado en cuestion de días.')),
                     tags$br(),
-                    tags$p('Para evitar esto tenemos algunas sugerencias:'),
+                    tags$p(strong('Para evitar esto tenemos algunas sugerencias:')),
                     tags$p('Como individuos, tenemos la obligación de seguir cumpliendo con las recomendaciones del uso de tapa bocas,
                       alcohol en gel, guantes descartables, higiene de las manos con agua y jabón, limpiar bien lo que uses o 
                       traigas de la calle según recomendaciones.'),
@@ -344,47 +359,58 @@ ui<- fluidPage(
     
     tabPanel("Recursos",
              tags$br(),
-          fluidRow(
-             column(2),
-             column(8,
-                    tags$p('Se nos ocurrió analizar este tema ya que es una situación nueva y extraordinaria que afecta al mundo
+             fluidRow(
+               column(2),
+               column(8,
+                      tags$p('Se nos ocurrió analizar este tema ya que es una situación nueva y extraordinaria que afecta al mundo
                     entero y nos pareció interesante poder emplear las herramientas que hemos aprendido durante el curso
                     de "Data Analytics".'),
-                    tags$br(),
-
-                    tags$p('Hemos realizado primeramente una investigación de los Data Sets disponibles que propone el Gobierno
+                      tags$br(),
+                      
+                      tags$p('Hemos realizado primeramente una investigación de los Data Sets disponibles que propone el Gobierno
                     de la Ciudad y en base a nuestro interés sobre el COVID19 aplicamos la metodología "Data thinking" para decidir
                     que potencial teníamos en frente.'),
-                    
-                    img( src='https://github.com/proyEant/general/raw/master/mapaconceptual.png',
-                         height="80%", 
-                         width="80%",
-                         align= "center",
-                         HSPACE=3,
-                         VSPACE= 3,
-                         align= "right"),
-                    tags$br(), 
-                    tags$p('Luego lo que hicimos fue dividir el proyecto en tareas hacibles,ordenanando las mismas en
-                           un tablero de Trello. Una vez identificadas las tareas, se le asignó un responsable a cada una de ellas.'),
-                    
-                    tags$p('Data sets que utilizamos:'),
-                    tags$ul(
-                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/centros-salud-privados/archivo/juqdkmgo-461-resource', "Centros de Salud Privados")),
-                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/hospitales/archivo/juqdkmgo-1191-resource','Hospitales')),
-                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/farmacias/archivo/juqdkmgo-1101-resource','Farmacias')),
-                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/vacunatorios-adultos-mayores','Vacunatorios')),
-                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/flujo-vehicular-por-radares-ausa/archivo/e8a5b66e-ffcd-47a1-a0af-e1caf0f5c8ab','Flujo vehicular radares 2019')),
-                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/flujo-vehicular-por-radares-ausa/archivo/66bbccae-d6e0-43f4-b874-dbdece04dfd1','Flujo vehicular radares 2020')),
-                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/subte-viajes-molinetes/archivo/26b65146-7f9d-4c9c-a162-87ad44806546','Contabilización de pase por molinetes 2019')),
-                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/subte-viajes-molinetes/archivo/a43d8d7e-0e5e-4706-853b-303f567d82d0','Contabilización de pase por molinetes 2020')),
-                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/cajeros-automaticos','Cajeros automáticos')),
-                      tags$li(a(href='https://data.buenosaires.gob.ar/dataset/estaciones-ferrocarril','Estaciones ferrocarril')),
+                      tags$br(),
+                      tags$p('Una de las herramientas fue "Mural", para organizar los temas que íbamos a tratar:'),
+                      tags$br(),
+                      img( src='https://github.com/proyEant/general/raw/master/mapaconceptual.png',
+                           height="80%", 
+                           width="80%",
+                           align= "center",
+                           HSPACE=3,
+                           VSPACE= 3,
+                           align= "right"),
+                      tags$br(), 
+                      tags$p('Luego lo que hicimos fue dividir el proyecto en tareas hacibles,ordenanando las mismas en
+                           un tablero de Trello. Una vez identificadas las tareas, se le asignó un responsable a cada una de ellas:'),
+                      tags$br(),
+                      img( src='https://github.com/proyEant/general/raw/master/trello.png',
+                           height="80%", 
+                           width="80%",
+                           align= "center",
+                           HSPACE=3,
+                           VSPACE= 3,
+                           align= "right"),
+                      tags$br(),
+                      tags$br(),
+                      tags$p('Data sets que utilizamos:'),
+                      tags$ul(
+                        tags$li(a(href='https://data.buenosaires.gob.ar/dataset/centros-salud-privados/archivo/juqdkmgo-461-resource', "Centros de Salud Privados")),
+                        tags$li(a(href='https://data.buenosaires.gob.ar/dataset/hospitales/archivo/juqdkmgo-1191-resource','Hospitales')),
+                        tags$li(a(href='https://data.buenosaires.gob.ar/dataset/farmacias/archivo/juqdkmgo-1101-resource','Farmacias')),
+                        tags$li(a(href='https://data.buenosaires.gob.ar/dataset/vacunatorios-adultos-mayores','Vacunatorios')),
+                        tags$li(a(href='https://data.buenosaires.gob.ar/dataset/flujo-vehicular-por-radares-ausa/archivo/e8a5b66e-ffcd-47a1-a0af-e1caf0f5c8ab','Flujo vehicular radares 2019')),
+                        tags$li(a(href='https://data.buenosaires.gob.ar/dataset/flujo-vehicular-por-radares-ausa/archivo/66bbccae-d6e0-43f4-b874-dbdece04dfd1','Flujo vehicular radares 2020')),
+                        tags$li(a(href='https://data.buenosaires.gob.ar/dataset/subte-viajes-molinetes/archivo/26b65146-7f9d-4c9c-a162-87ad44806546','Contabilización de pase por molinetes 2019')),
+                        tags$li(a(href='https://data.buenosaires.gob.ar/dataset/subte-viajes-molinetes/archivo/a43d8d7e-0e5e-4706-853b-303f567d82d0','Contabilización de pase por molinetes 2020')),
+                        tags$li(a(href='https://data.buenosaires.gob.ar/dataset/cajeros-automaticos','Cajeros automáticos')),
+                        tags$li(a(href='https://data.buenosaires.gob.ar/dataset/estaciones-ferrocarril','Estaciones ferrocarril')),
+                        
+                        
+                      ),#cierre ul
                       
-                      
-                    ),#cierre ul
-
-             ),# fin column 8  
-          ), #Cierre fluid 1
+               ),# fin column 8  
+             ), #Cierre fluid 1
              fluidRow(
                column(2),
                column(3,
@@ -413,6 +439,7 @@ ui<- fluidPage(
                         tags$li('library(sf)'),
                         tags$li('library(readxl)'),
                         tags$li('library(readr)'),
+                        tags$li('library(shinyWidgets)'),
                         tags$br(),
                         tags$br(),
                         tags$br(),
@@ -431,18 +458,19 @@ ui<- fluidPage(
                       ),
                ) #Cierre 6
              ), #Cierre fluid 2
-                      
+             
     ), # fin recursos
     
     
-    tabPanel("About us",
+    tabPanel("Nosotros",
              br(),
              column(2),
              column(8, 
                     p('Somos alumnos del curso Data Analytics. Nos dedicamos a distintas profesiones y en
                       conjunto hemos trabajado en el análisis de COVID 19 en CABA conjugando nuestras diferentes
-                      miradas referente a la situación que atraviesa nuestro  país.
-                      les contamos un poco de nosotros:'),
+                      miradas referente a la situación que atraviesa nuestro  país.'),
+                    tags$br(),
+                    p('Les contamos un poco de nosotros:'),
                     tags$br(),
                     tags$div(tags$p(strong('Marina')),
                              tags$p('Analista de Business Intelligence en empresa de E-commerce.'),
@@ -480,9 +508,9 @@ ui<- fluidPage(
                              tags$p('A pesar de lo anterior, logramos avanzar resolviendo todos los imprevistos generando una aplicación de
                                     visualización en Shiny funcional, con la información que teníamos como objetivo representar y en la disposición deseada.'),
                              tags$br(),
-                             ),
-
-
+                    ),
+                    
+                    
              )#cierra column8
              
     )#cierra About us
