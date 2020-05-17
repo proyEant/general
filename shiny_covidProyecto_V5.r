@@ -8,18 +8,18 @@ source('https://raw.githubusercontent.com/proyEant/general/master/Graficas.r',en
 
 ui<- fluidPage(
   setBackgroundColor(
-    color = c("#F7FBFF", "#2171B5"),
+    color = c("#FFD3BA", "#F29763"),
     gradient = "linear",
     direction = "bottom"
   ),
   
   h1(     img( src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/724px-R_logo.svg.png',
-               height=200, 
-               width=200, 
+               height=110, 
+               width=110, 
                align = 'right'),
-          img(src='https://images.unsplash.com/photo-1584118624012-df056829fbd0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80',
-              height="30%", 
-              width="30%", 
+          img(src='https://upload.wikimedia.org/wikipedia/commons/8/82/SARS-CoV-2_without_background.png',
+              height="16%", 
+              width="16%", 
               strong('COVID19 en CABA'), 
               align= "center"),
 
@@ -42,12 +42,12 @@ ui<- fluidPage(
                       tags$br(),
                       tags$div(
                         tags$p('CABA fué declarada bajo aislamiento social, preventivo y obligatorio a partir del día 19 de
-                        marzo de 2020, con el propósito de frenar esta pandemia que afecta al mundo entero.
+                        marzo de 2020, con el propósito de frenar la pandemia conocida como COVID-19 que afecta al mundo entero.
                         Sólo determinados sectores y profesionales habilitados, tienen permitida la libre circulación dentro de
                         la Ciudad Autónoma.
-                        Si bien se está aperturando la circulación de modo controlado y bajo ciertos criterios por edades y 
-                        franja horaria, hemos realizado un análisis sobre el impacto al liberar el libre transito sobre cada
-                        barrio bonaerense.'),
+                        Si bien se está aperturando la circulación de modo controlado y bajo ciertos criterios por edades, terminación de DNI y 
+                        franja horaria, hemos realizado un análisis sobre el impacto al liberar el libre tránsito sobre cada
+                        barrio porteño.'),
                         
                         tags$br(),
                         tags$p('Nos hemos basado en la siguiente información para recaudar datos:'),
@@ -95,7 +95,7 @@ ui<- fluidPage(
                'Mapa',
                tabPanel("Circulación por Medio de Transporte", 
                         tags$br(),
-                        tags$h1('Cuáles son los barrios más afectados y su relación con el transporte'),
+                        tags$h1('¿Cuáles son los barrios más afectados y su relación con el transporte?'),
                         tags$br(),
                         tags$p('En el siguiente mapa te mostramos cuáles son los barrios que tienen más casos confirmados de 
                                COVID19.'),
@@ -103,19 +103,19 @@ ui<- fluidPage(
                                zonas aledañas de acceso a los barrios porteños, tomando los datos sobre tráfico en autopistas, subtes y trenes
                                podemos ver cuál sería el nivel de circulación que  existiría a la hora de levantar la cuarentena completamente.'),
                         tags$br(), 
-                        tags$p(strong('Se observan que las siguientes zonas serian las mas expuestas:')),
+                        tags$p(strong('Se observan que las siguientes zonas serían las más expuestas:')),
                         tags$ul(
-                          tags$li('Las Zonas cercanas a la línea D de Subtes'),
-                          tags$li('La Zona de Retiro. Primeramente por ser una de las zonas que posee mas casos  de contagio y por otro lado 
+                          tags$li('Las Zonas cercanas a la línea D de Subtes.'),
+                          tags$li('La Zona de Retiro. Primeramente por ser una de las zonas que posee más casos de contagio y por otro lado 
                                   por ser cabecera de varias líneas de trenes y subte C.'),
-                          tags$li('Zonas por la que atraviesa las principales autopistas, siendo el micro centro el mas expuesto ya que es
+                          tags$li('Zonas por la que atraviesa las principales autopistas, siendo el micro centro el más expuesto ya que es
                                   el nexo de las mismas.'),
                           tags$li('Palermo también es una posible zona para estar en alerta, ya que posee un alto
                                   grado de casos identificados, cruza la línea de tren Mitre, Subte D y autopista Lugones.'),
                           tags$li('La zona de Constitución si bien no se destaca por los casos localizados, claramente concentra
-                                  un alto grado de ingresantes provenientes del sur del conurbano bonaerense No olvidemos la línea C 
+                                  un alto grado de ingresantes provenientes del sur del conurbano bonaerense. No olvidemos la línea C 
                                   que transporta gente hacia cabeceras relevantes.'),
-                          tags$li('La zonad de Flores también concentra muchos casos, lo cual tiene relación directa con la cantidad de pasajeros 
+                          tags$li('La zonas de Flores también concentra muchos casos, lo cual tiene relación directa con la cantidad de pasajeros 
                                   que registra el subte, ubicación donde existe una cabecera de la línea A.'),
                           
                         ),#cierre ul
@@ -136,12 +136,12 @@ ui<- fluidPage(
                         tags$br(),
                         tags$br(),
                         tags$br(),
-                        tags$p('En el gráfico de tipo scatterplot a continuación se pueden visualizar las estaciones y horarios que 
+                        tags$p('En el gráfico de tipo scatterplot a continuación se pueden visualizar las estaciones de subtes y horarios que 
                                mayor concentración de pasajeros presentan. El horario establecido para el análisis es el comprendido 
                                entre las 5hs y las 21hs, considerando todo el mes de junio de 2019'),
                         tags$br(), 
                         tags$p('Se utilizaron los datos del último mes de junio que se tienen registros para estimar la cantidad de 
-                               pasajeros que podrían circular en caso de abrirse la cuarentena.'),
+                               pasajeros que podrían circular en caso de abrirse la cuarentena en las próximas semanas.'),
                         tags$br(), 
                         tags$p('Esto nos servirá para identificar qué estaciones deben tener mayor presencia y rigurosidad tanto en el 
                                control de salubridad de los pasajeros como en la cartelería informativa para generar conciencia en los 
@@ -161,7 +161,7 @@ ui<- fluidPage(
                'Gráficos Accesos',
                tabPanel("Comparación de Circulacion",
                         tags$br(),
-                        tags$h1('Cómo se redujo el volumen de circulación desde la cuarentena.'),
+                        tags$h1('¿Cómo se redujo el volumen de circulación desde la cuarentena?'),
                         tags$br(),
                         tags$br(),
                         tags$p('Realizamos una comparativa según el volumen de circulación proveniente de los diferentes
@@ -190,7 +190,7 @@ ui<- fluidPage(
                
                tabPanel("Circulación semana pre y post cuarentena",
                         tags$br(),
-                        tags$h1('Qué pasó con el flujo de circulación durante la semana anterior y posterior al confinamiento'),
+                        tags$h1('¿Qué pasó con el flujo de circulación durante la semana anterior y posterior al confinamiento?'),
                         tags$br(),
                         tags$br(),
                         tags$p('En estos gráficos se observa la variación de actividad tanto en sentido hacia CABA como en sentido hacia
@@ -208,18 +208,18 @@ ui<- fluidPage(
                         plotlyOutput(outputId = 'id_grc_B'),
                         tags$br(),
                         tags$br()
-                        ),
-               
-               h1(img( src='https://images.unsplash.com/photo-1580094687196-cbc2bdab67e4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80',
-                       
-                       height="30%", 
-                       width="30%", 
-                       br() 
-                       ) 
-                  )
+                        )
                ),#fin navlistPanel 
              
              
+             
+             h1(img( src='https://images.unsplash.com/photo-1580094687196-cbc2bdab67e4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1000&q=80',
+                     
+                     height="30%", 
+                     width="30%", 
+                     br() 
+             ) 
+             ),
              
     ),#fin tab panel analisis transporte
     
@@ -230,20 +230,24 @@ ui<- fluidPage(
                column(1),
                column(10,
                       tags$br(),
-                      tags$h1('Cuáles son los barrios más afectados y su relación con los Servicios'),
+                      tags$h1('¿Cuáles son los barrios más afectados y su relación con los Servicios?'),
                       tags$br(),
-                      tags$p('Analizando los diferentes servicios se observa lo siguiente:'),
+                      tags$p('Así como para transporte, en el siguiente mapa tenemos visibilidad de los barrios con mayor
+                               cantidad de contagiados y los puntos de concentración posibles de personas, tal como son los
+                               hospitales, clínicas, farmacias, vacunatorios y cajeros automáticos.'),
                       tags$br(),
-                      tags$p('Las clínicas privadas se concentran justamente en los barrios que tienen entre 50 y 150 casos de contagios 
+                      tags$p(strong('Analizando los diferentes servicios se observa lo siguiente:')),
+                      tags$br(),
+                      tags$li('Las clínicas privadas se concentran justamente en los barrios que tienen entre 50 y 150 casos de contagios 
                         - Recoleta, Balvanera, Almagro, Palermo, Caballito y Belgrano- o próximos a barrios cómo Retiro y Flores con más de 
                         200 casos.'),
-                      tags$p('En cambio, los Hospitales se concentran mayormente en zona Sur dónde los casos de contagios no son tan elevados, 
+                      tags$li('En cambio, los Hospitales se concentran mayormente en zona Sur dónde los casos de contagios no son tan elevados, 
                         menos de 50 casos por barrio. También hay concentración de Hospitales, pero en menor medida, en Recoleta y Caballito que 
                         son barrios con número de casos de contagio intermedio.'),
-                      tags$p('Los vacunatorios se encuentran distribuidos uniformente a lo largo de toda la Ciudad, sin embargo se observa 
+                      tags$li('Los vacunatorios se encuentran distribuidos uniformente a lo largo de toda la Ciudad, sin embargo se observa 
                         mayor concentración en Palermo y Recoleta -contagios moderados- muy cerca de la alta concentración de Clínicas y 
                         Hospitales en dichos barrios.'),
-                      tags$p('En cuanto a Farmacias y Cajeros Automáticos - servicios que aglomeran una gran cantidad de personas- se observa 
+                      tags$li('En cuanto a Farmacias y Cajeros Automáticos - servicios que aglomeran una gran cantidad de personas- se observa 
                         una alta concentración en zona Norte y Centro de la Ciudad dónde se encuentran los barrios con mayores casos de contagios.'), 
                       tags$br(), 
                       tags$br(), 
@@ -272,7 +276,7 @@ ui<- fluidPage(
                     tags$h1('Ahora que tenes esta info, ¿que pensás?'),
                     tags$br(),
                     tags$br(),
-                    tags$p(strong('Repasemos cuáles son los barrios que poseen más casos de infectados confirmados hasta la fecha:')),
+                    tags$p(strong('Repasemos cuáles son los barrios que poseen más casos de infectados confirmados hasta el 7 de mayo:')),
                     tags$br(), 
                     tags$ul(
                       tags$li('Retiro: 293 casos'),
@@ -281,7 +285,6 @@ ui<- fluidPage(
                       tags$li('Balvanera: 91 casos'),
                       tags$li('Belgrano: 89 casos'),
                       tags$li('Recoleta: 88 casos '),
-                      tags$li('Balvanera: 91 casos'),
 
                     ),#cierre ul
                     
@@ -295,7 +298,7 @@ ui<- fluidPage(
                       tags$li('Constitución'),
                       tags$li('Palermo'),
                       tags$li('Belgrano'),
-                      tags$li(' '),
+                      tags$li('Recoleta'),
 
                     ), #fin ul
                     
@@ -311,23 +314,29 @@ ui<- fluidPage(
                     tags$p('Como tarea por parte del estado, deberá incrementar el personal de vigilancia para recordar a los circulantes
                       las medidas de distanciamiento social, el uso obligatorio de tapa boca y alcohol en gel.'),
                     
-                    tags$p('Es importante realizar campañas para que las entidades u organizaciones de atención al público brinden los elementos 
-                      necesarios para ayudar a las personas con la higiene y con los cuidados correspondientes, facilitando el 
-                      acceso al alcohol en gel, guantes de latex y en caso de algún inconveniente con el barbijo poder proporcionar 
-                      uno de emergencia.'),
+                    tags$p('Es importante realizar campañas para que las entidades u organizaciones de atención al público promuevan el
+                      cumplimiento de las medidas de distanciamiento social y brinden los elementos necesarios para ayudar a las personas
+                      con la higiene y con los cuidados correspondientes, facilitando el acceso al alcohol en gel, guantes de latex y
+                      en caso de algún inconveniente con el tapa boca poder proporcionar uno de emergencia.'),
                     
-                    tags$p('Laboralmente el gobierno podria realizar y promover propuestas de jornadas laborales alternativas como trabajo
-                      remoto, jornadas partidas, extención de horarios, entre otros.'),
+                    
+                    tags$p('Laboralmente el gobierno podría realizar y promover propuestas de jornadas laborales alternativas como trabajo
+                      remoto, jornadas partidas, extención de horarios, transporte para trabajadores, entre otros.'),
                     
                     tags$p('En caso de entidades como bancos, clínicas, hospitales y vacunatorios una posible opción podría ser procurar
                     un manejo de distribución de las personas alternativo. Para poder decidir como canalizar la distribución es importante 
-                    conocer cuáles son las zonas con mayor cantidad de casos y transeúntes y derivarlo a las de menor circulación de personas.'),
+                    conocer cuáles son las zonas con mayor cantidad de casos y transeúntes para derivarlos a las de menor circulación de personas.'),
                     
                     tags$p('Concientizar a los ciudadanos que la circulación sea si únicamente es necesario, y de tener la posibilidad
                       de elegir, elegir zonas que sean aquellas donde menos concentración haya.'),
                     
-                    tags$p('Sabemos Qué accesos son los de mayor caudal, por lo que se debería agilizar los controles pertinentes
-                      para el ingreso a CABA, para así no resulten demoras en las autopistas ya que podría ser de utilidad 
+                    tags$p('El transporte público es uno de los focos de mayor contagio, de acuerdo a lo estudiado observamos la cantidad de personas
+                      que se movilizan en las distintas líneas, por lo cual sería conveniente analizar la conveniencia de aumentar la frecuencia en 
+                      las líneas de subtes que tienen un flujo importante de gente, hacer controles en entradas a estaciones y vagones, asegurando
+                      y promoviendo que se cumpla el uso del tapa boca y distanciamiento social.'),
+                    
+                    tags$p('Sabemos qué accesos son los de mayor caudal, por lo que se debería reforzar el personal de control, además de agilizar 
+                      los controles pertinentes para el ingreso a CABA, para así no resulten demoras en las autopistas ya que podría ser de utilidad 
                       un flujo más agil ante urgencias. Estos controles de ingreso deberían seguir siendo justificados.'),
                     tags$br(), 
              ),#fin col8
@@ -412,9 +421,10 @@ ui<- fluidPage(
                ), #Cierre 3
                column(6,
                       tags$br(),
+                      tags$br(),
                       img( src='https://agrippadataconsulting.com/blog/content/images/2019/01/r-packages-hexagons.png',
-                           height="75%", 
-                           width="75%",
+                           height="80%", 
+                           width="80%",
                            align= "center",
                            HSPACE=4,
                            VSPACE= 3,

@@ -98,9 +98,10 @@ traf_mar20_sentidoA <- ggplot(sentidoA, aes(x = fecha, y = totalDia,color=autopi
         axis.title.y = element_blank())+
   scale_y_continuous(label = scales::comma)+
   geom_hline(yintercept = 40000, colour="orange")+
-  geom_hline(yintercept = 70000, colour="red")
-traf_mar20_sentidoA_p <- ggplotly(traf_mar20_sentidoA)+
+  geom_hline(yintercept = 70000, colour="red")+
   labs(color='Autopista:')
+traf_mar20_sentidoA_p <- ggplotly(traf_mar20_sentidoA)
+  
 
 traf_mar20_sentidoA_p$x$layout$title <- 'Cantidad de Accesos periodo 13/3 a 27/3 del año 2020 sentidoA'
 #traf_mar20_sentidoA_p
