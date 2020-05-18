@@ -138,7 +138,6 @@ leaflet(data = df) %>%
   addTiles(urlTemplate = TilesBA) %>% 
   addProviderTiles('CartoDB.Positron',
                    group = 'Cartografía Limpia') %>% 
-  setView(lat=-34.58720,lng=	-58.45503) %>% 
   addPolygons(label = barrioslabels,
               fillColor = ~pal2(Casos7_5),
               color = "#444444",
