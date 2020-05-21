@@ -144,7 +144,7 @@ filt_top_15 <- subte_gen_feb20 %>% group_by(ESTACION,desde) %>%
   head(15) %>% 
   select(ESTACION)
 
-subte_gen_feb20 <- subte_gen_feb20 %>% filter(ESTACION %in% filt_top_15$ESTACION) %>% 
+subte_gen_feb20 <- subte_gen_feb20 %>% filter(ESTACION %in% filt_top_15$ESTACION & fecha == '2020-02-11') %>% 
   group_by(desde,ESTACION,fecha) %>% 
   summarise('total'=sum(total))
 rm(filt_top_15)
@@ -235,11 +235,11 @@ filt_top_15 <- subte_gen_jun19 %>% group_by(ESTACION,desde) %>%
   head(15) %>% 
   select(ESTACION)
 
-subte_gen_jun19 <- subte_gen_jun19 %>% filter(ESTACION %in% filt_top_15$ESTACION) %>% 
+subte_gen_jun19 <- subte_gen_jun19 %>% filter(ESTACION %in% filt_top_15$ESTACION & fecha == '2019-06-11') %>% 
   group_by(desde,ESTACION,fecha) %>% 
   summarise('total'=sum(total))
 rm(filt_top_15)
-
+#view(subte_gen_jun19 %>% filter(ESTACION=='FEDERICO LACROZE'))
 #view(subte_gen_jun19)
 
 

@@ -175,9 +175,11 @@ ui<- fluidPage(
                         tags$br(),
                         tags$br(),
                         tags$br(),
-                        tags$p('En el gráfico de tipo scatterplot a continuación se pueden visualizar las estaciones de subtes y horarios que 
-                               mayor concentración de pasajeros presentan. El horario establecido para el análisis es el comprendido 
-                               entre las 5hs y las 21hs, considerando todo el mes de junio de 2019'),
+                        tags$p('En el gráfico de puntos a continuación se pueden visualizar las estaciones de subte que mayor concurrencia
+                              tienen y los horarios en que frecuentan la mayor cantidad de pasajeros.'),
+                        tags$br(),
+                        tags$p('El horario establecido para el análisis es el comprendido entre las 5hs y las 21hs, considerando el día más
+                               concurrido de junio de 2019'),
                         tags$br(), 
                         tags$p('Se utilizaron los datos del último mes de junio que se tienen registros para estimar la cantidad de 
                                pasajeros que podrían circular en caso de abrirse la cuarentena en las próximas semanas.'),
@@ -186,9 +188,9 @@ ui<- fluidPage(
                                control de salubridad de los pasajeros como en la cartelería informativa para generar conciencia en los 
                                ciudadanos.'),
                         tags$br(), 
-                        tags$p('Se observan que las siguientes zonas serían las más expuestas:'),
+                        tags$p('El tamaño de los puntos representa la cantidad de pasajeros por hora en cada estación:'),
                         
-                        plotOutput(outputId = 'graf_subte'),
+                        plotlyOutput(outputId = 'graf_subte_p', width = '100%',height = 800),
                         tags$br(),
                         tags$br(),
                         tags$br(),
@@ -549,9 +551,9 @@ server<- function(input, output){
   ### RENDER PLOTLY Y GGPLOT 
   
   # GRAFICO, subte       
-  output$graf_subte=renderPlot({
+  output$graf_subte_p=renderPlotly({
     
-    graf_subte
+    graf_subte_p
     
   })# fin render plot  
   

@@ -4,21 +4,22 @@
 
 graf_subtefeb20 <-
 ggplot(data = subte_gen_feb20, aes(x=desde,y=ESTACION,size=total,color=total))+
-  geom_jitter()+
-  scale_size_continuous(limits=c(50, 11000), breaks=seq(1000, 10000, by=1000))+
-  scale_color_continuous(limits=c(50, 11000), breaks=seq(1000, 10000, by=1000))+
+  geom_point()+ # esta variante es más estética me parece
+  scale_size_continuous(limits=c(1000, 12000), breaks=seq(1000, 12000, by=1000))+
+  scale_color_continuous(limits=c(1000, 12000), breaks=seq(1000, 12000, by=1000))+
   guides(color= guide_legend(), size=guide_legend())+
   scale_x_continuous(breaks = seq(5,21,by = 1))+
-  labs(title = 'Focos de concentración en estaciones',
-       x = 'Horarios de ingreso al molinete por día',
+  labs(title = 'Focos de concentración en estaciones más frecuentadas',
+       x = 'Horarios de ingreso al molinete',
        y = 'Estaciones'
-  )+
+       )+
   theme_bw()
 
+#ggplotly(graf_subtefeb20)
 
 # Top 15 estaciones más frecuentadas, en scatter para ver concentración por horario (consideran fechas de junio/19)
 
-graf_subte <-
+graf_subte_jitter <-
 ggplot(data = subte_gen_jun19, aes(x=desde,y=ESTACION,size=total,color=total))+
   geom_jitter()+
   scale_size_continuous(limits=c(100, 16000), breaks=seq(2000, 16000, by=2000))+
@@ -26,12 +27,27 @@ ggplot(data = subte_gen_jun19, aes(x=desde,y=ESTACION,size=total,color=total))+
   guides(color= guide_legend(), size=guide_legend())+
   scale_x_continuous(breaks = seq(5,21,by = 1))+
   labs(title = 'Focos de concentración en estaciones',
-       x = 'Horarios de ingreso al molinete por día',
+       x = 'Horarios de ingreso al molinete',
+       y = 'Estaciones'
+       )+
+  theme_bw()
+
+
+# Top 15 estaciones más frecuentadas, en scatter para ver concentración por horario (consideran fechas de junio/19) V2 + estética
+
+graf_subte <-
+  ggplot(data = subte_gen_jun19, aes(x=desde,y=ESTACION,size=total,color=total))+
+  geom_point()+
+  scale_size_continuous(limits=c(1000, 16000), breaks=seq(2000, 16000, by=2000))+
+  scale_color_continuous(limits=c(1000, 16000), breaks=seq(2000, 16000, by=2000))+
+  guides(color= guide_legend(), size=guide_legend())+
+  scale_x_continuous(breaks = seq(5,21,by = 1))+
+  labs(title = 'Focos de concentración en estaciones más frecuentadas',
+       x = 'Horarios de ingreso al molinete',
        y = 'Estaciones'
   )+
-  theme_bw()+
-  theme(legend.text = element_text( 'es el total'))
-
+  theme_bw()
+graf_subte_p <- ggplotly(graf_subte)
 
 # GRÁFICO FALLECIDOS POR GENERO
 graf_fallecidos <-
