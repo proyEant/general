@@ -2,7 +2,7 @@ rm(list=ls())
 
 #Setear WD a utilizar
 
-setwd()
+#setwd()
 
 #Descargar RData al WD que se quiera utilizar
 
