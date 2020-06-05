@@ -2,9 +2,10 @@
 
 #Addons para visualización
 TilesBA <- 'https://servicios.usig.buenosaires.gob.ar/mapcache/tms/1.0.0/amba_con_transporte_3857@GoogleMapsCompatible/{z}/{x}/{-y}.png'
-pal <- colorBin("OrRd", domain = df$casos)
-pal2 <- colorBin("YlOrRd", domain = df$Casos7_5)
+pal <- colorBin("Reds", domain = df$casos)
+pal2 <- colorBin("Reds", domain = df$Casos7_5)
 pal3 <- colorBin("Blues", domain = densidad$Densidad_pob, bins = 9)
+pal4 <- colorBin("Reds", domain = df$Casos28_5)
 
 #Iconos
 iconos <- iconList(
@@ -22,6 +23,16 @@ iconos <- iconList(
 barrioslabels <- sprintf(
   "<strong>%s</strong><br/>%g casos",
   df$Barrio, df$Casos7_5
+) %>% lapply(htmltools::HTML)
+
+barrioslabels285 <- sprintf(
+  "<strong>%s</strong><br/>%g casos",
+  df$Barrio, df$Casos28_5
+) %>% lapply(htmltools::HTML)
+
+barrioslabelsorig <- sprintf(
+  "<strong>%s</strong><br/>%g casos",
+  df$Barrio, df$casos
 ) %>% lapply(htmltools::HTML)
 
 barrios_poblabels <- sprintf(
@@ -68,12 +79,36 @@ leaflet(data = df) %>%
               weight = 1,
               smoothFactor = 0.5,
               opacity = 1.0,
-              fillOpacity = 0.5,
-              group = 'Casos por Barrio',
+              fillOpacity = 0.4,
+              group = 'Casos por Barrio al 7/5',
               highlightOptions = highlightOptions(color = "black",
                                                   weight = 2,
                                                   bringToFront = F)
               ) %>% 
+  addPolygons(label = barrioslabels285,
+                fillColor = ~pal4(Casos28_5),
+                color = "#444444",
+                weight = 1,
+                smoothFactor = 0.5,
+                opacity = 1.0,
+                fillOpacity = 0.4,
+                group = 'Casos por Barrio al 28/5',
+                highlightOptions = highlightOptions(color = "black",
+                                                    weight = 2,
+                                                  bringToFront = F)
+                ) %>% 
+  addPolygons(label = barrioslabelsorig,
+              fillColor = ~pal(casos),
+              color = "#444444",
+              weight = 1,
+              smoothFactor = 0.5,
+              opacity = 1.0,
+              fillOpacity = 0.4,
+              group = 'Casos por Barrio al 25/4',
+              highlightOptions = highlightOptions(color = "black",
+                                                  weight = 2,
+                                                  bringToFront = F)
+  ) %>%
   addCircles(lng = Hospitales$long,
              lat = Hospitales$lat,
              #clusterOptions = markerClusterOptions(), #Se deben dejar si se usan CircleMarkers
@@ -118,18 +153,42 @@ leaflet(data = df) %>%
   #  addMarkers(lng = df_far$long,
   #             lat = df_far$lat,
   #             icon = iconos$farmacias) %>% 
+  addCircleMarkers(lng = ~ df_ufu$long,
+                   lat = ~ df_ufu$lat,
+                   label = df_ufu$nombre,
+                   color = 'blue',
+                   radius = 2,
+                   weight = 4,
+                   group = 'Unidades Febriles'
+  ) %>%
   addLayersControl(
-    overlayGroups = c('Hospitales','Clínicas Privadas','Farmacias','Vacunatorios','Cajeros','Casos por Barrio','Cartografía Limpia'),
+    overlayGroups = c('Hospitales','Clínicas Privadas','Farmacias','Vacunatorios','Cajeros','Unidades Febriles','Cartografía Limpia'),
+    baseGroups = c('Casos por Barrio al 25/4','Casos por Barrio al 7/5','Casos por Barrio al 28/5'),
     options = layersControlOptions(collapsed = FALSE)
-  ) %>% 
-  
+  ) %>%
+  addLegend(pal = pal4,
+            values = ~df$Casos28_5,
+            opacity = 0.7,
+            position = 'bottomright',
+            title = 'Cantidad de casos al 28/5:',
+            group = 'Casos por Barrio al 28/5',
+            ) %>% 
   addLegend(pal = pal2,
             values = ~df$Casos7_5,
             opacity = 0.7,
             position = 'bottomright',
-            title = 'Cantidad de casos:'
+            title = 'Cantidad de casos al 7/5:',
+            group = 'Casos por Barrio al 7/5'
+            ) %>% 
+  addLegend(pal = pal,
+            values = ~df$casos,
+            opacity = 0.7,
+            position = 'bottomright',
+            title = 'Cantidad de casos al 25/4:',
+            group = 'Casos por Barrio al 25/4',
             )
 
+mapa_s
 
 #### Mapa Tránsito ####
 
@@ -144,12 +203,36 @@ leaflet(data = df) %>%
               weight = 1,
               smoothFactor = 0.5,
               opacity = 1.0,
-              fillOpacity = 0.42,
-              group = 'Casos por Barrio',
+              fillOpacity = 0.5,
+              group = 'Casos por Barrio al 7/5',
               highlightOptions = highlightOptions(color = "black",
                                                   weight = 2,
                                                   bringToFront = F)
               ) %>% 
+  addPolygons(label = barrioslabels285,
+              fillColor = ~pal4(Casos28_5),
+              color = "#444444",
+              weight = 1,
+              smoothFactor = 0.5,
+              opacity = 1.0,
+              fillOpacity = 0.42,
+              group = 'Casos por Barrio al 28/5',
+              highlightOptions = highlightOptions(color = "black",
+                                                  weight = 2,
+                                                  bringToFront = F)
+              ) %>% 
+  addPolygons(label = barrioslabelsorig,
+              fillColor = ~pal(casos),
+              color = "#444444",
+              weight = 1,
+              smoothFactor = 0.5,
+              opacity = 1.0,
+              fillOpacity = 0.42,
+              group = 'Casos por Barrio al 25/4',
+              highlightOptions = highlightOptions(color = "black",
+                                                  weight = 2,
+                                                  bringToFront = F)
+              ) %>%
   addCircleMarkers(lng = subte_feb20$lng,
                    lat = subte_feb20$lat,
                    radius = subte_feb20$total/600,
@@ -181,15 +264,31 @@ leaflet(data = df) %>%
              label = estacionestrenlabels
   ) %>% 
   addLayersControl(
-    overlayGroups = c("Autopistas: Acceso a CABA", "Autopistas: Salida de CABA",'Casos por Barrio','Estaciones de tren','Estaciones de subte','Cartografía Limpia'),
+    overlayGroups = c("Autopistas: Acceso a CABA", "Autopistas: Salida de CABA",'Estaciones de tren','Estaciones de subte','Cartografía Limpia'),
+    baseGroups = c('Casos por Barrio al 25/4','Casos por Barrio al 7/5','Casos por Barrio al 28/5'),
     options = layersControlOptions(collapsed = FALSE)
   ) %>% 
+  addLegend(pal = pal4,
+            values = ~df$Casos28_5,
+            opacity = 0.7,
+            position = 'bottomright',
+            title = 'Cantidad de casos al 28/5:',
+            group = 'Casos por Barrio al 28/5'
+            ) %>% 
   addLegend(pal = pal2,
             values = ~df$Casos7_5,
             opacity = 0.7,
             position = 'bottomright',
-            title = 'Cantidad de casos:'
-  )
+            title = 'Cantidad de casos al 7/5:',
+            group = 'Casos por Barrio al 7/5'
+            ) %>% 
+  addLegend(pal = pal,
+            values = ~df$casos,
+            opacity = 0.7,
+            position = 'bottomright',
+            title = 'Cantidad de casos al 25/4:',
+            group = 'Casos por Barrio al 25/4'
+            )
 
 #mapa_t
 

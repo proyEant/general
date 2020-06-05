@@ -307,7 +307,39 @@ ui<- fluidPage(
              ) #fin fluidRow
     ), # fin tabPanel Analsis servicios
     
-    
+    tabPanel("Análisis según Casos",
+             fluidRow(
+               column(1),
+               column(10,
+                      tags$br(),
+                      tags$h1('¿Qué podemos interpretar de los datos sobre los casos?',align = 'center'),
+                      tags$br(),
+                      tags$p('La cantidad de casos por si sola no nos dice nada, pero revisando los detalles podemos conocer más acerca
+                             de lo que nos pueden contar.'),
+                      tags$br(),
+                      tags$p(strong('Analizando los diferentes casos por sexo, edad, condición y resultado podemos ver lo siguiente:')),
+                      tags$br(),
+                      tags$br(),
+                      tags$li('La mayor cantidad de casos descartados se da en la población menor a 15 años, y la que se encuentra entre
+                              los 25 y los 45 años.'),
+                      tags$br(),
+                      plotlyOutput(outputId = 'graf_confirm_edad_p', width = "85%", height = 680),
+                      tags$br(),
+                      tags$br(),
+                      tags$li('La proporción global de mortalidad se encuentra en torno al 4,5%, pero si nos acercamos más, vemos que cambia
+                              fuertemente a lo largo de las edades'),
+                      tags$br(),
+                      plotOutput(outputId = 'graf_confirm', width = "85%", height = 680),
+                      tags$br(),
+                      tags$br(),
+                      plotOutput(outputId = 'graf_confirm_fallec', width = "85%", height = 680),
+                      tags$br(),
+                      tags$br(),
+                      tags$br(),
+                      
+               ),#CIERRA 8
+             ) #fin fluidRow
+    ), # fin tabPanel Analsis Casos
     
     
     tabPanel("Conclusiones",
@@ -431,7 +463,9 @@ ui<- fluidPage(
                         tags$li(a(href='https://data.buenosaires.gob.ar/dataset/subte-viajes-molinetes/archivo/a43d8d7e-0e5e-4706-853b-303f567d82d0','Contabilización de pase por molinetes 2020')),
                         tags$li(a(href='https://data.buenosaires.gob.ar/dataset/cajeros-automaticos','Cajeros automáticos')),
                         tags$li(a(href='https://data.buenosaires.gob.ar/dataset/estaciones-ferrocarril','Estaciones ferrocarril')),
+                        tags$li(a(href='https://data.buenosaires.gob.ar/dataset/unidades-febriles-de-urgencia','Unidades Febriles de Urgencia')),
                         tags$li(a(href='http://datos.salud.gob.ar/dataset/covid-19-determinaciones-registradas-en-la-republica-argentina','Casos registrados en triage')),
+                        tags$li(a(href='https://www.buenosaires.gob.ar/sites/gcaba/files/bes_197_se_20_vf_0.pdf','Reporte de Vigilancia Sanitaria')),
                         
                         
                       ),#cierre ul
@@ -467,8 +501,8 @@ ui<- fluidPage(
                         tags$li('library(readxl)'),
                         tags$li('library(readr)'),
                         tags$li('library(shinyWidgets)'),
-                        tags$br('library(colorspace)'),
-                        tags$br('library(treemapify)'),
+                        tags$li('library(colorspace)'),
+                        tags$li('library(treemapify)'),
                         tags$br(),
                         tags$br(),
                         tags$br(),
@@ -590,6 +624,26 @@ server<- function(input, output){
     
   })# fin render plot
   
+  #Gráfico de proporciones fallecidos 
+  output$graf_confirm_fallec = renderPlot({
+    
+    graf_confirm_fallec
+    
+  })# fin render plot
+  
+  #Gráfico de proporciones confirmados 
+  output$graf_confirm = renderPlot({
+    
+    graf_confirm
+    
+  })# fin render plot
+  
+  #Gráfico de confirmados vs descartados por edad 
+  output$graf_confirm_edad_p = renderPlotly({
+    
+    graf_confirm_edad_p
+    
+  })# fin render plot
 
   #RENDER LEAFLET  
   
@@ -598,7 +652,6 @@ server<- function(input, output){
     mapa_t
     
   })# fin render plot
-  
   
   ##mapa de servicios. 
   output$mapa_s=renderLeaflet({

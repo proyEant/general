@@ -143,8 +143,8 @@ traf_mar20_sentidoB_p$x$layout$title <- 'Cantidad de Accesos periodo 13/3 a 27/3
 #traf_mar20_sentidoB_p
 
 
-## confirmados y no fallecidos
-graf_confirm <-
+## confirmados y fallecidos
+graf_confirm_fallec <-
   ggplot(casos54, aes(area = tot.x, fill = sexo, subgroup=edad,label=label.x)) +
   geom_treemap(aes(alpha=prop_fall))+
   geom_treemap_subgroup_border(colour='white')+
@@ -158,12 +158,12 @@ graf_confirm <-
   labs(fill = 'Sexo',
        area = 'Total',
        alpha = 'Proporción',
-       title = 'Cantidades y proporciones entre confirmados')+
+       title = 'Cantidades y proporciones entre confirmados y fallecidos')+
   theme_gray()
 
 
-## confirmados y fallecidos
-graf_confirm_fallec <-
+## confirmados
+graf_confirm <-
   ggplot(casos54, aes(area = tot.y, fill = sexo, subgroup=edad,label=label.y)) +
   geom_treemap(aes(alpha=propglob.y))+
   geom_treemap_subgroup_border(colour='white')+
@@ -177,7 +177,7 @@ graf_confirm_fallec <-
   labs(fill = 'Sexo',
        area = 'Total',
        alpha = 'Proporción',
-       title = 'Cantidades y proporciones entre confirmados y fallecidos')+
+       title = 'Cantidades y proporciones entre confirmados')+
   theme_gray()
 
 
@@ -197,6 +197,8 @@ graf_confirm_edad <-
        y = 'Cantidad de casos',
        color = 'Sexo')+
   facet_grid(. ~clasificacion_resumen)
+
+graf_confirm_edad_p <- ggplotly(graf_confirm_edad)
 
 ###
 #view(df_sentidoB_junio19$promedioMes[1]/1000)

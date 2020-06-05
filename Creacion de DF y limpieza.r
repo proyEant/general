@@ -1,7 +1,6 @@
-####DF Casos CABA y nueva fuente con datos 7 de Mayo 2020 (principal DF)####
+####DF Casos CABA y nueva fuente con datos 7 y 28 de Mayo 2020 (principal DF)####
 
 df <-Leer_gDrive("https://drive.google.com/open?id=1i1APIKryoLNlJzdZuLjAacZ1jV4cvh3j",sep=",")
-#df= read.csv('Covid19arData - Prov_CABA.csv',encoding = 'UTF-8')
 
 df<- select(df,-c(prov,depto,altas,fuente,fechaact))
 df <- df %>% rename(
@@ -11,7 +10,7 @@ df$Barrio <- df$Barrio %>% toupper()
 df$Barrio[df$Barrio=='VILLA PUYERREDON'] <- 'VILLA PUEYRREDON'
 df$Barrio[df$Barrio=='VILLA GRAL MITE'] <- 'VILLA GRAL MITRE'
 
-#view(df)
+view(df)
 
 dfcabanew <- read.csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vR6ypAY36GnF5KZgwEYPkid2IDoF69eW3aBfmUyTCq_8y-8IfDB5p6ts2DFG-nP7w/pub?output=csv',stringsAsFactors = F,header = T,encoding = 'UTF-8')
 #view(dfcabanew)
@@ -30,11 +29,28 @@ dfcabanew$Barrio[dfcabanew$Barrio=='LA BOCA'] <- 'BOCA'
 
 #view(dfcabanew)
 
+dfcabanew285 <- read.csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vT_vYdaJvb361Zm5MQSF2jppA9sgZb-1ClP9i1Fi4RpBWNt2agssN7EtDfQwOcKQw/pub?output=csv',stringsAsFactors = F,header = T,encoding = 'UTF-8')
+#view(dfcabanew285)
+
+#Se limpia el df y acomoda para futuro merge
+dfcabanew285$Barrio <- toupper(dfcabanew285$Barrio)
+dfcabanew285 <- dfcabanew285 %>% filter(!Casos == max(Casos)) %>%
+  select(-Comunas)
+names(dfcabanew285) = c('Barrio','Casos28_5')
+dfcabanew285$Barrio <- stri_trans_general(dfcabanew285$Barrio,"Latin-ASCII")
+dfcabanew285$Barrio[dfcabanew285$Barrio=='NUNEZ'] <- 'NUÑEZ'
+dfcabanew285$Barrio[dfcabanew285$Barrio=='VILLA GENERAL MITRE'] <- 'VILLA GRAL MITRE'
+dfcabanew285$Barrio[dfcabanew285$Barrio=='MONTSERRAT'] <- 'MONSERRAT'
+dfcabanew285$Barrio[dfcabanew285$Barrio=='LA PATERNAL'] <- 'PATERNAL'
+dfcabanew285$Barrio[dfcabanew285$Barrio=='LA BOCA'] <- 'BOCA'
+#view(dfcabanew285)
+
 # Merge Casos nuevos con DF casos anterior
 
 df <- merge(df,dfcabanew)
+df <- merge(df,dfcabanew285)
 #View(df)
-rm(dfcabanew)
+rm(dfcabanew,dfcabanew285)
 
 
 ####DF Fallecidos ####
@@ -284,6 +300,16 @@ df_cajeros <- df_cajeros %>% rename(
   'Barrio' = barrio)
 
 #view(df_cajeros)
+
+
+####DF Cajeros Unidades Febriles de Urgencia - UFU ####
+
+df_ufu <- read.csv('https://docs.google.com/spreadsheets/d/e/2PACX-1vRvZQS3PllDmhkzsTmEUWrOPesTGjRsAexH4fOVgR-eIJEacOwqd28SWI3sckRmrw4WQ6e6D4QELNSA/pub?output=csv',encoding = 'UTF-8', stringsAsFactors = F)
+df_ufu <- df_ufu %>% rename(
+  'Barrio' = barrio)
+df_ufu$long <- as.numeric(df_ufu$long)
+df_ufu$lat <- as.numeric(df_ufu$lat)
+#view(df_ufu)
 
 
 ####DF Tráfico Vehicular ####
