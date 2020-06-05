@@ -431,6 +431,7 @@ ui<- fluidPage(
                         tags$li(a(href='https://data.buenosaires.gob.ar/dataset/subte-viajes-molinetes/archivo/a43d8d7e-0e5e-4706-853b-303f567d82d0','Contabilización de pase por molinetes 2020')),
                         tags$li(a(href='https://data.buenosaires.gob.ar/dataset/cajeros-automaticos','Cajeros automáticos')),
                         tags$li(a(href='https://data.buenosaires.gob.ar/dataset/estaciones-ferrocarril','Estaciones ferrocarril')),
+                        tags$li(a(href='http://datos.salud.gob.ar/dataset/covid-19-determinaciones-registradas-en-la-republica-argentina','Casos registrados en triage')),
                         
                         
                       ),#cierre ul
@@ -466,6 +467,8 @@ ui<- fluidPage(
                         tags$li('library(readxl)'),
                         tags$li('library(readr)'),
                         tags$li('library(shinyWidgets)'),
+                        tags$br('library(colorspace)'),
+                        tags$br('library(treemapify)'),
                         tags$br(),
                         tags$br(),
                         tags$br(),

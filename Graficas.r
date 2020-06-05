@@ -143,7 +143,60 @@ traf_mar20_sentidoB_p$x$layout$title <- 'Cantidad de Accesos periodo 13/3 a 27/3
 #traf_mar20_sentidoB_p
 
 
+## confirmados y no fallecidos
+graf_confirm <-
+  ggplot(casos54, aes(area = tot.x, fill = sexo, subgroup=edad,label=label.x)) +
+  geom_treemap(aes(alpha=prop_fall))+
+  geom_treemap_subgroup_border(colour='white')+
+  geom_treemap_text(colour = "Black", place = "topleft", reflow = T)+
+  geom_treemap_subgroup_text(place = 'bottom',
+                             grow = T,
+                             alpha = 0.5,
+                             colour = '#FAFAFA',
+                             min.size = 0)+
+  scale_alpha_continuous(range = c(0.4, 1))+
+  labs(fill = 'Sexo',
+       area = 'Total',
+       alpha = 'Proporción',
+       title = 'Cantidades y proporciones entre confirmados')+
+  theme_gray()
 
+
+## confirmados y fallecidos
+graf_confirm_fallec <-
+  ggplot(casos54, aes(area = tot.y, fill = sexo, subgroup=edad,label=label.y)) +
+  geom_treemap(aes(alpha=propglob.y))+
+  geom_treemap_subgroup_border(colour='white')+
+  geom_treemap_subgroup_text(place = 'bottom',
+                             grow = T,
+                             alpha = 0.5,
+                             colour = '#FAFAFA',
+                             min.size = 0)+
+  geom_treemap_text(colour = "Black", place = "topleft", grow = T, reflow = F)+
+  scale_alpha_continuous(range = c(0.4, 1))+
+  labs(fill = 'Sexo',
+       area = 'Total',
+       alpha = 'Proporción',
+       title = 'Cantidades y proporciones entre confirmados y fallecidos')+
+  theme_gray()
+
+
+## confirmados y desartados por edad
+graf_confirm_edad <-
+  ggplot(casos50, aes(x=edad,y=n,color=sexo))+
+  geom_point(size = 2)+
+  scale_x_continuous(breaks = seq(from=0,to=110,by=5))+
+  scale_y_continuous(breaks = seq(from=0,to=max(casos50$n),by=5))+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 90,face = 'bold'),
+        axis.text.y = element_text(face = 'bold'),
+        axis.title.x = element_text(face = 'bold'),
+        axis.title.y = element_text(face = 'bold'))+
+  labs(title = element_text('Casos confirmados por edad.'),
+       x = 'Edad',
+       y = 'Cantidad de casos',
+       color = 'Sexo')+
+  facet_grid(. ~clasificacion_resumen)
 
 ###
 #view(df_sentidoB_junio19$promedioMes[1]/1000)

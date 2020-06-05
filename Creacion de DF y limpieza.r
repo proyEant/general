@@ -283,9 +283,7 @@ df_cajeros <- df_cajeros %>% select(banco,red,lat,long,ubicacion,barrio)
 df_cajeros <- df_cajeros %>% rename(
   'Barrio' = barrio)
 
-
 #view(df_cajeros)
-
 
 
 ####DF Tráfico Vehicular ####
@@ -369,7 +367,77 @@ sentidoB = df_mapAccesos2020 %>%
   filter(as.Date(fecha)>='2020-03-13' && as.Date(fecha)<='2020-03-27', seccion_sentido == 'B') #solo me quedo con las filas que cumplen la condicion.
 
 
+#### DF Unidades Febriles ####
+u_febriles <- read.csv('ufus.csv',encoding = 'UTF-8',header = T,stringsAsFactors = F)
+u_febriles$barrio <- toupper(u_febriles$barrio)
+names(u_febriles) = c('lng','lat','nombre','direccion','Barrio','comuna')
+view(u_febriles)
 
 
-# Armado de DF con densidad de casos por barrio
+#### DF Cantidad Triage #### Para gráfico
+cant_triage <- read.csv('BOTI-Cantidad_contactos_hicieron_triage.csv')
+cant_triage$fecha <- as.Date(cant_triage$fecha,'%Y-%m-%d')
+cant_triage <- cant_triage %>% group_by(fecha) %>% 
+  summarise(cantidad = sum(triage_cantidad))
+#View(cant_triage)
 
+#### DF Casos actualizados. Datos del GCBA ####
+
+casos <- read.csv('https://raw.githubusercontent.com/SistemasMapache/Covid19arData/master/datosAbiertosOficiales/covid19casos.csv',encoding = 'UTF-8',header = T,stringsAsFactors = F)
+casos0 <- casos %>% filter(provincia_residencia=='CABA') %>% 
+  select(clasificacion_resumen,sexo,edad,asistencia_respiratoria_mecanica,origen_financiamiento,fallecido)
+rm(casos)
+#view(casos0)
+
+casos50 <- casos0 %>% filter(clasificacion_resumen == 'Descartado'|clasificacion_resumen == 'Confirmado') %>% 
+  group_by(clasificacion_resumen,sexo,edad,fallecido) %>% 
+  select(-c(asistencia_respiratoria_mecanica,origen_financiamiento)) %>% 
+  count()
+#view(casos50)
+
+casos52 <- casos0 %>%
+  mutate(edad =case_when(
+    edad < 20 ~ 'Menor de 20 años',
+    edad >= 20 & edad <35~ 'De 20 a 35 años',
+    edad >= 35 & edad <50~ 'De 35 a 50 años',
+    edad >= 50 & edad <65~ 'De 50 a 65 años',
+    edad >= 65 & edad <75~ 'De 65 a 75 años',
+    edad >= 75 & edad <90~ 'De 75 a 90 años',
+    edad >= 90 ~ 'Mayor de 90 años',
+    TRUE ~ 'NA'
+  )
+  )
+casos52 <- casos52 %>%
+  ungroup() %>% 
+  mutate(sexo =case_when(
+    sexo == 'F' ~ 'Femenino',
+    sexo == 'M' ~ 'Masculino',
+    sexo == 'NR' ~ 'NR',
+    TRUE ~ 'NA'
+  )
+  )
+casos53 <-casos52
+casos52 <- casos52 %>% filter(clasificacion_resumen == 'Confirmado' & fallecido=='NO') # Casos 52 trabaja con los confirmados y no fallecidos
+casos52 <- casos52 %>% group_by(sexo,edad) %>% 
+  summarise(tot = n())
+casos52$propglob <-casos52$tot/(sum(casos52$tot)+sum(casos53$tot)) #Proporción de contagiados
+casos52 <- casos52 %>% filter(tot > 5)
+
+
+casos53 <- casos53 %>% filter(clasificacion_resumen == 'Confirmado' & fallecido=='SI') # Casos 52 trabaja con los confirmados y fallecidos
+casos53 <- casos53 %>% group_by(sexo,edad) %>% 
+  summarise(tot = n())
+casos53$propglob <-casos53$tot/(sum(casos52$tot)+sum(casos53$tot))
+casos53 <- casos53 %>% filter(tot > 1)
+
+
+# Full join y dentro de el hacer el %
+casos54 <- full_join(casos53,casos52,by = c('sexo','edad'))
+#View(casos54)
+casos54$prop_fall <- round(casos54$tot.x/(casos54$tot.y+casos54$tot.x),4) 
+casos54$label.x <- paste0(casos54$tot.x,' fallecimientos',',\n',casos54$prop_fall*100,'% de los confirmados')
+casos54$label.y <- paste0('Total: ',casos54$tot.y,' confirmados',',\n',round(casos54$propglob.y*100,2),'% del total')
+casos54 <- casos54 %>% replace(is.na(.), 0)
+#view(casos54)
+
+rm(casos0,casos51,casos52,casos53)
